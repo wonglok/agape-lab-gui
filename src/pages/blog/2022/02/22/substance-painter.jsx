@@ -1,3 +1,4 @@
+import { MixMat } from '@/components/substance-painter/MixMat/MixMat'
 import {
   Box,
   Cone,
@@ -13,7 +14,6 @@ import {
 } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
-import { MixMat } from './substance-painter/MixMat/MixMat'
 
 export default function Material() {
   return (
