@@ -1,35 +1,39 @@
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import path from 'path'
-const cache = []
+const pages = [
+  {
+    key: `2022/02/23/shader-editor`,
+    url: `2022/02/23/shader-editor`,
+    name: `shader-editor`,
+  },
+  {
+    key: `2022/02/22/substance-painter.jsx`,
+    url: `2022/02/22/substance-painter`,
+    name: `substance-painter`,
+  },
+]
 
-function importAll(r) {
-  r.keys().forEach((key) => {
-    let url = key.replace('src/', '')
-    url = url.replace('pages/blog', '')
-    url = url.replace('./', '')
-    if (url[0] === '/') {
-      url = url.replace('/', '')
-    }
+// function importAll(r) {
+//   r.keys().forEach((key) => {
+//     let url = key.replace('src/', '')
+//     url = url.replace('pages/blog', '')
+//     url = url.replace('./', '')
+//     if (url[0] === '/') {
+//       url = url.replace('/', '')
+//     }
 
-    if (!cache.some((r) => r.key === url)) {
-      cache.push({
-        key: url,
-        url: url.replace('.jsx', ''),
-        date: path.dirname(url).split('/').join('-'),
-        name: path.basename(url).replace('.jsx', ''),
-        compos: dynamic(
-          async () => {
-            return r(key)
-          },
-          { ssr: true },
-        ),
-      })
-    }
-  })
-}
+//     if (!cache.some((r) => r.key === url)) {
+//       cache.push({
+//         key: url,
+//         url: url.replace('.jsx', ''),
+//         date: path.dirname(url).split('/').join('-'),
+//         name: path.basename(url).replace('.jsx', ''),
+//       })
+//     }
+//   })
+// }
 
-importAll(require.context('./blog', true, /\.jsx$/, 'lazy'))
+// importAll(require.context('./blog', true, /\.jsx$/))
 
 export default function Index() {
   return (
@@ -72,14 +76,14 @@ export default function Index() {
           </g>
         </svg>
       </div>
-      {cache.map((blog) => {
+      {pages.map((blog) => {
         return (
           <div className='mx-4 mb-3' key={blog.key}>
-            <div className='text-xl'>{blog.date}</div>
+            <div className='text-xl'>{path.dirname(blog.url).split('/').join('-')}</div>
             <div className='text-sm'>
-              <Link className='underline' href={`${'/blog/'}${blog.url}`}>
+              <a className='underline' target='_blank' href={`/blog/${blog.url}`} rel='noreferrer'>
                 {blog.name}
-              </Link>
+              </a>
             </div>
           </div>
         )
