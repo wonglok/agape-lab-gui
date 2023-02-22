@@ -30,7 +30,7 @@ function importAll(r) {
 }
 
 importAll(require.context('./blog', true, /\.jsx$/, 'lazy'))
-console.log(cache)
+
 export default function Index() {
   return (
     <div className='w-full h-full'>
