@@ -34,7 +34,8 @@ importAll(require.context('./blog', true, /\.jsx$/, 'lazy'))
 export default function Index() {
   return (
     <div className='w-full h-full overflow-hidden'>
-      <div className='mx-4 mt-4 mb-3 text-3xl'>AGAPE LAB // 愛加倍 實驗室</div>
+      <div className='mx-4 mt-4 mb-1 text-3xl text-left'>AGAPE LAB</div>
+      <div className='mx-4 mb-3 text-xl text-left'>愛加倍 實驗室</div>
 
       <div className='mb-4' style={{ height: '50vmin', width: '50vmin' }}>
         <svg className='w-full h-full' width='800px' height='800px' viewBox='0 0 800 800' version='1.1'>
