@@ -1,37 +1,21 @@
+import md5 from 'md5'
 import Link from 'next/link'
 import path from 'path'
+import { v4 } from 'uuid'
 const pages = [
   {
-    key: `2022/02/23/shader-editor`,
-    url: `2022/02/23/shader-editor`,
+    key: md5(v4()),
+    url: `https://agape-ecosystem.vercel.app/lab/graphics`,
     name: `shader-editor`,
+    date: '2022-02-23',
   },
   {
-    key: `2022/02/22/substance-painter.jsx`,
-    url: `2022/02/22/substance-painter`,
+    key: md5(v4()),
+    url: `/blog/2022/02/22/substance-painter`,
     name: `substance-painter`,
+    date: '2022-02-22',
   },
 ]
-
-// function importAll(r) {
-//   r.keys().forEach((key) => {
-//     let url = key.replace('src/', '')
-//     url = url.replace('pages/blog', '')
-//     url = url.replace('./', '')
-//     if (url[0] === '/') {
-//       url = url.replace('/', '')
-//     }
-
-//     if (!cache.some((r) => r.key === url)) {
-//       cache.push({
-//         key: url,
-//         url: url.replace('.jsx', ''),
-//         date: path.dirname(url).split('/').join('-'),
-//         name: path.basename(url).replace('.jsx', ''),
-//       })
-//     }
-//   })
-// }
 
 // importAll(require.context('./blog', true, /\.jsx$/))
 
@@ -79,10 +63,10 @@ export default function Index() {
       {pages.map((blog) => {
         return (
           <div className='mx-4 mb-3' key={blog.key}>
-            <div className='text-xl'>{path.dirname(blog.url).split('/').join('-')}</div>
+            <div className='text-xl'>{blog.name}</div>
             <div className='text-sm'>
-              <a className='underline' target='_blank' href={`/blog/${blog.url}`} rel='noreferrer'>
-                {blog.name}
+              <a className='underline' target='_blank' href={`${blog.url}`} rel='noreferrer'>
+                {blog.date}
               </a>
             </div>
           </div>
