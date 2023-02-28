@@ -1,8 +1,15 @@
 import md5 from 'md5'
+import { v4 } from 'uuid'
 import Link from 'next/link'
 import path from 'path'
-import { v4 } from 'uuid'
+
 const pages = [
+  {
+    key: md5(v4()),
+    url: `/blog/2022/02/28/ball2k`,
+    name: `dragon-ball-mech-2k`,
+    date: '2022-02-28',
+  },
   {
     key: md5(v4()),
     url: `https://agape-ecosystem.vercel.app/lab/graphics`,

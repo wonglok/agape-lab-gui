@@ -22,6 +22,7 @@
   "dependencies": {
     "@react-three/drei": "^9.56.5",
     "@react-three/fiber": "^8.10.1",
+    "@react-three/postprocessing": "^2.7.0",
     "@reactflow/node-resizer": "^2.0.1",
     "antd": "^5.2.2",
     "glsl-random": "^0.0.5",
