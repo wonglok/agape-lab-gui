@@ -166,7 +166,8 @@ export function Ball2kJSX(props) {
               thickness={0.1}
               chromaticAberration={0.3}
               roughnessMap={materials['UV07Glass.002'].roughnessMap}
-              metalnessMap={materials['UV07Glass.002'].metalnessMap}></MeshTransmissionMaterial>
+              metalnessMap={materials['UV07Glass.002'].metalnessMap}
+              transmissionSampler></MeshTransmissionMaterial>
           </skinnedMesh>
           <skinnedMesh
             frustumCulled={false}
