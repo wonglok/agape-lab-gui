@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations, MeshTransmissionMaterial } from '@react-three/drei'
+import { Color } from 'three'
 
 export function Ball2kJSX(props) {
   const group = useRef()
@@ -17,6 +18,10 @@ export function Ball2kJSX(props) {
       })
     }
   }, [names, actions])
+
+  materials['Neon.001'].color = new Color('#00ffff')
+  materials['Neon.001'].emissive = new Color('#00ffff')
+  materials['Neon.001'].emissiveIntensity = 1
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -163,7 +168,7 @@ export function Ball2kJSX(props) {
             // material={materials['UV07Glass.002']}
             skeleton={nodes.RetopoFlow002.skeleton}>
             <MeshTransmissionMaterial
-              thickness={0.1}
+              thickness={0.2}
               chromaticAberration={0.3}
               roughnessMap={materials['UV07Glass.002'].roughnessMap}
               metalnessMap={materials['UV07Glass.002'].metalnessMap}

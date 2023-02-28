@@ -28,10 +28,10 @@ export default function Material() {
         <Suspense fallback={null}>
           <Ball2kJSX></Ball2kJSX>
           <EffectComposer>
-            <Bloom></Bloom>
+            <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer>
           <Environment preset='sunset'></Environment>
-          <OrbitControls target={[0, 1, 0]}></OrbitControls>
+          <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
         <Box position={[0, -0.05, 0]} args={[100, 0.05, 100]}>
