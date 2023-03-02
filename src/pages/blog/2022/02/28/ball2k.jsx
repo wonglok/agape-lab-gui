@@ -25,16 +25,17 @@ export default function Material() {
   return (
     <div className='w-full h-full'>
       <Canvas>
+        <color attach='background' args={['#000000']}></color>
         <Suspense fallback={null}>
           <Ball2kJSX></Ball2kJSX>
-          <EffectComposer>
+          {/* <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
-          </EffectComposer>
+          </EffectComposer> */}
           <Environment preset='sunset'></Environment>
           <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
-        <Box position={[0, -0.05, 0]} args={[100, 0.05, 100]}>
+        {/* <Box position={[0, -0.05, 0]} args={[100, 0.05, 100]}>
           <meshStandardMaterial color={'#000000'} roughness={0.2} metalness={0.5}></meshStandardMaterial>
         </Box>
 
@@ -47,7 +48,7 @@ export default function Material() {
         </Box>
         <Box position={[20, -0.05, 0]} args={[0.05, 100, 100]}>
           <meshStandardMaterial color={'#000000'} roughness={0.2} metalness={0.5}></meshStandardMaterial>
-        </Box>
+        </Box> */}
         {/*  */}
       </Canvas>
       <Loader></Loader>
