@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { useGLTF, useAnimations, MeshTransmissionMaterial } from '@react-three/drei'
-import { Color } from 'three'
+import { useGLTF, useAnimations } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Ball2kJSX(props) {

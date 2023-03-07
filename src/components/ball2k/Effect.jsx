@@ -1,38 +1,41 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { ColorManagement, FloatType } from 'three'
+import { SSGIDebugGUI } from './SSGIDebug'
+import { Clock } from 'three'
 // import 'three/examples/jsm/objects/'
+import { GroundProjectedEnv } from 'three/examples/jsm/objects/GroundProjectedEnv.js'
+import { useEnvironment } from '@react-three/drei'
 
 const options = {
-  distance: 10,
-  thickness: 10,
+  distance: 2.7200000000000104,
   autoThickness: false,
+  thickness: 1.2999999999999972,
   maxRoughness: 1,
-  blend: 0.9,
-  denoiseIterations: 1,
-  denoiseKernel: 2,
-  denoiseDiffuse: 10,
-  denoiseSpecular: 10,
-  depthPhi: 2,
-  normalPhi: 50,
-  roughnessPhi: 1,
-  envBlur: 0.5,
-  importanceSampling: true,
+  blend: 0.925,
+  denoiseIterations: 3,
+  denoiseKernel: 3,
+  denoiseDiffuse: 40,
+  denoiseSpecular: 40,
+  depthPhi: 5,
+  normalPhi: 28,
+  roughnessPhi: 18.75,
+  envBlur: 0.55,
   directLightMultiplier: 1,
   maxEnvLuminance: 50,
   steps: 20,
-  refineSteps: 5,
+  refineSteps: 4,
   spp: 1,
   resolutionScale: 1,
-  missedRays: true,
+  missedRays: false,
 }
-
 export function Effect() {
   // let [st, setST] = useState(false)
   let gl = useThree((s) => s.gl)
   let scene = useThree((s) => s.scene)
   let camera = useThree((s) => s.camera)
 
+  let env = useEnvironment({ preset: 'dawn' })
   let ref = useRef(false)
   useEffect(() => {
     if (ref.current) {
@@ -54,8 +57,12 @@ export function Effect() {
       const velocityDepthNormalPass = new VelocityDepthNormalPass(scene, camera)
       composer.addPass(velocityDepthNormalPass)
 
+      let envMesh = new GroundProjectedEnv(env, { height: 50, radius: 50 })
+      scene.add(envMesh)
       // SSGI
       const ssgiEffect = new SSGIEffect(scene, camera, velocityDepthNormalPass, options)
+
+      let yo = new SSGIDebugGUI(ssgiEffect, options)
 
       // // TRAA
       // const traaEffect = new TRAAEffect(scene, camera, velocityDepthNormalPass)
@@ -70,16 +77,18 @@ export function Effect() {
       composer.addPass(effectPass)
 
       let rAFID = 0
+      let clock = new Clock()
       let rAF = () => {
         rAFID = requestAnimationFrame(rAF)
         //
-        composer.render(1 / 60)
+        composer.render(clock.getDelta())
       }
       rAFID = requestAnimationFrame(rAF)
 
       clean = () => {
         cancelAnimationFrame(rAFID)
         ref.current = false
+        envMesh.removeFromParent()
       }
 
       // setST(composer)
@@ -88,16 +97,12 @@ export function Effect() {
     return () => {
       clean()
     }
-  }, [camera, gl, scene])
+  }, [camera, env, gl, scene])
 
   useFrame(() => {
     // if (st) {
     //   st.render()
     // }
   }, 100)
-  return (
-    <group>
-      <pointLight position={[0, 1, 1]} color={'#ffffff'} intensity={3}></pointLight>
-    </group>
-  )
+  return <group></group>
 }

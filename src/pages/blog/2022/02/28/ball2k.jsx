@@ -1,25 +1,8 @@
 import { Ball2kJSX } from '@/components/ball2k/Ball2kJSX'
 import { Effect } from '@/components/ball2k/Effect'
-import { MixMat } from '@/components/substance-painter/MixMat/MixMat'
-import {
-  Box,
-  Center,
-  Cone,
-  Cylinder,
-  Effects,
-  Environment,
-  Loader,
-  OrbitControls,
-  Plane,
-  Sphere,
-  Stage,
-  Torus,
-  TorusKnot,
-  useAnimations,
-  useGLTF,
-} from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 
 export default function Material() {
   return (
@@ -29,10 +12,14 @@ export default function Material() {
         <Suspense fallback={null}>
           <Effect></Effect>
           <Ball2kJSX></Ball2kJSX>
+
+          {/* <Sphere args={[15, 64, 64]}>
+            <meshPhysicalMaterial emissive={'#ffffff'} side={DoubleSide}></meshPhysicalMaterial>
+          </Sphere> */}
           {/* <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer> */}
-          <Environment preset='dawn' background></Environment>
+          {/* <Environment preset='city' background></Environment> */}
           <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
@@ -52,7 +39,6 @@ export default function Material() {
         </Box> */}
         {/*  */}
       </Canvas>
-      <Loader></Loader>
     </div>
   )
 }
