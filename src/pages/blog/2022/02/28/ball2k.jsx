@@ -17,7 +17,7 @@ export default function Material() {
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer> */}
           {/* <Environment preset='city' background></Environment> */}
-          <OrbitControls target={[0, 1, 0]} object-far={50} object-position={[0, 1, 2]}></OrbitControls>
+          <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
         {/* <Box position={[0, -0.05, 0]} args={[100, 0.05, 100]}>

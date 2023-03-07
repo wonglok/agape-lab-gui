@@ -1,15 +1,21 @@
 import React, { useEffect, useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import { useGLTF, useAnimations, MeshTransmissionMaterial } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Ball2kJSX(props) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF('/2022/02/28/mech/yoyo.glb')
+  const { nodes, materials, animations, scene } = useGLTF('/2022/02/28/mech/yoyo.glb')
   const { actions, names, mixer } = useAnimations(animations, group)
   useFrame((st, dt) => {
     mixer.update(dt)
   })
   useEffect(() => {
+    scene.traverse((it) => {
+      if (it.material) {
+        it.material.envMapIntensity = 30
+      }
+    })
+
     names.forEach((n) => {
       actions[n]?.play()
     })
@@ -21,20 +27,20 @@ export function Ball2kJSX(props) {
         <group frustumCulled={false} name='Circe_Rig001' rotation={[0, -0.06, 0]} scale={1.64}>
           <primitive frustumCulled={false} object={nodes.Ctrl_Master} />
           <group frustumCulled={false} name='RetopoFlow002'>
-            <skinnedMesh
+            {/* <skinnedMesh
               frustumCulled={false}
               name='RetopoFlow010'
               geometry={nodes.RetopoFlow010.geometry}
-              // material={
-              //   <MeshTransmissionMaterial
-              //     thickness={0.2}
-              //     chromaticAberration={0.1}
-              //     roughnessMap={materials['UV07Glass.002'].roughnessMap}
-              //     metalnessMap={materials['UV07Glass.002'].metalnessMap}
-              //     transmissionSampler></MeshTransmissionMaterial>
-              // }
+              material={
+                <MeshTransmissionMaterial
+                  thickness={0.2}
+                  chromaticAberration={0.1}
+                  roughnessMap={materials['UV07Glass.002'].roughnessMap}
+                  metalnessMap={materials['UV07Glass.002'].metalnessMap}
+                  transmissionSampler></MeshTransmissionMaterial>
+              }
               skeleton={nodes.RetopoFlow010.skeleton}
-            />
+            /> */}
             <skinnedMesh
               frustumCulled={false}
               name='RetopoFlow010_1'

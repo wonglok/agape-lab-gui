@@ -1,12 +1,22 @@
 import { useEnvironment } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { Clock, Color, DoubleSide, EquirectangularReflectionMapping, sRGBEncoding } from 'three'
+import {
+  Clock,
+  Color,
+  DoubleSide,
+  EquirectangularReflectionMapping,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+  sRGBEncoding,
+} from 'three'
 import { PMREMGenerator } from 'three'
 import { TextureLoader } from 'three'
 import { Mesh } from 'three'
 import { SphereGeometry } from 'three'
 import { MeshPhysicalMaterial } from 'three'
+import { RGBELoader } from 'three-stdlib'
+import { GroundProjectedEnv } from './realism/GroundProjectedEnv'
 
 const options = {
   distance: 10,
@@ -59,7 +69,7 @@ export function Effect() {
 
       let EffectComposer = await import('postprocessing').then((r) => r.EffectComposer)
       let EffectPass = await import('postprocessing').then((r) => r.EffectPass)
-      let { SSGIEffect, TRAAEffect, MotionBlurEffect, VelocityDepthNormalPass } = realism
+      let { SSGIEffect, VelocityDepthNormalPass } = realism
 
       const composer = new EffectComposer(gl, { multisampling: 4, alpha: true })
 
@@ -72,12 +82,10 @@ export function Effect() {
       // const traaEffect = new TRAAEffect(scene, camera, velocityDepthNormalPass)
 
       // // // Motion Blur
-      const motionBlurEffect = new MotionBlurEffect(velocityDepthNormalPass)
+      // const motionBlurEffect = new MotionBlurEffect(velocityDepthNormalPass)
 
       // const effectPass = new EffectPass(gl, ssgiEffect, traaEffect, motionBlurEffect)
       const effectPass = new EffectPass(gl, ssgiEffect)
-
-      // let yo = new SSGIDebugGUI(ssgiEffect)
 
       let texture = await new TextureLoader().loadAsync(`/envMap/ma-galaxy.jpg`)
       texture.mapping = EquirectangularReflectionMapping
@@ -86,15 +94,14 @@ export function Effect() {
       scene.background = texture
       scene.environment = texture
 
-      let envMesh = new Mesh(
+      let ballball = new Mesh(
         new SphereGeometry(5, 32, 32),
-        new MeshPhysicalMaterial({
-          transmission: 0,
-          roughness: 0.1,
-          metalness: 0.3,
+        new MeshStandardMaterial({
+          roughness: 0.4,
+          metalness: 0.5,
           side: DoubleSide,
           map: texture,
-          envMapIntensity: 3,
+          envMapIntensity: 15,
           color: new Color('#ffffff'),
           emissiveMap: texture,
           emissiveIntensity: 15,
@@ -102,8 +109,7 @@ export function Effect() {
         }),
       )
 
-      envMesh.position.y = -1.5
-      scene.add(envMesh)
+      scene.add(ballball)
 
       effectPass.enabled = true
       composer.addPass(effectPass)
@@ -117,9 +123,21 @@ export function Effect() {
       }
       rAFID = requestAnimationFrame(rAF)
 
+      camera.far = 3000
+      camera.near = 0.5
+      camera.updateProjectionMatrix()
+
+      let envMesh = new GroundProjectedEnv(texture)
+      envMesh.radius = 100
+      envMesh.height = 20
+      envMesh.scale.setScalar(100)
+      envMesh.updateMatrixWorld()
+      scene.add(envMesh)
+
       clean = () => {
         cancelAnimationFrame(rAFID)
         ref.current = false
+        ballball.removeFromParent()
         envMesh.removeFromParent()
       }
 
@@ -138,6 +156,8 @@ export function Effect() {
   }, 100)
   return (
     <group>
+      <pointLight color={'#ffffff'} intensity={15} position={[0, 15, 3]}></pointLight>
+      <pointLight color={'#ffffff'} intensity={15} position={[0, 15, -3]}></pointLight>
       {/* <hemisphereLight args={[0xffffff, 0xffffff]}></hemisphereLight>
       <pointLight color={'#ffffff'} position={[0, 1, -1]} intensity={30}></pointLight> */}
     </group>
