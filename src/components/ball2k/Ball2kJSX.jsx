@@ -26,14 +26,14 @@ export function Ball2kJSX(props) {
               frustumCulled={false}
               name='RetopoFlow010'
               geometry={nodes.RetopoFlow010.geometry}
-              material={
-                <MeshTransmissionMaterial
-                  thickness={0.2}
-                  chromaticAberration={0.1}
-                  roughnessMap={materials['UV07Glass.002'].roughnessMap}
-                  metalnessMap={materials['UV07Glass.002'].metalnessMap}
-                  transmissionSampler></MeshTransmissionMaterial>
-              }
+              // material={
+              //   <MeshTransmissionMaterial
+              //     thickness={0.2}
+              //     chromaticAberration={0.1}
+              //     roughnessMap={materials['UV07Glass.002'].roughnessMap}
+              //     metalnessMap={materials['UV07Glass.002'].metalnessMap}
+              //     transmissionSampler></MeshTransmissionMaterial>
+              // }
               skeleton={nodes.RetopoFlow010.skeleton}
             />
             <skinnedMesh

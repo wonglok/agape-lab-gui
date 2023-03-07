@@ -4936,7 +4936,7 @@ postcss@^8.4.18, postcss@^8.4.21:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@^6.29.0:
+postprocessing@^6.29.0, postprocessing@^6.30.1:
   version "6.30.1"
   resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.30.1.tgz#b1739eb78c26730bb86196f7dc8c759237e660b4"
   integrity sha512-GkBrQtX6KjNz+Pz3+ABvP1aXKCCW7h/tuE37wlM90WZLbaGfJ7eSIBN2gPgKExuK584IPde0YOoNiuWMr7PNCQ==
@@ -5490,6 +5490,11 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+realism-effects@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/realism-effects/-/realism-effects-1.0.9.tgz#e2b99d2b482432bf2043f567b8e479c0a7439235"
+  integrity sha512-wGxIXwGpTQ1WNUZxYE8zK5/w6iY9DRtsTJJE5ccjf9TO314RpVwXTakv9/u0hB7N+MmrelSj0jfdoLn/5dpDPQ==
 
 regenerate-unicode-properties@^10.1.0:
   version "10.1.0"
@@ -6213,10 +6218,10 @@ three-stdlib@^2.8.11:
     potpack "^1.0.1"
     zstddec "^0.0.2"
 
-three@^0.149.0:
-  version "0.149.0"
-  resolved "https://registry.npmjs.org/three/-/three-0.149.0.tgz#a9cf78b17d02f063ffe6dfca1e300eff2eab2927"
-  integrity sha512-tohpUxPDht0qExRLDTM8sjRLc5d9STURNrdnK3w9A+V4pxaTBfKWWT/IqtiLfg23Vfc3Z+ImNfvRw1/0CtxrkQ==
+three@^0.150.0:
+  version "0.150.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.150.0.tgz#38a324c3976e07799671d06d99f01b02a2fe65c6"
+  integrity sha512-12oqqBZom9fb5HtX3rD8qPVnamojuiN5Os7r0x8s3HQ+WHRwnEyzl2XU3aEKocsDkG++rkE9+HWzx77O59NXtw==
 
 throttle-debounce@^5.0.0:
   version "5.0.0"
@@ -6339,6 +6344,11 @@ tsutils@^3.21.0:
   integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
   dependencies:
     tslib "^1.8.1"
+
+tweakpane@^3.1.0:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/tweakpane/-/tweakpane-3.1.6.tgz#457ba68cd4f02839045b49fcbaf1164e84f22253"
+  integrity sha512-A67JCgWyovee5AF5W5PclXGx6VSJxJ6uWykVTVrr4XzhANGuZhe9szPbeuBQ3r6begaw5i0WDAXmK7EafgM+mQ==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"

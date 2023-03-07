@@ -1,4 +1,5 @@
 import { Ball2kJSX } from '@/components/ball2k/Ball2kJSX'
+import { Effect } from '@/components/ball2k/Effect'
 import { MixMat } from '@/components/substance-painter/MixMat/MixMat'
 import {
   Box,
@@ -18,20 +19,20 @@ import {
   useGLTF,
 } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Bloom, EffectComposer, SSR } from '@react-three/postprocessing'
 import { Suspense, useEffect } from 'react'
 
 export default function Material() {
   return (
     <div className='w-full h-full'>
       <Canvas>
-        <color attach='background' args={['#000000']}></color>
+        <color attach='background' args={['#ffffff']}></color>
         <Suspense fallback={null}>
+          <Effect></Effect>
           <Ball2kJSX></Ball2kJSX>
           {/* <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer> */}
-          <Environment preset='sunset'></Environment>
+          <Environment preset='dawn' background></Environment>
           <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
@@ -55,7 +56,6 @@ export default function Material() {
     </div>
   )
 }
-
 // function Content() {
 //   let glb = useGLTF(`/2022/02/28/mech/ball2k.glb`)
 //   let anim = useAnimations(glb.animations, glb.scene)
