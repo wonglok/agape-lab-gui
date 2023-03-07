@@ -10,16 +10,15 @@ export function Ball2kJSX(props) {
     mixer.update(dt)
   })
   useEffect(() => {
-    // scene.traverse((it) => {
-    //   if (it.material) {
-    //     it.material.envMapIntensity = 30
-    //   }
-    // })
+    scene.traverse((it) => {
+      if (it.material) {
+      }
+    })
 
     names.forEach((n) => {
       actions[n]?.play()
     })
-  }, [names, actions])
+  }, [names, actions, scene])
 
   return (
     <group ref={group} {...props} dispose={null}>

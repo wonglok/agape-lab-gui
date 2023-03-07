@@ -1,4 +1,4 @@
-import { useEnvironment } from '@react-three/drei'
+import { Sphere, useEnvironment } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import {
@@ -108,10 +108,10 @@ export function Effect() {
           metalness: 0.5,
           side: DoubleSide,
           map: texture,
-          envMapIntensity: 5,
+          envMapIntensity: 1,
           color: new Color('#ffffff'),
           emissiveMap: texture,
-          emissiveIntensity: 5,
+          emissiveIntensity: 10,
           emissive: new Color('#ffffff'),
         }),
       )
@@ -137,12 +137,12 @@ export function Effect() {
       camera.near = 0.5
       camera.updateProjectionMatrix()
 
-      let envMesh = new GroundProjectedEnv(texture)
-      envMesh.radius = 100
-      envMesh.height = 20
-      envMesh.scale.setScalar(100)
-      envMesh.updateMatrixWorld()
-      scene.add(envMesh)
+      // let envMesh = new GroundProjectedEnv(texture)
+      // envMesh.radius = 100
+      // envMesh.height = 20
+      // envMesh.scale.setScalar(100)
+      // envMesh.updateMatrixWorld()
+      // scene.add(envMesh)
 
       clean = () => {
         cancelAnimationFrame(rAFID)
@@ -159,8 +159,14 @@ export function Effect() {
     }
   }, [camera, gl, scene])
 
+  // useFrame(() => {}, 100)
+
   return (
     <group>
+      <Sphere position={[0, 1.5, 0]} scale={0.05}>
+        <meshStandardMaterial emissive={0xffffff} emissiveIntensity={5}></meshStandardMaterial>
+      </Sphere>
+
       {/* <pointLight color={'#ffffff'} intensity={35} position={[0, 5, 0]}></pointLight> */}
       {/* <hemisphereLight args={[0xffffff, 0xffffff]}></hemisphereLight>
       <pointLight color={'#ffffff'} position={[0, 1, -1]} intensity={30}></pointLight> */}
