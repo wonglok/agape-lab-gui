@@ -1,26 +1,23 @@
 import { Ball2kJSX } from '@/components/ball2k/Ball2kJSX'
 import { Effect } from '@/components/ball2k/Effect'
-import { OrbitControls } from '@react-three/drei'
+import { Environment, OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 
 export default function Material() {
   return (
     <div className='w-full h-full'>
-      <Canvas>
-        <color attach='background' args={['#ffffff']}></color>
+      <Canvas gl={{ useLegacyLights: true }}>
         <Suspense fallback={null}>
           <Effect></Effect>
           <Ball2kJSX></Ball2kJSX>
 
-          {/* <Sphere args={[15, 64, 64]}>
-            <meshPhysicalMaterial emissive={'#ffffff'} side={DoubleSide}></meshPhysicalMaterial>
-          </Sphere> */}
+          {/* */}
           {/* <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer> */}
           {/* <Environment preset='city' background></Environment> */}
-          <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
+          <OrbitControls target={[0, 1, 0]} object-far={50} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 
         {/* <Box position={[0, -0.05, 0]} args={[100, 0.05, 100]}>

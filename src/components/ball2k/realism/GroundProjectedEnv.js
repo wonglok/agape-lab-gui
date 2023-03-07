@@ -1,20 +1,16 @@
-import { Mesh, IcosahedronGeometry, ShaderMaterial, DoubleSide } from 'three';
+import { Mesh, IcosahedronGeometry, ShaderMaterial, DoubleSide } from 'three'
 
 /**
  * Ground projected env map adapted from @react-three/drei.
  * https://github.com/pmndrs/drei/blob/master/src/core/Environment.tsx
  */
 export class GroundProjectedEnv extends Mesh {
+  constructor(texture, options = {}) {
+    const isCubeMap = texture.isCubeTexture
 
-	constructor( texture, options = {} ) {
+    const defines = [isCubeMap ? '#define ENVMAP_TYPE_CUBE' : '']
 
-		const isCubeMap = texture.isCubeTexture;
-
-		const defines = [
-			isCubeMap ? '#define ENVMAP_TYPE_CUBE' : ''
-		];
-
-		const vertexShader = /* glsl */ `
+    const vertexShader = /* glsl */ `
         varying vec3 vWorldPosition;
 
         void main()
@@ -26,8 +22,10 @@ export class GroundProjectedEnv extends Mesh {
             gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
         }
-        `;
-		const fragmentShader = defines.join( '\n' ) + /* glsl */ `
+        `
+    const fragmentShader =
+      defines.join('\n') +
+      /* glsl */ `
 
         varying vec3 vWorldPosition;
 
@@ -127,48 +125,38 @@ export class GroundProjectedEnv extends Mesh {
             #include <encodings_fragment>
 
         }
-        `;
+        `
 
-		const uniforms = {
-			map: { value: texture },
-			height: { value: options.height || 15 },
-			radius: { value: options.radius || 100 },
-		};
+    const uniforms = {
+      map: { value: texture },
+      height: { value: options.height || 15 },
+      radius: { value: options.radius || 100 },
+    }
 
-		const geometry = new IcosahedronGeometry( 1, 16 );
-		const material = new ShaderMaterial( {
-			uniforms,
-			fragmentShader,
-			vertexShader,
-			side: DoubleSide,
-		} );
+    const geometry = new IcosahedronGeometry(1, 16)
+    const material = new ShaderMaterial({
+      uniforms,
+      fragmentShader,
+      vertexShader,
+      side: DoubleSide,
+    })
 
-		super( geometry, material );
+    super(geometry, material)
+  }
 
-	}
+  set radius(radius) {
+    this.material.uniforms.radius.value = radius
+  }
 
-	set radius( radius ) {
+  get radius() {
+    return this.material.uniforms.radius.value
+  }
 
-		this.material.uniforms.radius.value = radius;
+  set height(height) {
+    this.material.uniforms.height.value = height
+  }
 
-	}
-
-	get radius() {
-
-		return this.material.uniforms.radius.value;
-
-	}
-
-	set height( height ) {
-
-		this.material.uniforms.height.value = height;
-
-	}
-
-	get height() {
-
-		return this.material.uniforms.height.value;
-
-	}
-
+  get height() {
+    return this.material.uniforms.height.value
+  }
 }

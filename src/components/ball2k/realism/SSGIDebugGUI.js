@@ -1,4 +1,4 @@
-import { SSGIEffect } from 'realism-effects'
+﻿import { SSGIEffect } from 'realism-effects'
 import { Pane } from 'tweakpane'
 import copy from 'copy-to-clipboard'
 
