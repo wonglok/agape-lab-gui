@@ -90,16 +90,19 @@ export function Effect() {
         new SphereGeometry(5, 32, 32),
         new MeshPhysicalMaterial({
           transmission: 0,
-          roughness: 1,
-          metalness: 0.0,
+          roughness: 0.1,
+          metalness: 0.3,
           side: DoubleSide,
           map: texture,
+          envMapIntensity: 3,
           color: new Color('#ffffff'),
           emissiveMap: texture,
-          emissiveIntensity: 10,
+          emissiveIntensity: 15,
           emissive: new Color('#ffffff'),
         }),
       )
+
+      envMesh.position.y = -1.5
       scene.add(envMesh)
 
       effectPass.enabled = true
@@ -117,6 +120,7 @@ export function Effect() {
       clean = () => {
         cancelAnimationFrame(rAFID)
         ref.current = false
+        envMesh.removeFromParent()
       }
 
       // setST(composer)
