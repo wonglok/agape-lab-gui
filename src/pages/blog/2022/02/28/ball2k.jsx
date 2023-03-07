@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 export default function Material() {
   return (
     <div className='w-full h-full'>
-      <Canvas gl={{ useLegacyLights: true }}>
+      <Canvas gl={{ useLegacyLights: false }}>
         <Suspense fallback={null}>
           <Effect></Effect>
           <Ball2kJSX></Ball2kJSX>

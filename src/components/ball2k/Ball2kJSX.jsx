@@ -10,11 +10,11 @@ export function Ball2kJSX(props) {
     mixer.update(dt)
   })
   useEffect(() => {
-    scene.traverse((it) => {
-      if (it.material) {
-        it.material.envMapIntensity = 30
-      }
-    })
+    // scene.traverse((it) => {
+    //   if (it.material) {
+    //     it.material.envMapIntensity = 30
+    //   }
+    // })
 
     names.forEach((n) => {
       actions[n]?.play()

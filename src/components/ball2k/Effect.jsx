@@ -67,8 +67,10 @@ export function Effect() {
       const pmremGenerator = new PMREMGenerator(gl)
       pmremGenerator.compileEquirectangularShader()
 
+      let LUT3dlLoader = await import('postprocessing').then((r) => r.LUT3dlLoader)
       let EffectComposer = await import('postprocessing').then((r) => r.EffectComposer)
       let EffectPass = await import('postprocessing').then((r) => r.EffectPass)
+      let LUT3DEffect = await import('postprocessing').then((r) => r.LUT3DEffect)
       let { SSGIEffect, VelocityDepthNormalPass } = realism
 
       const composer = new EffectComposer(gl, { multisampling: 4, alpha: true })
@@ -78,6 +80,9 @@ export function Effect() {
 
       const ssgiEffect = new SSGIEffect(scene, camera, velocityDepthNormalPass, options)
 
+      let lut = await new LUT3dlLoader().loadAsync('/ssgi/lut.3dl')
+
+      const lutEffect = new LUT3DEffect(lut)
       // // // TRAA
       // const traaEffect = new TRAAEffect(scene, camera, velocityDepthNormalPass)
 
@@ -85,7 +90,9 @@ export function Effect() {
       // const motionBlurEffect = new MotionBlurEffect(velocityDepthNormalPass)
 
       // const effectPass = new EffectPass(gl, ssgiEffect, traaEffect, motionBlurEffect)
-      const effectPass = new EffectPass(gl, ssgiEffect)
+      const effectPass = new EffectPass(gl, ssgiEffect, lutEffect)
+
+      // public
 
       let texture = await new TextureLoader().loadAsync(`/envMap/ma-galaxy.jpg`)
       texture.mapping = EquirectangularReflectionMapping
@@ -101,10 +108,10 @@ export function Effect() {
           metalness: 0.5,
           side: DoubleSide,
           map: texture,
-          envMapIntensity: 15,
+          envMapIntensity: 5,
           color: new Color('#ffffff'),
           emissiveMap: texture,
-          emissiveIntensity: 15,
+          emissiveIntensity: 5,
           emissive: new Color('#ffffff'),
         }),
       )
@@ -119,7 +126,10 @@ export function Effect() {
       let rAF = () => {
         rAFID = requestAnimationFrame(rAF)
         //
-        composer.render(clock.getDelta())
+        let dt = clock.getDelta()
+
+        ballball.rotation.y += dt / 50.0
+        composer.render(dt)
       }
       rAFID = requestAnimationFrame(rAF)
 
@@ -149,15 +159,9 @@ export function Effect() {
     }
   }, [camera, gl, scene])
 
-  useFrame(() => {
-    // if (st) {
-    //   st.render()
-    // }
-  }, 100)
   return (
     <group>
-      <pointLight color={'#ffffff'} intensity={15} position={[0, 15, 3]}></pointLight>
-      <pointLight color={'#ffffff'} intensity={15} position={[0, 15, -3]}></pointLight>
+      {/* <pointLight color={'#ffffff'} intensity={35} position={[0, 5, 0]}></pointLight> */}
       {/* <hemisphereLight args={[0xffffff, 0xffffff]}></hemisphereLight>
       <pointLight color={'#ffffff'} position={[0, 1, -1]} intensity={30}></pointLight> */}
     </group>
