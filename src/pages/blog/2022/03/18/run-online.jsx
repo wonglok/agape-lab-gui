@@ -10,12 +10,12 @@ export default function Fun() {
         {/*  */}
         <Sphere></Sphere>
 
-        <GLBLoader
+        {/* <GLBLoader
           url={`/2022/03/18/floor/floor.glb`}
           decorate={({ glb }) => {
             let sceneCloned = clone(glb.scene)
             return <primitive object={sceneCloned}></primitive>
-          }}></GLBLoader>
+          }}></GLBLoader> */}
         {/*  */}
 
         <WorldBirdy></WorldBirdy>
