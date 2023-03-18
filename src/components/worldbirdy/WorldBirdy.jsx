@@ -121,7 +121,7 @@ export function WorldBirdy() {
             }}
           ></MeshTransmissionMaterial>*/
   // let tex = useEnvironment({ preset: 'apartment' })
-
+  s
   return (
     <group>
       <primitive object={cloneQuerlo}></primitive>
@@ -169,48 +169,19 @@ export function WorldBirdy() {
                 {/* <primitive object={showGLB}></primitive> */}
               </group>
 
-              {/*  */}
-
-              {/* <group position={[0, 1.5, 0]}>
-                <group position={[5.523, 6.087, -14.196]}>
-                  <group scale={0.075}>
-                    <theVortex key={TheVortex.key}></theVortex>
-                  </group>
-                </group>
-              </group> */}
-
-              {/* <WalkerGame
-                startAt={[
-                  0, 1.5, 0,
-                  // 2.563503709126706,
-                  // 1.595614002597168 + 1.5,
-                  // 45.14220988974003,
-                ]}
-                glb={glb}
-                collider={collider}
-                onGameReady={({ game, core }) => {
-                  //
-                  //
-                }}
-              ></WalkerGame>
-
-              <Avatar></Avatar> */}
-
-              {/* <AvatarChaser collider={collider}></AvatarChaser> */}
-
               <AvatarGuide
                 offset={[0, 2, 2]}
                 chaseDist={1}
                 speed={2}
                 destObj={destObj}
                 collider={collider}
-                avatarUrl={`/2022/03/18/floor/xr/skycity/lok-school.glb`}
+                avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
                 onACore={(aCore) => {
                   return (
                     <group>
                       <BirdCamSync player={aCore.player}></BirdCamSync>
 
-                      {makeFollower(collider, 5, aCore)}
+                      {/* {makeFollower(collider, 5, aCore)} */}
                     </group>
                   )
                 }}></AvatarGuide>
