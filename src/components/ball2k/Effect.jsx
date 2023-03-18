@@ -1,12 +1,12 @@
-import { Sphere, useEnvironment } from '@react-three/drei'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useEnvironment } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import {
   Clock,
   Color,
   DoubleSide,
   EquirectangularReflectionMapping,
-  MeshBasicMaterial,
+  // MeshBasicMaterial,
   MeshStandardMaterial,
   sRGBEncoding,
 } from 'three'
@@ -14,9 +14,9 @@ import { PMREMGenerator } from 'three'
 import { TextureLoader } from 'three'
 import { Mesh } from 'three'
 import { SphereGeometry } from 'three'
-import { MeshPhysicalMaterial } from 'three'
-import { RGBELoader } from 'three-stdlib'
-import { GroundProjectedEnv } from './realism/GroundProjectedEnv'
+// import { MeshPhysicalMaterial } from 'three'
+// import { RGBELoader } from 'three-stdlib'
+// import { GroundProjectedEnv } from './realism/GroundProjectedEnv'
 
 const options = {
   distance: 10,
@@ -83,6 +83,7 @@ export function Effect() {
       let lut = await new LUT3dlLoader().loadAsync('/ssgi/lut.3dl')
 
       const lutEffect = new LUT3DEffect(lut)
+
       // // // TRAA
       // const traaEffect = new TRAAEffect(scene, camera, velocityDepthNormalPass)
 
@@ -163,9 +164,9 @@ export function Effect() {
 
   return (
     <group>
-      <Sphere position={[0, 1.5, 0]} scale={0.05}>
+      {/* <Sphere position={[0, 1.5, 0]} scale={0.05}>
         <meshStandardMaterial emissive={0xffffff} emissiveIntensity={5}></meshStandardMaterial>
-      </Sphere>
+      </Sphere> */}
 
       {/* <pointLight color={'#ffffff'} intensity={35} position={[0, 5, 0]}></pointLight> */}
       {/* <hemisphereLight args={[0xffffff, 0xffffff]}></hemisphereLight>
