@@ -121,7 +121,7 @@ export function WorldBirdy() {
             }}
           ></MeshTransmissionMaterial>*/
   // let tex = useEnvironment({ preset: 'apartment' })
-  s
+
   return (
     <group>
       <primitive object={cloneQuerlo}></primitive>
@@ -181,7 +181,7 @@ export function WorldBirdy() {
                     <group>
                       <BirdCamSync player={aCore.player}></BirdCamSync>
 
-                      {/* {makeFollower(collider, 5, aCore)} */}
+                      {makeFollower(collider, 5, aCore)}
                     </group>
                   )
                 }}></AvatarGuide>
