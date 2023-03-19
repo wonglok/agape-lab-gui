@@ -9,9 +9,9 @@ export function Mouse3D({ collider, mouse3d }) {
   let mouser = useRef({ isDown: false })
 
   useFrame(({ raycaster, mouse, camera, controls }, dt) => {
-    mouser.current.isDown = true
-    mouse.x = 0
-    mouse.y = 0
+    // mouser.current.isDown = true
+    // mouse.x = 0
+    // mouse.y = 0
     //
     if (collider.geometry) {
       // if ('ontouchstart' in window) {
