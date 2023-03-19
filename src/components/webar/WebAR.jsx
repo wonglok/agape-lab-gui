@@ -190,10 +190,10 @@ export function WebAR() {
         }
 
         try {
-          const sensor = await DeviceOrientationSensor.Initialize()
+          // const sensor = await DeviceOrientationSensor.Initialize()
           const media = await Camera.Initialize(config)
 
-          await demo(media, sensor)
+          await demo(media)
         } catch (e) {
           console.log('sensor', e)
         }
