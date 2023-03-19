@@ -175,6 +175,7 @@ class AvatarChaserCore extends Object3D {
       let glbScene = clone(glb.scene)
       //
       glbScene.traverse((it) => {
+        it.castShadow = true
         //!SECTION
         it.frustumCulled = false
         if (it.material) {

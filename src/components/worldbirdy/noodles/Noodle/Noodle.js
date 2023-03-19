@@ -115,7 +115,7 @@ export function Noodle({ mouse3d = false, nameToChase = `myself-player` }) {
     }
   }, [core, gl, howLongTail, howManyTracker, mouse3d])
 
-  let roughnessMapTex = useTexture(`/texture/snow/pattern.jpeg`)
+  let roughnessMapTex = useTexture(`/2022/03/18/floor/xr/snow/pattern.jpeg`)
   roughnessMapTex.encoding = sRGBEncoding
   roughnessMapTex.wrapS = roughnessMapTex.wrapT = RepeatWrapping
   roughnessMapTex.repeat.y = 2 / 1.5

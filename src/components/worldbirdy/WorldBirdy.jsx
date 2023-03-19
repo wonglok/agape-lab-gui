@@ -2,7 +2,7 @@ import { Collider } from './collider/Collider'
 import { useGLBLoader } from './glb-loader/useGLBLoader'
 // import { WalkerGame } from '@/lib/walker/WalkerGame'
 // import { Avatar } from '../Avatar/Avatar'
-import { createPortal, useThree } from '@react-three/fiber'
+import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import {
   CubeCamera,
   Environment,
@@ -26,11 +26,14 @@ import { BoxBufferGeometry, DoubleSide } from 'three'
 import { Mesh } from 'three'
 import { MeshBasicMaterial } from 'three'
 import { Color } from 'three'
+import { Noodle } from './noodles/Noodle/Noodle'
+import { DirectionalLight } from 'three'
+import { PointLight } from 'three'
 // import { MeshReflectorMaterial } from '@react-three/drei'
 
 export function WorldBirdy() {
-  let gl = useThree((s) => s.gl)
-  let camera = useThree((s) => s.camera)
+  // let gl = useThree((s) => s.gl)
+  // let camera = useThree((s) => s.camera)
 
   let destObj = useMemo(() => {
     let dd = new Object3D()
@@ -68,35 +71,38 @@ export function WorldBirdy() {
   }
 
   let colliderScene = new Object3D() // clone(glb.scene)
-  let floor = new Mesh(new BoxBufferGeometry(2000, 0.1, 2000), new MeshBasicMaterial({ color: new Color('#ffbaba') }))
-  floor.position.y = -1
+  let floor = new Mesh(
+    new BoxBufferGeometry(2000, 0.1, 2000),
+    new MeshBasicMaterial({ transparent: true, opacity: 0.5, color: new Color('#ffbaba') }),
+  )
+  floor.position.y = -0.52
 
   //
-  let querlo = useGLBLoader(`/2022/03/18/floor/xr/querlo.glb`)
+  // let querlo = useGLBLoader(`/2022/03/18/floor/xr/querlo.glb`)
 
   colliderScene.add(floor)
-  colliderScene.traverse((it) => {
-    if (it.name === 'ground') {
-      it.visible = false
-    }
-  })
+  // colliderScene.traverse((it) => {
+  //   if (it.name === 'ground') {
+  //     it.visible = false
+  //   }
+  // })
 
-  let cloneQuerlo = clone(querlo.scene)
-  colliderScene.add(cloneQuerlo)
+  // let cloneQuerlo = clone(querlo.scene)
+  // colliderScene.add(cloneQuerlo)
 
-  let querlo2 = {
-    scene: clone(querlo.scene),
-  }
-  querlo2.scene.position.x += 50
-  colliderScene.add(querlo2.scene)
+  // let querlo2 = {
+  //   scene: clone(querlo.scene),
+  // }
+  // querlo2.scene.position.x += 50
+  // colliderScene.add(querlo2.scene)
 
-  let querlo3 = {
-    scene: clone(querlo.scene),
-  }
-  querlo3.scene.position.x -= 50
-  colliderScene.add(querlo3.scene)
+  // let querlo3 = {
+  //   scene: clone(querlo.scene),
+  // }
+  // querlo3.scene.position.x -= 50
+  // colliderScene.add(querlo3.scene)
 
-  let island = cloneQuerlo.getObjectByName('island')
+  // let island = cloneQuerlo.getObjectByName('island')
 
   /*
 
@@ -122,11 +128,36 @@ export function WorldBirdy() {
           ></MeshTransmissionMaterial>*/
   // let tex = useEnvironment({ preset: 'apartment' })
 
+  let light = useMemo(() => {
+    //Create a PointLight and turn on shadows for the light
+    const light = new PointLight(0xffffff, 1, 100, 0.1)
+    light.castShadow = true // default false
+
+    //Set up shadow properties for the light
+    light.shadow.mapSize.width = 1024 // default
+    light.shadow.mapSize.height = 1024 // default
+    light.shadow.camera.near = 0.2 // default
+    light.shadow.camera.far = 1000 // default
+    light.shadow.radius = 0.5
+
+    return light
+  }, [])
+
+  useFrame(() => {
+    light.shadow.camera.lookAt(destObj.position)
+  })
+
   return (
     <group>
-      <primitive object={cloneQuerlo}></primitive>
-      <primitive object={querlo2.scene}> </primitive>
-      <primitive object={querlo3.scene}> </primitive>
+      {
+        <group position={[0, 15, -15]}>
+          <primitive object={light}></primitive>
+        </group>
+      }
+
+      {/* <primitive object={cloneQuerlo}></primitive> */}
+      {/* <primitive object={querlo2.scene}> </primitive>
+      <primitive object={querlo3.scene}> </primitive> */}
 
       {/* {island &&
         createPortal(
@@ -143,13 +174,13 @@ export function WorldBirdy() {
           island
         )} */}
 
-      <OrbitControls
+      {/* <OrbitControls
         args={[camera, gl.domElement]}
         makeDefault
         enableRotate={false}
         enablePan={false}
         object-position={[0, 20, 40]}
-        target={[0, 0, 0]}></OrbitControls>
+        target={[0, 0, 0]}></OrbitControls> */}
 
       {/* <gridHelper
         rotation-y={Math.PI * 0.25}
@@ -179,7 +210,7 @@ export function WorldBirdy() {
                 onACore={(aCore) => {
                   return (
                     <group>
-                      <BirdCamSync player={aCore.player}></BirdCamSync>
+                      {/* <BirdCamSync player={aCore.player}></BirdCamSync> */}
 
                       {makeFollower(collider, 5, aCore)}
                     </group>
@@ -190,15 +221,15 @@ export function WorldBirdy() {
               <Mouse3D collider={collider} mouse3d={destObj}></Mouse3D>
 
               {/*  */}
-              <AvaZoom mouse3d={destObj}></AvaZoom>
+              {/* <AvaZoom mouse3d={destObj}></AvaZoom> */}
 
               {/*  */}
-              {/* <Noodle mouse3d={destObj}></Noodle> */}
+              <Noodle mouse3d={destObj}></Noodle>
             </group>
           )
         }}></Collider>
 
-      <Environment preset='apartment' background></Environment>
+      {/* <Environment preset='apartment' background></Environment> */}
     </group>
   )
 }
