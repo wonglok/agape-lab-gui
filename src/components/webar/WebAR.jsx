@@ -237,9 +237,9 @@ export function WebAR() {
                 <meshNormalMaterial></meshNormalMaterial>
               </Sphere>
 
-              <Environment preset='sunset'></Environment>
+              <Environment preset='apartment'></Environment>
 
-              <WorldBirdy></WorldBirdy>
+              {<WorldBirdy></WorldBirdy>}
             </Canvas>
           </div>
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>

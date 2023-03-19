@@ -129,7 +129,7 @@ export function WorldBirdy() {
   // let tex = useEnvironment({ preset: 'apartment' })
 
   let light = useMemo(() => {
-    //Create a PointLight and turn on shadows for the light
+    // Create a PointLight and turn on shadows for the light
     const light = new PointLight(0xffffff, 1, 100, 0.1)
     light.castShadow = true // default false
 
