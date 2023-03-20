@@ -223,8 +223,8 @@ export function WebAR() {
           <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full'></canvas>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
-              <group position={[0, 3, 10]} rotation={[Math.PI * -0.125, 0, 0]}>
-                <PerspectiveCamera makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
+              <group position={[0, 3, 5]} rotation={[Math.PI * -0.125, 0, 0]}>
+                <PerspectiveCamera fov={90} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
               <gridHelper args={[100, 100]}></gridHelper>
