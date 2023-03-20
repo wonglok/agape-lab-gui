@@ -3,7 +3,7 @@ import { MyView } from './MyView.js'
 import { DeviceOrientationSensor } from './assets/orientation.js'
 import { AlvaARConnectorTHREE } from './assets/alva_ar_three.js'
 import { Canvas } from '@react-three/fiber'
-import { Box, Environment, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
+import { Box, Environment, OrbitControls, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
 import { MathUtils, Quaternion, Vector3 } from 'three'
 import { Euler } from 'three'
 import { ShadowMaterial } from 'three'
@@ -13,6 +13,9 @@ import { CircleGeometry } from 'three'
 import { WorldBirdy } from '../worldbirdy/WorldBirdy.jsx'
 import { GLBLoader } from '../loader/GLBLoader.jsx'
 import { DirectionalLight } from 'three'
+import { Garage } from './Garage/Garage.jsx'
+import { EnvSSR } from './RealismEffect/EnvSSR.jsx'
+import { Genesis } from './Genesis/Genesis.jsx'
 
 export function WebAR() {
   let containerRef = useRef()
@@ -239,7 +242,11 @@ export function WebAR() {
 
               <Environment preset='apartment'></Environment>
 
-              {<WorldBirdy></WorldBirdy>}
+              <Garage></Garage>
+
+              {/* <EnvSSR></EnvSSR> */}
+
+              {/* {<WorldBirdy></WorldBirdy>} */}
             </Canvas>
           </div>
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
