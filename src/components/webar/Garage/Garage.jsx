@@ -6,16 +6,22 @@ export function Garage() {
     <group>
       <GLBLoader
         decorate={({ glb }) => {
+          glb.scene.traverse((it) => {
+            //
+
+            if (it.material) {
+              it.castShadow = true
+              it.receivesShadow = true
+              it.material.envMapIntensity = 0.1
+            }
+          })
           return <primitive object={glb.scene}></primitive>
         }}
-        url={`/2022/03/19/ar/garage-6.glb`}>
-        {({ glb }) => {
-          //
-          return <group></group>
-        }}
-      </GLBLoader>
+        url={`/2022/03/19/ar/garage-6.glb`}></GLBLoader>
 
-      <group position={[0, 0, -4]}>
+      <pointLight castShadow={true} position={[0, 1, 0]} />
+
+      <group position={[0, 0.1, -4]}>
         <Genesis></Genesis>
       </group>
     </group>

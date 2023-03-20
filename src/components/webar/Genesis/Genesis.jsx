@@ -14,6 +14,7 @@ export function Genesis() {
     cloned.traverse((it) => {
       it.frustumCulled = false
 
+      it.castShadow = true
       if (it.material) {
         it.material.envMapIntensity = 1
       }
@@ -24,16 +25,14 @@ export function Genesis() {
   })
 
   useEffect(() => {
-    if (!anim.actions.Idle) {
-      return
-    }
+    anim.names.forEach((nm) => {
+      anim.actions[nm].play()
+    })
+  })
 
-    anim.actions.Idle.play()
-  }, [anim.actions.Idle])
   return (
     <>
-      <group scale={3}>
-        <pointLight position={[0, 1, 0]} />
+      <group scale={2}>
         <primitive object={cloned}></primitive>
       </group>
     </>

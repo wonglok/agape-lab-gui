@@ -240,7 +240,7 @@ export function WebAR() {
                 <meshNormalMaterial></meshNormalMaterial>
               </Sphere>
 
-              <Environment preset='apartment'></Environment>
+              <Environment preset='night'></Environment>
 
               <Garage></Garage>
 
