@@ -32,7 +32,7 @@ export function Genesis() {
 
   return (
     <>
-      <group scale={2}>
+      <group scale={1.5}>
         <primitive object={cloned}></primitive>
       </group>
     </>
