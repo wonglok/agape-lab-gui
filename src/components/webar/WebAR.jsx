@@ -359,8 +359,8 @@ function Content({ joy }) {
 
   useFrame(() => {
     if (joy.isDown) {
-      player.position.x += joy.xAxis * 2
-      player.position.z += -joy.yAxis * 2
+      player.position.x += -joy.xAxis * 1.4
+      player.position.z += -joy.yAxis * 1.4
       //colliderProm
     }
   })
