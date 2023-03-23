@@ -377,7 +377,7 @@ function Content({ joy }) {
           <AvatarGuide
             offset={[0, 2, -2]}
             chaseDist={1}
-            speed={2}
+            speed={0.5}
             destObj={player}
             collider={collider}
             avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
