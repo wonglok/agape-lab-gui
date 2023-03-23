@@ -21,6 +21,8 @@ import { Matrix4 } from 'three'
 import { PerspectiveCamera as TPCam } from 'three'
 
 export function WebAR() {
+  const gridRef = useRef()
+
   let containerRef = useRef()
   let canvasRef = useRef()
   let initRef = useRef()
@@ -95,6 +97,8 @@ export function WebAR() {
 
           oriControls.connect()
 
+          let qq = new Quaternion()
+          let vv = new Vector3()
           onFrame(() => {
             internalCamera.getWorldQuaternion(self.camera.quaternion)
             // .copy(.quaternion)
@@ -134,6 +138,13 @@ export function WebAR() {
               if (pose) {
                 //
                 if (cameraRef.current) {
+                  const plane = alva.findPlane(frame)
+
+                  if (plane) {
+                    // gridRef.current.position.set(plane[12], plane[13], plane[14])
+                    // console.log(plane[12], plane[13], plane[14])
+                  }
+
                   // console.log(pose)
 
                   // let m4 = matrix4.fromArray(pose)
@@ -143,10 +154,17 @@ export function WebAR() {
                   // cam.position.set(pose[12], pose[13], pose[14])
 
                   //
-                  cameraRef.current.fov = alva.intrinsics.fov
-                  cameraRef.current.updateProjectionMatrix()
+                  if (cameraRef.current.fov !== alva.intrinsics.fov) {
+                    cameraRef.current.fov = alva.intrinsics.fov
+                    cameraRef.current.updateProjectionMatrix()
+                  }
 
-                  applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
+                  applyPose(pose, qq, vv)
+                  qq.normalize()
+                  cameraRef.current.quaternion.normalize()
+                  cameraRef.current.quaternion.slerp(qq, 0.1)
+
+                  cameraRef.current.position.lerp(vv, 0.1)
                 }
                 // if (sensor) {
                 //   let { alpha, beta, gamma, screenAngle } = sensor
@@ -268,7 +286,7 @@ export function WebAR() {
                 <PerspectiveCamera fov={90} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
-              <gridHelper args={[100, 100]}></gridHelper>
+              <gridHelper ref={gridRef} args={[100, 100]}></gridHelper>
 
               <mesh receiveShadow={true} geometry={plane}>
                 <shadowMaterial opacity={0.5}></shadowMaterial>
