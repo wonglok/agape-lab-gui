@@ -25,12 +25,14 @@ export function WebAR() {
   let [api, setAPI] = useState(null)
   useEffect(() => {
     //
-
+    let cleans = []
     setAPI({
       start: async () => {
         // let { Stats } = await import('./assets/stats.js')
         // let { AlvaAR } = await import('./assets/alva_ar.js')
-
+        let DeviceOrientationControls = await import('./DeviceOrientationControls.js').then(
+          (r) => r.DeviceOrientationControls,
+        )
         let { AlvaAR } = await window.remoteImport(`/ar/alva_ar.js`)
         // let { ARCamView } = await import('./assets/view.js')
         let { Camera, onFrame, resize2cover } = await import('./assets/utils.js')
@@ -67,13 +69,20 @@ export function WebAR() {
 
           let applyPose = AlvaARConnectorTHREE.Initialize()
 
+          //cameraRef.current.quaternion
+
           const self = {
             camera: cameraRef.current,
             prevQuaternion: new Quaternion(),
             cameraPositionCurr: new Vector3(),
             cameraPositionPrev: new Vector3(),
           }
+
+          let oriControls = new DeviceOrientationControls(self.camera)
+          let myQuaterDisable = new Quaternion()
+
           onFrame(() => {
+            oriControls.update()
             let aspect = $canvas.width / $canvas.height
 
             // Stats.next()
@@ -105,7 +114,7 @@ export function WebAR() {
               self.camera = cameraRef.current
               if (pose) {
                 if (cameraRef.current) {
-                  applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
+                  applyPose(pose, myQuaterDisable, cameraRef.current.position)
                 }
 
                 // if (sensor) {
@@ -208,6 +217,10 @@ export function WebAR() {
         //
       },
     })
+
+    return () => {
+      cleans.forEach((it) => it())
+    }
   }, [])
 
   let plane = useMemo(() => {
@@ -254,13 +267,14 @@ export function WebAR() {
               <button
                 className='px-5 py-2 bg-white rounded-xl'
                 onClick={() => {
+                  api.start()
+
                   setAPI((r) => {
                     return {
                       ...r,
                       start: false,
                     }
                   })
-                  api.start()
                 }}>
                 Start
               </button>
