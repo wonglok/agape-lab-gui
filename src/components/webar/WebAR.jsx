@@ -165,10 +165,10 @@ export function WebAR() {
 
                   if (plane) {
                     applyPose(pose, qq, vv)
-                    sceneRef.quaternion.normalize()
-                    sceneRef.quaternion.slerp(qq, 0.4)
+                    sceneRef.current.quaternion.normalize()
+                    sceneRef.current.quaternion.slerp(qq, 0.4)
 
-                    sceneRef.position.lerp(vv, 0.4)
+                    sceneRef.current.position.lerp(vv, 0.4)
                   }
                 }
               } else {
