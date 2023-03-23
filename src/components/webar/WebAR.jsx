@@ -4,7 +4,7 @@ import { DeviceOrientationSensor } from './assets/orientation.js'
 import { AlvaARConnectorTHREE } from './assets/alva_ar_three.js'
 import { Canvas } from '@react-three/fiber'
 import { Box, Environment, OrbitControls, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
-import { MathUtils, Quaternion, Vector3 } from 'three'
+import { BoxGeometry, MathUtils, Mesh, Quaternion, Scene, Vector3 } from 'three'
 import { Euler } from 'three'
 import { ShadowMaterial } from 'three'
 import { PlaneGeometry } from 'three'
@@ -19,6 +19,10 @@ import { Genesis } from './Genesis/Genesis.jsx'
 import { Object3D } from 'three'
 import { Matrix4 } from 'three'
 import { PerspectiveCamera as TPCam } from 'three'
+import { LoaderGLB } from './MetaOnline/LoaderGLB.jsx'
+import { MetaverseGLB } from './MetaOnline/MetaverseGLB.jsx'
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js'
+import { AvatarGuide } from '../worldbirdy/AvatarGuide.jsx'
 
 export function WebAR() {
   const gridRef = useRef()
@@ -141,12 +145,12 @@ export function WebAR() {
               if (pose) {
                 //
                 if (cameraRef.current) {
-                  const plane = alva.findPlane(frame)
+                  // const plane = alva.findPlane(frame)
 
-                  if (plane) {
-                    // gridRef.current.position.set(plane[12], plane[13], plane[14])
-                    // console.log(plane[12], plane[13], plane[14])
-                  }
+                  // if (plane) {
+                  //   // gridRef.current.position.set(plane[12], plane[13], plane[14])
+                  //   // console.log(plane[12], plane[13], plane[14])
+                  // }
 
                   // console.log(pose)
 
@@ -163,6 +167,7 @@ export function WebAR() {
                   }
 
                   applyPose(pose, qq, vv)
+
                   qq.normalize()
                   cameraRef.current.quaternion.normalize()
                   cameraRef.current.quaternion.slerp(qq, 0.4)
@@ -269,7 +274,7 @@ export function WebAR() {
               </Sphere>
 
               <Environment preset='night'></Environment>
-
+              <Content></Content>
               {/* <Garage></Garage> */}
 
               {/* <EnvSSR></EnvSSR> */}
@@ -311,6 +316,49 @@ export function WebAR() {
           )}
         </>
       }
+    </>
+  )
+}
+
+function Content() {
+  let glb = useMemo(() => {
+    let scene = new Scene()
+
+    scene.add(new Mesh(new BoxGeometry(100, 0.01, 100)))
+    return {
+      scene,
+    }
+  }, [])
+  return (
+    <>
+      <group>
+        <MetaverseGLB offsetY={0.01} glb={glb}>
+          {({ glb, game }) => {
+            return (
+              <group>
+                {/*  */}
+
+                {
+                  <AvatarGuide
+                    offset={[0, 2, 2]}
+                    chaseDist={1}
+                    speed={2}
+                    destObj={game.player}
+                    collider={game.collider}
+                    avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
+                    onACore={(aCore) => {
+                      return <group>{/* <BirdCamSync player={aCore.player}></BirdCamSync> */}</group>
+                    }}></AvatarGuide>
+                }
+
+                {/* <primitive object={}></primitive> */}
+
+                {/*  */}
+              </group>
+            )
+          }}
+        </MetaverseGLB>
+      </group>
     </>
   )
 }
