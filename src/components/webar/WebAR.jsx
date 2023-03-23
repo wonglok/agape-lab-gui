@@ -198,9 +198,8 @@ export function WebAR() {
               ...r,
               reset: () => {
                 alva.reset()
-                // alva.findFloor()
                 // cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
-                // cameraRef.current.position.set(0, 1, 5)
+                // cameraRef.current.position.set(0, 2, 5)
               },
             }
           })
@@ -315,9 +314,6 @@ export function WebAR() {
               className='absolute top-0 right-0 p-2 bg-white'
               onClick={() => {
                 api.reset()
-
-                cameraRef.current.position.fromArray(initPos)
-                cameraRef.current.lookAt(initLookAt[0], initLookAt[1], initLookAt[2])
               }}>
               Reset
             </button>
