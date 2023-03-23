@@ -172,7 +172,6 @@ export function WebAR() {
                   //   applyPose(pose, qq, vv)
                   //   sceneRef.current.quaternion.normalize()
                   //   sceneRef.current.quaternion.slerp(qq, 0.4)
-
                   //   sceneRef.current.position.lerp(vv, 0.4)
                   // }
                 }
