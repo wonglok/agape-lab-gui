@@ -82,12 +82,14 @@ export function WebAR() {
           let proxyCamera = self.camera.clone()
 
           let internalCamera = new Object3D()
-          internalCamera.rotation.x = Math.PI * -0.5
+          internalCamera.rotation.x = Math.PI * 0.5
 
           proxyCamera.add(internalCamera)
 
           let oriControls = new DeviceOrientationControls(proxyCamera)
+          // oriControls.alphaOffset += Math.PI * 0.25
 
+          //
           oriControls.connect()
           let myQuaterDisable = new Quaternion()
 
