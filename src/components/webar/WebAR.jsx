@@ -89,9 +89,11 @@ export function WebAR() {
           proxyCamera.add(internalCamera)
 
           let oriControls = new DeviceOrientationControls(proxyCamera)
-          oriControls.alphaOffset = Math.PI * 0.5
+          // oriControls.alphaOffset = Math.PI * 0.5
 
           let myQuaterDisable = new Quaternion()
+
+          oriControls.connect()
 
           onFrame(() => {
             internalCamera.getWorldQuaternion(self.camera.quaternion)
@@ -257,7 +259,7 @@ export function WebAR() {
           </div>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
-              <group position={[0, 2.5, 5]} rotation={[Math.PI * 0.0, 0, 0]}>
+              <group position={[0, 0, 0]} rotation={[Math.PI * 0.0, 0, 0]}>
                 <PerspectiveCamera fov={90} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
@@ -270,7 +272,7 @@ export function WebAR() {
                 <meshStandardMaterial color={'white'} roughness={0.6} transparent opacity={0.5}></meshStandardMaterial>
               </mesh> */}
 
-              <Sphere position={[0, 1, -1]} castShadow scale={0.25}>
+              <Sphere position={[0, 0, -3]} castShadow scale={0.25}>
                 <meshNormalMaterial></meshNormalMaterial>
               </Sphere>
 
