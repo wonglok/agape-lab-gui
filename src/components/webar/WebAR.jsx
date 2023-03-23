@@ -143,6 +143,9 @@ export function WebAR() {
                   // cam.position.set(pose[12], pose[13], pose[14])
 
                   //
+                  cameraRef.current.fov = alva.intrinsics.fov
+                  cameraRef.current.updateProjectionMatrix()
+
                   applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
                 }
                 // if (sensor) {
@@ -273,6 +276,18 @@ export function WebAR() {
               </mesh> */}
 
               <Sphere position={[0, 0, -3]} castShadow scale={0.25}>
+                <meshNormalMaterial></meshNormalMaterial>
+              </Sphere>
+
+              <Sphere position={[0, 3, -3]} castShadow scale={0.25}>
+                <meshNormalMaterial></meshNormalMaterial>
+              </Sphere>
+
+              <Sphere position={[3, 3, -3]} castShadow scale={0.25}>
+                <meshNormalMaterial></meshNormalMaterial>
+              </Sphere>
+
+              <Sphere position={[-3, 3, -3]} castShadow scale={0.25}>
                 <meshNormalMaterial></meshNormalMaterial>
               </Sphere>
 
