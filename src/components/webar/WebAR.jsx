@@ -246,7 +246,7 @@ export function WebAR() {
           </div>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
-              <group position={[0, 0, 0]} rotation={[Math.PI * 0.0, 0, 0]}>
+              <group position={[0, 3, 6]}>
                 <PerspectiveCamera fov={45} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
