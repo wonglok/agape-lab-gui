@@ -336,8 +336,6 @@ function Content() {
           {({ glb, game }) => {
             return (
               <group>
-                {/*  */}
-
                 {
                   <AvatarGuide
                     offset={[0, 2, 2]}
@@ -350,8 +348,6 @@ function Content() {
                       return <group>{/* <BirdCamSync player={aCore.player}></BirdCamSync> */}</group>
                     }}></AvatarGuide>
                 }
-
-                {/* <primitive object={}></primitive> */}
 
                 {/*  */}
               </group>
