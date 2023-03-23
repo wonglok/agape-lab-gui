@@ -103,8 +103,6 @@ export function WebAR() {
             internalCamera.getWorldQuaternion(self.camera.quaternion)
             // .copy(.quaternion)
 
-            oriControls.update()
-
             // let aspect = $canvas.width / $canvas.height
 
             // Stats.next()
@@ -165,6 +163,7 @@ export function WebAR() {
                   cameraRef.current.quaternion.slerp(qq, 0.4)
 
                   cameraRef.current.position.lerp(vv, 0.4)
+                  oriControls.update()
                 }
                 // if (sensor) {
                 //   let { alpha, beta, gamma, screenAngle } = sensor
