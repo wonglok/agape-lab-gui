@@ -84,7 +84,7 @@ export function WebAR() {
           let proxyCamera = self.camera.clone()
 
           let internalCamera = new Object3D()
-          // internalCamera.rotation.x = Math.PI * 0.5
+          internalCamera.rotation.x = Math.PI * 0.5
 
           proxyCamera.add(internalCamera)
 
