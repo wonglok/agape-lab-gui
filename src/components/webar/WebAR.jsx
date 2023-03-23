@@ -17,6 +17,8 @@ import { Garage } from './Garage/Garage.jsx'
 import { EnvSSR } from './RealismEffect/EnvSSR.jsx'
 import { Genesis } from './Genesis/Genesis.jsx'
 import { Object3D } from 'three'
+import { Matrix4 } from 'three'
+import { PerspectiveCamera as TPCam } from 'three'
 
 export function WebAR() {
   let containerRef = useRef()
@@ -56,12 +58,12 @@ export function WebAR() {
           const size = resize2cover(
             $video.videoWidth,
             $video.videoHeight,
-            $container.clientWidth,
-            $container.clientHeight,
+            $container.clientWidth / 2,
+            $container.clientHeight / 2,
           )
 
-          $canvas.width = $container.clientWidth
-          $canvas.height = $container.clientHeight
+          $canvas.width = $container.clientWidth / 2
+          $canvas.height = $container.clientHeight / 2
           $video.style.width = size.width + 'px'
           $video.style.height = size.height + 'px'
 
@@ -92,6 +94,7 @@ export function WebAR() {
           //
           oriControls.connect()
           let myQuaterDisable = new Quaternion()
+          let matrix4 = new Matrix4()
 
           onFrame(() => {
             internalCamera.getWorldQuaternion(self.camera.quaternion)
@@ -132,6 +135,15 @@ export function WebAR() {
               if (pose) {
                 //
                 if (cameraRef.current) {
+                  // console.log(pose)
+
+                  // let m4 = matrix4.fromArray(pose)
+                  // matrix4.transpose()
+                  /** @type {TPCam} */
+                  // let cam = cameraRef.current
+                  // cam.position.set(pose[12], pose[13], pose[14])
+
+                  //
                   applyPose(pose, myQuaterDisable, cameraRef.current.position)
                 }
                 // if (sensor) {
@@ -240,7 +252,12 @@ export function WebAR() {
     <>
       {
         <>
-          <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full'></canvas>
+          <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
+            <canvas
+              ref={canvasRef}
+              className=''
+              style={{ width: '50%', height: '50%', transform: `scale(2)` }}></canvas>
+          </div>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
               <group position={[0, 2.5, 5]} rotation={[Math.PI * 0.0, 0, 0]}>
@@ -262,13 +279,14 @@ export function WebAR() {
 
               <Environment preset='night'></Environment>
 
-              <Garage></Garage>
+              {/* <Garage></Garage> */}
 
               {/* <EnvSSR></EnvSSR> */}
 
               {/* {<WorldBirdy></WorldBirdy>} */}
             </Canvas>
           </div>
+
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
             {api?.start && (
               <button
@@ -290,7 +308,7 @@ export function WebAR() {
 
           {api?.reset && (
             <button
-              className='absolute top-0 right-0'
+              className='absolute top-0 right-0 p-2 bg-white'
               onClick={() => {
                 api.reset()
               }}>

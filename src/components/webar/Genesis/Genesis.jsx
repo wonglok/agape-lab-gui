@@ -28,7 +28,7 @@ export function Genesis() {
     anim.names.forEach((nm) => {
       anim.actions[nm].play()
     })
-  })
+  }, [])
 
   return (
     <>
