@@ -357,10 +357,10 @@ function Content({ joy }) {
     return new Object3D()
   }, [])
 
-  useFrame(() => {
+  useFrame((st, dt) => {
     if (joy.isDown) {
-      player.position.x += -joy.xAxis * 1.4
-      player.position.z += -joy.yAxis * 1.4
+      player.position.x += -joy.xAxis * 1.4 * dt * 12
+      player.position.z += -joy.yAxis * 1.4 * dt * 12
       //colliderProm
     }
   })
