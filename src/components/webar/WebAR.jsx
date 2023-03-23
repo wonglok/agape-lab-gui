@@ -248,8 +248,9 @@ export function WebAR() {
                 <PerspectiveCamera fov={45} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
-              <gridHelper ref={gridRef} args={[100, 100]}></gridHelper>
-              <group ref={sceneRef}>
+              <group ref={sceneRef} rotation={[Math.PI * 0.12, 0, 0]}>
+                <gridHelper ref={gridRef} args={[100, 100]}></gridHelper>
+
                 <mesh receiveShadow={true} geometry={plane}>
                   <shadowMaterial opacity={0.5}></shadowMaterial>
                 </mesh>
