@@ -105,7 +105,7 @@ export function WebAR() {
           let oriControls = new DeviceOrientationControls(proxyCamera)
           // oriControls.alphaOffset = Math.PI * 0.5
 
-          let myQuaterDisable = new Quaternion()
+          // let myQuaterDisable = new Quaternion()
 
           oriControls.connect()
 
