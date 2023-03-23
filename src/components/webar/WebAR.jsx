@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { MyView } from './MyView.js'
 import { DeviceOrientationSensor } from './assets/orientation.js'
 import { AlvaARConnectorTHREE } from './assets/alva_ar_three.js'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, createPortal, useFrame } from '@react-three/fiber'
 import { Box, Environment, OrbitControls, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
 import { BoxGeometry, MathUtils, Mesh, Quaternion, Scene, Vector3 } from 'three'
 // import { Euler } from 'three'
@@ -36,16 +36,11 @@ export function WebAR() {
   let cameraRef = useRef()
   let [api, setAPI] = useState(null)
 
-  let [initPos] = useState([0, 1.5, 5])
-  let [initLookAt] = useState([0, 0, 0])
   useEffect(() => {
     //
     let cleans = []
     setAPI({
       start: async () => {
-        cameraRef.current.position.fromArray(initPos)
-        cameraRef.current.lookAt(initLookAt[0], initLookAt[1], initLookAt[2])
-
         // let { Stats } = await import('./assets/stats.js')
         // let { AlvaAR } = await import('./assets/alva_ar.js')
 
@@ -203,9 +198,9 @@ export function WebAR() {
               ...r,
               reset: () => {
                 alva.reset()
-                alva.findFloor()
-                cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
-                cameraRef.current.position.set(0, 1, 5)
+                // alva.findFloor()
+                // cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
+                // cameraRef.current.position.set(0, 1, 5)
               },
             }
           })
@@ -364,8 +359,8 @@ function Content({ joy }) {
 
   useFrame(() => {
     if (joy.isDown) {
-      player.position.x += joy.xAxis
-      player.position.z += -joy.yAxis
+      player.position.x += joy.xAxis * 2
+      player.position.z += -joy.yAxis * 2
       //colliderProm
     }
   })
@@ -373,6 +368,13 @@ function Content({ joy }) {
   return (
     <>
       <group>
+        {createPortal(
+          <>
+            <Sphere></Sphere>
+          </>,
+          player,
+        )}
+        <primitive object={player}></primitive>
         {collider && (
           <AvatarGuide
             offset={[0, 2, -2]}
