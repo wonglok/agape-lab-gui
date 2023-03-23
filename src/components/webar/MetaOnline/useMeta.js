@@ -10,13 +10,14 @@ export class YoMeta extends Object3D {
     this.offsetY = 0.5
 
     this.camera = camera
-    this.camera.fov = 75
-    if (window.innerWidth <= 500) {
-      this.camera.fov = 90
-    }
+    // this.camera.fov = 75
+    // if (window.innerWidth <= 500) {
+    //   this.camera.fov = 90
+    // }
     this.camera.updateProjectionMatrix()
-    this.controls = new OrbitControls(camera, gl.domElement)
+    this.controls = new OrbitControls(camera.clone(), gl.domElement)
     this.controls.enableDamping = false
+    this.controls.enabled = false
 
     this.clean = () => {
       this.controls.dispose()

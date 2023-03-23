@@ -23,6 +23,7 @@ import { PerspectiveCamera as TPCam } from 'three'
 import { MetaverseGLB } from './MetaOnline/MetaverseGLB.jsx'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { AvatarGuide } from '../worldbirdy/AvatarGuide.jsx'
+import { JoyStick } from './MetaOnline/Joystick.jsx'
 
 export function WebAR() {
   const gridRef = useRef()
@@ -202,7 +203,7 @@ export function WebAR() {
                 alva.reset()
                 alva.findFloor()
                 cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
-                cameraRef.current.position.set(0, 0, 0)
+                cameraRef.current.position.set(0, 1, 5)
               },
             }
           })
@@ -287,6 +288,8 @@ export function WebAR() {
             </Canvas>
           </div>
 
+          <JoyStick></JoyStick>
+
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
             {api?.start && (
               <button
@@ -327,8 +330,10 @@ export function WebAR() {
 function Content() {
   let glb = useMemo(() => {
     let scene = new Scene()
+    let plane = new Mesh(new BoxGeometry(100, 0.01, 100))
 
-    scene.add(new Mesh(new BoxGeometry(100, 0.01, 100)))
+    plane.visible = false
+    scene.add(plane)
     return {
       scene,
     }
@@ -342,7 +347,7 @@ function Content() {
               <group>
                 {
                   <AvatarGuide
-                    offset={[0, 2, 2]}
+                    offset={[0, 2, -2]}
                     chaseDist={1}
                     speed={2}
                     destObj={game.player}
