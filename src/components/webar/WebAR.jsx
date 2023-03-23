@@ -370,7 +370,7 @@ function Content({ joy }) {
       <group>
         {createPortal(
           <>
-            <Sphere></Sphere>
+            <Sphere scale={0.3}></Sphere>
           </>,
           player,
         )}
@@ -378,7 +378,7 @@ function Content({ joy }) {
         {collider && (
           <AvatarGuide
             offset={[0, 2, -2]}
-            chaseDist={0.5}
+            chaseDist={0.35}
             speed={1.5}
             destObj={player}
             collider={collider}
