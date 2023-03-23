@@ -82,7 +82,7 @@ export function WebAR() {
           let proxyCamera = self.camera.clone()
 
           let internalCamera = new Object3D()
-          internalCamera.rotation.x = Math.PI * -1
+          internalCamera.rotation.x = Math.PI * 0.5
 
           proxyCamera.add(internalCamera)
 
@@ -240,7 +240,7 @@ export function WebAR() {
           <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full'></canvas>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
-              <group position={[0, 0, 5]} rotation={[Math.PI * 0.0, 0, 0]}>
+              <group position={[0, 2.5, 5]} rotation={[Math.PI * 0.0, 0, 0]}>
                 <PerspectiveCamera fov={90} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
