@@ -79,6 +79,7 @@ export function WebAR() {
           }
 
           let oriControls = new DeviceOrientationControls(self.camera)
+          oriControls.connect()
           let myQuaterDisable = new Quaternion()
 
           onFrame(() => {
