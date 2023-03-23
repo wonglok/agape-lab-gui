@@ -217,6 +217,8 @@ export function WebAR() {
               ...r,
               reset: () => {
                 alva.reset()
+                cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
+                cameraRef.current.position.set(0, 0, 0)
               },
             }
           })
