@@ -16,6 +16,7 @@ import { DirectionalLight } from 'three'
 import { Garage } from './Garage/Garage.jsx'
 import { EnvSSR } from './RealismEffect/EnvSSR.jsx'
 import { Genesis } from './Genesis/Genesis.jsx'
+import { Object3D } from 'three'
 
 export function WebAR() {
   let containerRef = useRef()
@@ -78,16 +79,28 @@ export function WebAR() {
             cameraPositionPrev: new Vector3(),
           }
 
-          let oriControls = new DeviceOrientationControls(self.camera)
+          let proxyCamera = self.camera.clone()
+
+          let internalCamera = new Object3D()
+          internalCamera.rotation.x = Math.PI * -1
+
+          proxyCamera.add(internalCamera)
+
+          let oriControls = new DeviceOrientationControls(proxyCamera)
+
           oriControls.connect()
           let myQuaterDisable = new Quaternion()
 
           onFrame(() => {
+            internalCamera.getWorldQuaternion(self.camera.quaternion)
+            // .copy(.quaternion)
+
             oriControls.update()
             let aspect = $canvas.width / $canvas.height
 
             // Stats.next()
             // Stats.start('total')
+            //
 
             ctx.clearRect(0, 0, $canvas.width, $canvas.height)
 
@@ -114,10 +127,10 @@ export function WebAR() {
 
               self.camera = cameraRef.current
               if (pose) {
+                //
                 if (cameraRef.current) {
                   applyPose(pose, myQuaterDisable, cameraRef.current.position)
                 }
-
                 // if (sensor) {
                 //   let { alpha, beta, gamma, screenAngle } = sensor
                 //   const orientation = MathUtils.degToRad(screenAngle)
@@ -125,31 +138,22 @@ export function WebAR() {
                 //   const euler = new Euler()
                 //   const q0 = new Quaternion()
                 //   const q1 = new Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)) // - PI/2 around the x-axis
-
                 //   // 'ZXY' for the device, but 'YXZ' for us
                 //   euler.set(beta, alpha, -gamma, 'YXZ')
-
                 //   // orient the device
                 //   self.camera.quaternion.setFromEuler(euler)
-
                 //   // camera looks out the back of the device, not the top
                 //   self.camera.quaternion.multiply(q1)
-
                 //   // adjust for screen orientation
                 //   self.camera.quaternion.multiply(q0.setFromAxisAngle(axis, -orientation))
-
                 //   self.prevQuaternion = self.prevQuaternion || new THREE.Quaternion()
-
                 //   if (8 * (1 - self.prevQuaternion.dot(self.camera.quaternion)) > 0.000001) {
                 //     self.prevQuaternion.copy(self.camera.quaternion)
                 //   }
-
                 //   self.cameraPositionPrev.copy(self.cameraPositionCurr)
-
                 //   if (pose) {
                 //     applyPose(pose, null, self.cameraPositionCurr)
                 //   }
-
                 //   self.camera.position.set(
                 //     self.camera.position.x + self.cameraPositionCurr.x - self.cameraPositionPrev.x,
                 //     self.camera.position.y + self.cameraPositionCurr.y - self.cameraPositionPrev.y,
@@ -160,7 +164,6 @@ export function WebAR() {
                 //     applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
                 //   }
                 // }
-
                 // if (sensor) {
                 //   view.updateCameraPoseDeviceOrient(
                 //     pose,
