@@ -162,9 +162,9 @@ export function WebAR() {
                   applyPose(pose, qq, vv)
                   qq.normalize()
                   cameraRef.current.quaternion.normalize()
-                  cameraRef.current.quaternion.slerp(qq, 0.1)
+                  cameraRef.current.quaternion.slerp(qq, 0.3)
 
-                  cameraRef.current.position.lerp(vv, 0.1)
+                  cameraRef.current.position.lerp(vv, 0.3)
                 }
                 // if (sensor) {
                 //   let { alpha, beta, gamma, screenAngle } = sensor
