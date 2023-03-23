@@ -33,6 +33,7 @@ export function WebAR() {
   let containerRef = useRef()
   let canvasRef = useRef()
   let initRef = useRef()
+  let sceneRef = useRef()
   let cameraRef = useRef()
   let [api, setAPI] = useState(null)
 
@@ -145,21 +146,6 @@ export function WebAR() {
               if (pose) {
                 //
                 if (cameraRef.current) {
-                  // const plane = alva.findPlane(frame)
-
-                  // if (plane) {
-                  //   // gridRef.current.position.set(plane[12], plane[13], plane[14])
-                  //   // console.log(plane[12], plane[13], plane[14])
-                  // }
-
-                  // console.log(pose)
-
-                  // let m4 = matrix4.fromArray(pose)
-                  // matrix4.transpose()
-                  /** @type {TPCam} */
-                  // let cam = cameraRef.current
-                  // cam.position.set(pose[12], pose[13], pose[14])
-
                   //
                   if (cameraRef.current.fov !== alva.intrinsics.fov) {
                     cameraRef.current.fov = alva.intrinsics.fov
@@ -174,6 +160,16 @@ export function WebAR() {
 
                   cameraRef.current.position.lerp(vv, 0.4)
                   oriControls.update()
+
+                  const plane = alva.findPlane()
+
+                  if (plane) {
+                    applyPose(pose, qq, vv)
+                    sceneRef.quaternion.normalize()
+                    sceneRef.quaternion.slerp(qq, 0.4)
+
+                    sceneRef.position.lerp(vv, 0.4)
+                  }
                 }
               } else {
                 const dots = alva.getFramePoints()
@@ -249,32 +245,34 @@ export function WebAR() {
               </group>
 
               {/* <gridHelper ref={gridRef} args={[100, 100]}></gridHelper> */}
-
-              <mesh receiveShadow={true} geometry={plane}>
-                <shadowMaterial opacity={0.5}></shadowMaterial>
-              </mesh>
-              {/* <mesh position={[0, -0.1, 0]} geometry={plane}>
+              <group ref={sceneRef}>
+                <mesh receiveShadow={true} geometry={plane}>
+                  <shadowMaterial opacity={0.5}></shadowMaterial>
+                </mesh>
+                {/* <mesh position={[0, -0.1, 0]} geometry={plane}>
                 <meshStandardMaterial color={'white'} roughness={0.6} transparent opacity={0.5}></meshStandardMaterial>
               </mesh> */}
 
-              <Sphere position={[0, 0, -3]} castShadow scale={0.25}>
-                <meshNormalMaterial></meshNormalMaterial>
-              </Sphere>
+                <Sphere position={[0, 0, -3]} castShadow scale={0.25}>
+                  <meshNormalMaterial></meshNormalMaterial>
+                </Sphere>
 
-              <Sphere position={[0, 3, -3]} castShadow scale={0.25}>
-                <meshNormalMaterial></meshNormalMaterial>
-              </Sphere>
+                <Sphere position={[0, 3, -3]} castShadow scale={0.25}>
+                  <meshNormalMaterial></meshNormalMaterial>
+                </Sphere>
 
-              <Sphere position={[3, 3, -3]} castShadow scale={0.25}>
-                <meshNormalMaterial></meshNormalMaterial>
-              </Sphere>
+                <Sphere position={[3, 3, -3]} castShadow scale={0.25}>
+                  <meshNormalMaterial></meshNormalMaterial>
+                </Sphere>
 
-              <Sphere position={[-3, 3, -3]} castShadow scale={0.25}>
-                <meshNormalMaterial></meshNormalMaterial>
-              </Sphere>
+                <Sphere position={[-3, 3, -3]} castShadow scale={0.25}>
+                  <meshNormalMaterial></meshNormalMaterial>
+                </Sphere>
 
-              <Environment preset='apartment'></Environment>
-              {joyState && <Content joy={joyState}></Content>}
+                <Environment preset='apartment'></Environment>
+                {joyState && <Content joy={joyState}></Content>}
+              </group>
+
               {/* <Garage></Garage> */}
 
               {/* <EnvSSR></EnvSSR> */}
