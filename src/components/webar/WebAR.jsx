@@ -28,11 +28,16 @@ export function WebAR() {
   let initRef = useRef()
   let cameraRef = useRef()
   let [api, setAPI] = useState(null)
+
+  let [initPos] = useState([0, 1.5, 5])
+  let [initLookAt] = useState([0, 0, 0])
   useEffect(() => {
     //
     let cleans = []
     setAPI({
       start: async () => {
+        cameraRef.current.position.fromArray(initPos)
+        cameraRef.current.lookAt(initLookAt[0], initLookAt[1], initLookAt[2])
         // let { Stats } = await import('./assets/stats.js')
         // let { AlvaAR } = await import('./assets/alva_ar.js')
         let DeviceOrientationControls = await import('./DeviceOrientationControls.js').then(
@@ -165,54 +170,7 @@ export function WebAR() {
                   cameraRef.current.position.lerp(vv, 0.4)
                   oriControls.update()
                 }
-                // if (sensor) {
-                //   let { alpha, beta, gamma, screenAngle } = sensor
-                //   const orientation = MathUtils.degToRad(screenAngle)
-                //   const axis = new Vector3(0, 0, 1)
-                //   const euler = new Euler()
-                //   const q0 = new Quaternion()
-                //   const q1 = new Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)) // - PI/2 around the x-axis
-                //   // 'ZXY' for the device, but 'YXZ' for us
-                //   euler.set(beta, alpha, -gamma, 'YXZ')
-                //   // orient the device
-                //   self.camera.quaternion.setFromEuler(euler)
-                //   // camera looks out the back of the device, not the top
-                //   self.camera.quaternion.multiply(q1)
-                //   // adjust for screen orientation
-                //   self.camera.quaternion.multiply(q0.setFromAxisAngle(axis, -orientation))
-                //   self.prevQuaternion = self.prevQuaternion || new THREE.Quaternion()
-                //   if (8 * (1 - self.prevQuaternion.dot(self.camera.quaternion)) > 0.000001) {
-                //     self.prevQuaternion.copy(self.camera.quaternion)
-                //   }
-                //   self.cameraPositionPrev.copy(self.cameraPositionCurr)
-                //   if (pose) {
-                //     applyPose(pose, null, self.cameraPositionCurr)
-                //   }
-                //   self.camera.position.set(
-                //     self.camera.position.x + self.cameraPositionCurr.x - self.cameraPositionPrev.x,
-                //     self.camera.position.y + self.cameraPositionCurr.y - self.cameraPositionPrev.y,
-                //     self.camera.position.z + self.cameraPositionCurr.z - self.cameraPositionPrev.z,
-                //   )
-                // } else {
-                //   if (cameraRef.current) {
-                //     applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
-                //   }
-                // }
-                // if (sensor) {
-                //   view.updateCameraPoseDeviceOrient(
-                //     pose,
-                //     sensor.deviceOrientationAlpha,
-                //     sensor.deviceOrientationBeta,
-                //     sensor.deviceOrientationGamma,
-                //     sensor.screenOrientationAngle,
-                //   )
-                // } else {
-                //   view.updateCameraPose(pose)
-                // }
-                // view.applyPose(pose, camera.quaternion, camera.position)
               } else {
-                // view.lostCamera()
-
                 const dots = alva.getFramePoints()
 
                 for (const p of dots) {
@@ -282,7 +240,7 @@ export function WebAR() {
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
               <group position={[0, 0, 0]} rotation={[Math.PI * 0.0, 0, 0]}>
-                <PerspectiveCamera fov={90} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
+                <PerspectiveCamera fov={45} makeDefault far={500} near={0.1} ref={cameraRef}></PerspectiveCamera>
               </group>
 
               <gridHelper ref={gridRef} args={[100, 100]}></gridHelper>
@@ -344,6 +302,9 @@ export function WebAR() {
               className='absolute top-0 right-0 p-2 bg-white'
               onClick={() => {
                 api.reset()
+
+                cameraRef.current.position.fromArray(initPos)
+                cameraRef.current.lookAt(initLookAt[0], initLookAt[1], initLookAt[2])
               }}>
               Reset
             </button>
