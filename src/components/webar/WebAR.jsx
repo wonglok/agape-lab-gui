@@ -295,7 +295,7 @@ export function WebAR() {
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
             {api?.start && (
               <button
-                className='px-5 py-2 bg-white rounded-xl'
+                className='px-5 py-2 bg-white rounded-xl -translate-y-32'
                 onClick={() => {
                   api.start()
 
