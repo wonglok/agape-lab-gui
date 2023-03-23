@@ -42,11 +42,14 @@ export function WebAR() {
       start: async () => {
         cameraRef.current.position.fromArray(initPos)
         cameraRef.current.lookAt(initLookAt[0], initLookAt[1], initLookAt[2])
+
         // let { Stats } = await import('./assets/stats.js')
         // let { AlvaAR } = await import('./assets/alva_ar.js')
+
         let DeviceOrientationControls = await import('./DeviceOrientationControls.js').then(
           (r) => r.DeviceOrientationControls,
         )
+
         let { AlvaAR } = await window.remoteImport(`/ar/alva_ar.js`)
         // let { ARCamView } = await import('./assets/view.js')
         let { Camera, onFrame, resize2cover } = await import('./assets/utils.js')
