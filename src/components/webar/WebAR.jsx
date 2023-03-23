@@ -200,6 +200,7 @@ export function WebAR() {
               ...r,
               reset: () => {
                 alva.reset()
+                alva.findFloor()
                 cameraRef.current.rotation.set(0, 0, 0, 'XYZ')
                 cameraRef.current.position.set(0, 0, 0)
               },
