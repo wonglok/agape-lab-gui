@@ -58,12 +58,12 @@ export function WebAR() {
           const size = resize2cover(
             $video.videoWidth,
             $video.videoHeight,
-            $container.clientWidth / 2,
-            $container.clientHeight / 2,
+            $container.clientWidth,
+            $container.clientHeight,
           )
 
-          $canvas.width = $container.clientWidth / 2
-          $canvas.height = $container.clientHeight / 2
+          $canvas.width = $container.clientWidth
+          $canvas.height = $container.clientHeight
           $video.style.width = size.width + 'px'
           $video.style.height = size.height + 'px'
 
@@ -256,7 +256,7 @@ export function WebAR() {
             <canvas
               ref={canvasRef}
               className=''
-              style={{ width: '50%', height: '50%', transform: `scale(2)` }}></canvas>
+              style={{ width: '100%', height: '100%', transform: `scale(1)` }}></canvas>
           </div>
           <div ref={containerRef} className='absolute top-0 left-0 w-full h-full'>
             <Canvas shadows>
