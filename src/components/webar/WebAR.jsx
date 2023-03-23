@@ -50,6 +50,10 @@ export function WebAR() {
           (r) => r.DeviceOrientationControls,
         )
 
+        window.addEventListener('deviceorientation', (ev) => {
+          console.log(ev)
+        })
+
         let { AlvaAR } = await window.remoteImport(`/ar/alva_ar.js`)
         // let { ARCamView } = await import('./assets/view.js')
         let { Camera, onFrame, resize2cover } = await import('./assets/utils.js')
@@ -162,15 +166,15 @@ export function WebAR() {
                   cameraRef.current.position.lerp(vv, 0.4)
                   oriControls.update()
 
-                  const plane = alva.findPlane()
+                  // const plane = alva.findPlane()
 
-                  if (plane) {
-                    applyPose(pose, qq, vv)
-                    sceneRef.current.quaternion.normalize()
-                    sceneRef.current.quaternion.slerp(qq, 0.4)
+                  // if (plane) {
+                  //   applyPose(pose, qq, vv)
+                  //   sceneRef.current.quaternion.normalize()
+                  //   sceneRef.current.quaternion.slerp(qq, 0.4)
 
-                    sceneRef.current.position.lerp(vv, 0.4)
-                  }
+                  //   sceneRef.current.position.lerp(vv, 0.4)
+                  // }
                 }
               } else {
                 const dots = alva.getFramePoints()
