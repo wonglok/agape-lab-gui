@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { MyView } from './MyView.js'
 import { DeviceOrientationSensor } from './assets/orientation.js'
 import { AlvaARConnectorTHREE } from './assets/alva_ar_three.js'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { Box, Environment, OrbitControls, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
 import { BoxGeometry, MathUtils, Mesh, Quaternion, Scene, Vector3 } from 'three'
 // import { Euler } from 'three'
@@ -24,9 +24,11 @@ import { MetaverseGLB } from './MetaOnline/MetaverseGLB.jsx'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { AvatarGuide } from '../worldbirdy/AvatarGuide.jsx'
 import { JoyStick } from './MetaOnline/Joystick.jsx'
+import { JoyStickBasic } from './MetaOnline/JoyStickBasic.jsx'
+import { sceneToCollider } from './MetaOnline/sceneToCollider.js'
 
 export function WebAR() {
-  const gridRef = useRef()
+  const [joyState, setJoyState] = useState()
 
   let containerRef = useRef()
   let canvasRef = useRef()
@@ -279,7 +281,7 @@ export function WebAR() {
               </Sphere>
 
               <Environment preset='night'></Environment>
-              <Content></Content>
+              {joyState && <Content joy={joyState}></Content>}
               {/* <Garage></Garage> */}
 
               {/* <EnvSSR></EnvSSR> */}
@@ -288,7 +290,11 @@ export function WebAR() {
             </Canvas>
           </div>
 
-          <JoyStick></JoyStick>
+          <JoyStickBasic
+            onGame={({ state }) => {
+              //
+              setJoyState(state)
+            }}></JoyStickBasic>
 
           <div ref={initRef} className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
             {api?.start && (
@@ -327,7 +333,7 @@ export function WebAR() {
   )
 }
 
-function Content() {
+function Content({ joy }) {
   let glb = useMemo(() => {
     let scene = new Scene()
     let plane = new Mesh(new BoxGeometry(100, 0.01, 100))
@@ -338,31 +344,47 @@ function Content() {
       scene,
     }
   }, [])
+
+  let colliderProm = useMemo(() => {
+    return sceneToCollider({ scene: glb.scene })
+  }, [glb])
+
+  let [collider, setCollider] = useState(false)
+
+  useEffect(() => {
+    colliderProm.then((v) => {
+      //
+      setCollider(v)
+    })
+  }, [colliderProm])
+
+  let player = useMemo(() => {
+    return new Object3D()
+  }, [])
+
+  useFrame(() => {
+    if (joy.isDown) {
+      player.position.x += joy.xAxis
+      player.position.z += -joy.yAxis
+      //colliderProm
+    }
+  })
+
   return (
     <>
       <group>
-        <MetaverseGLB offsetY={0.01} glb={glb}>
-          {({ glb, game }) => {
-            return (
-              <group>
-                {
-                  <AvatarGuide
-                    offset={[0, 2, -2]}
-                    chaseDist={1}
-                    speed={2}
-                    destObj={game.player}
-                    collider={game.collider}
-                    avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
-                    onACore={(aCore) => {
-                      return <group>{/* <BirdCamSync player={aCore.player}></BirdCamSync> */}</group>
-                    }}></AvatarGuide>
-                }
-
-                {/*  */}
-              </group>
-            )
-          }}
-        </MetaverseGLB>
+        {collider && (
+          <AvatarGuide
+            offset={[0, 2, -2]}
+            chaseDist={1}
+            speed={2}
+            destObj={player}
+            collider={collider}
+            avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
+            onACore={(aCore) => {
+              return <group>{/* <BirdCamSync player={aCore.player}></BirdCamSync> */}</group>
+            }}></AvatarGuide>
+        )}
       </group>
     </>
   )

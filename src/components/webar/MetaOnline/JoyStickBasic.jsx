@@ -1,9 +1,17 @@
-import { useEffect, useRef } from 'react'
-import { useMeta } from './useMeta'
+import { useEffect, useMemo, useRef } from 'react'
 
-export function JoyStick() {
+export function JoyStickBasic({ onGame }) {
   let ref = useRef()
-  let game = useMeta((r) => r.game)
+  let game = useMemo(() => {
+    return {
+      keyState: {
+        isDown: false,
+        yAxis: 0,
+        xAxis: 0,
+      },
+    }
+  }, [])
+
   useEffect(() => {
     class Dynamic {
       constructor({ game }) {
@@ -43,7 +51,7 @@ export function JoyStick() {
             this.dynamic.on('added', (evt, nipple) => {
               this.dynamic.on('start move end dir plain', (evta, data) => {
                 if (evta.type === 'start') {
-                  this.game.keyState.joyStickDown = true
+                  this.game.keyState.isDown = true
                 }
 
                 // let distance = this.core.now.controls.getDistance()
@@ -53,33 +61,33 @@ export function JoyStick() {
                   //
                   // //
                   // if (data?.direction?.angle === 'up') {
-                  //   this.game.keyState.joyStickSide = data.angle.radian - Math.PI * 0.5
+                  //   this.game.keyState.xAxis = data.angle.radian - Math.PI * 0.5
 
-                  //   this.game.keyState.joyStickPressure =
+                  //   this.game.keyState.yAxis =
                   //     (Math.min(Math.abs(data.distance / 50.0) * 4, 5) / 5.0) *
                   //     speed
 
                   //   //
                   // } else if (data?.direction?.angle === 'right') {
                   //   if (data.direction.y == 'up') {
-                  //     this.game.keyState.joyStickSide = data.angle.radian - Math.PI * 0.5
+                  //     this.game.keyState.xAxis = data.angle.radian - Math.PI * 0.5
                   //   } else {
-                  //     this.game.keyState.joyStickSide =
+                  //     this.game.keyState.xAxis =
                   //       data.angle.radian - Math.PI * 2.0 - Math.PI * 0.5
                   //   }
 
-                  //   this.game.keyState.joyStickPressure =
+                  //   this.game.keyState.yAxis =
                   //     (Math.min(Math.abs(data.distance / 50.0) * 4, 5) / 5.0) *
                   //     speed
                   // } else if (data?.direction?.angle === 'left') {
-                  //   this.game.keyState.joyStickSide = data.angle.radian - Math.PI * 0.5
+                  //   this.game.keyState.xAxis = data.angle.radian - Math.PI * 0.5
 
-                  //   this.game.keyState.joyStickPressure =
+                  //   this.game.keyState.yAxis =
                   //     (Math.min(Math.abs(data.distance / 50.0) * 4, 5) / 5.0) *
                   //     speed
                   // } else {
-                  //   this.game.keyState.joyStickSide = data.angle.radian - Math.PI * 0.5
-                  //   this.game.keyState.joyStickPressure =
+                  //   this.game.keyState.xAxis = data.angle.radian - Math.PI * 0.5
+                  //   this.game.keyState.yAxis =
                   //     (Math.min(Math.abs(data.distance / 50.0) * 4, 5) / 5.0) *
                   //     speed *
                   //     -1.0
@@ -87,25 +95,25 @@ export function JoyStick() {
 
                   // console.log(data.vector.y)
                   // if (data?.direction?.y == 'up') {
-                  //   this.game.keyState.joyStickPressure = data.vector.y
+                  //   this.game.keyState.yAxis = data.vector.y
                   // } else if (data?.direction?.y == 'down') {
                   // }
 
-                  this.game.keyState.joyStickPressure = data.vector.y
-                  this.game.keyState.joyStickSide = -data.vector.x * 0.8
+                  this.game.keyState.yAxis = data.vector.y
+                  this.game.keyState.xAxis = -data.vector.x * 0.8
 
-                  if (this.game.keyState.joyStickPressure <= -1) {
-                    this.game.keyState.joyStickPressure = -1
+                  if (this.game.keyState.yAxis <= -1) {
+                    this.game.keyState.yAxis = -1
                   }
-                  if (this.game.keyState.joyStickPressure >= 1) {
-                    this.game.keyState.joyStickPressure = 1
+                  if (this.game.keyState.yAxis >= 1) {
+                    this.game.keyState.yAxis = 1
                   }
 
-                  if (this.game.keyState.joyStickSide >= Math.PI * 0.5) {
-                    this.game.keyState.joyStickSide = Math.PI * 0.5
+                  if (this.game.keyState.xAxis >= Math.PI * 0.5) {
+                    this.game.keyState.xAxis = Math.PI * 0.5
                   }
-                  if (this.game.keyState.joyStickSide <= -Math.PI * 0.5) {
-                    this.game.keyState.joyStickSide = -Math.PI * 0.5
+                  if (this.game.keyState.xAxis <= -Math.PI * 0.5) {
+                    this.game.keyState.xAxis = -Math.PI * 0.5
                   }
 
                   //
@@ -113,7 +121,7 @@ export function JoyStick() {
                 }
 
                 if (evta.type === 'end') {
-                  this.game.keyState.joyStickDown = false
+                  this.game.keyState.isDown = false
                 }
               })
               nipple.on('removed', () => {
@@ -132,15 +140,17 @@ export function JoyStick() {
 
     let api = new Dynamic({ game })
 
+    onGame({ state: game.keyState })
+
     return () => {
       api.dispose()
     }
-  }, [game])
+  }, [game, onGame])
 
   return (
     <div
       ref={ref}
-      className=' select-none'
+      className='bg-gray-800 select-none'
       style={{
         zIndex: 1,
         position: 'absolute',
