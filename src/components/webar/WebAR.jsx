@@ -143,7 +143,7 @@ export function WebAR() {
                   // cam.position.set(pose[12], pose[13], pose[14])
 
                   //
-                  applyPose(pose, myQuaterDisable, cameraRef.current.position)
+                  applyPose(pose, cameraRef.current.quaternion, cameraRef.current.position)
                 }
                 // if (sensor) {
                 //   let { alpha, beta, gamma, screenAngle } = sensor
