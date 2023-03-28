@@ -5,7 +5,7 @@ export default function WebSocketPage() {
       <button
         onClick={() => {
           //
-          let ws = new WebSocket(`ws://localhost:8173`)
+          let ws = new WebSocket(`ws://localhost:8765`)
 
           ws.addEventListener('open', (ev) => {
             ws.send('to-blender-123')
