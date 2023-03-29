@@ -11,72 +11,106 @@ let useLink = create((set, get) => {
 })
 
 export default function WebSocketPage() {
-  let setup = useCallback(() => {
-    let yoTryAgain = 0
-    let ws = new WebSocket(`ws://localhost:8765`)
+  let setup = () => {
+    let ws = null
     let rAFID = 0
-    ws.addEventListener('open', (ev) => {
-      clearInterval(yoTryAgain)
-      let rAF = () => {
+
+    let connect = () => {
+      ws = new WebSocket(`ws://localhost:8765`)
+      ws.addEventListener('open', (ev) => {
+        console.log(ev)
+        let rAF = () => {
+          rAFID = requestAnimationFrame(rAF)
+
+          if (ws.readyState === ws.OPEN) {
+            ws.send('list:all')
+            // ws.send('patch:lights')
+            // console.log('sending')
+          } else if (ws.readyState === ws.CLOSED) {
+            console.log('closed')
+
+            cancelAnimationFrame(rAFID)
+            setTimeout(() => {
+              connect()
+            }, 1000)
+          } else if (ws.readyState === ws.CLOSING) {
+            // console.log('closing')
+          } else {
+            // console.log('other')
+          }
+        }
         rAFID = requestAnimationFrame(rAF)
-        // ws.send('list:lights')
-        ws.send('list:all')
-      }
-      rAFID = requestAnimationFrame(rAF)
-    })
-
-    let o3 = new Object3D()
-    let m4 = new Matrix4()
-    m4.fromArray([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1])
-    m4.invert()
-
-    ws.addEventListener('message', (ev) => {
-      // console.log('receive data from blender', JSON.parse(ev.data))
-
-      let json = JSON.parse(ev.data)
-
-      json.data = json.data.map((it) => {
-        o3.up.set(0, 0, 1)
-
-        o3.position.fromArray(it.position)
-        o3.scale.fromArray(it.scale)
-        o3.scale.multiplyScalar(2)
-        o3.rotation.fromArray(it.euler)
-
-        o3.applyMatrix4(m4)
-        o3.updateMatrix()
-
-        it.scale = o3.scale.toArray()
-        it.position = o3.position.toArray()
-        it.quaternion = o3.quaternion.toArray()
-
-        return it
       })
 
-      // if (json.type === 'list:lights') {
-      //   useLink.setState({ lights: json.data })
-      // }
-      if (json.type === 'list:all') {
-        useLink.setState({ all: json.data })
+      ws.onerror = (ev) => {
+        console.log('error', ev)
       }
-    })
 
-    ws.addEventListener('error', () => {
-      yoTryAgain = setInterval(() => {
-        setup()
-      }, 3000)
-    })
+      let o3 = new Object3D()
+      let m4 = new Matrix4()
+      m4.fromArray([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1])
+      m4.invert()
 
-    return () => {
-      cancelAnimationFrame(rAFID)
-      ws.close()
-      clearInterval(yoTryAgain)
+      ws.addEventListener('message', (ev) => {
+        // console.log('receive data from blender', JSON.parse(ev.data))
+
+        let payload = JSON.parse(ev.data)
+
+        payload.data = payload.data.map((it) => {
+          o3.up.set(0, 0, 1)
+
+          o3.position.fromArray(it.position)
+          o3.scale.fromArray(it.scale)
+          o3.scale.multiplyScalar(2)
+          o3.rotation.fromArray(it.euler)
+
+          o3.applyMatrix4(m4)
+          o3.updateMatrix()
+
+          it.scale = o3.scale.toArray()
+          it.position = o3.position.toArray()
+          it.quaternion = o3.quaternion.toArray()
+
+          if (it.color) {
+            it.color = '#' + new Color().fromArray(it.color).getHexString()
+          }
+
+          return it
+        })
+
+        if (payload.type === 'list:all') {
+          useLink.setState({ all: payload.data })
+        }
+        // if (payload.type === 'list:lights') {
+        //   // console.log(payload.type)
+        //   // useLink.setState({ all: payload.data })
+        //   // let all = useLink.getState().all
+        //   // payload.data.forEach((it) => {
+        //   //   console.log(it)
+        //   // })
+        //   // console.log(all, payload.data)
+        //   // console.log(all)
+        //   // all.forEach((it) => {
+        //   //   let foundIdx = all.findIndex((e) => e.name === it.name)
+        //   //   let found = all.find((e) => e.name === it.name)
+        //   //   if (found && foundIdx !== -1) {
+        //   //     all[foundIdx] = it
+        //   //   }
+        //   // })
+        // }
+      })
+
+      ws.onclose = () => {}
+      ws.onerror = () => {}
     }
-  }, [])
+
+    connect()
+    return () => {}
+  }
 
   useEffect(() => {
     return setup()
-  }, [setup])
+  }, [])
 
   return (
     <div className='w-full h-full'>
@@ -100,7 +134,6 @@ export default function WebSocketPage() {
 
 function Content() {
   let all = useLink((r) => r.all)
-  // let lights = useLink((r) => r.lights)
 
   return (
     <group>
@@ -121,7 +154,7 @@ function Content() {
           return (
             <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'empty'}>
               <Sphere>
-                <meshStandardMaterial wireframe color={'red'}></meshStandardMaterial>
+                <meshStandardMaterial wireframe color={item.color}></meshStandardMaterial>
               </Sphere>
             </group>
           )
@@ -132,7 +165,7 @@ function Content() {
         .map((item) => {
           return (
             <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'lights'}>
-              <pointLight color={'red'} intensity={1} power={item.power} />
+              <pointLight color={item.color} intensity={1} power={item.power} />
             </group>
           )
         })}
