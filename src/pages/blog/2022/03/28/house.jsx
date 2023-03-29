@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect } from 'react'
 import { Color, Matrix4, Object3D, Quaternion, Vector3 } from 'three'
 import { create } from 'zustand'
-
+import ReconnectingWebSocket from 'reconnecting-websocket'
 let useLink = create((set, get) => {
   return {
     all: [],
@@ -16,7 +16,7 @@ export default function WebSocketPage() {
     let rAFID = 0
 
     let connect = () => {
-      ws = new WebSocket(`ws://localhost:8765`)
+      ws = new ReconnectingWebSocket(`ws://localhost:8765`)
       ws.addEventListener('open', (ev) => {
         console.log(ev)
         let rAF = () => {
@@ -99,9 +99,6 @@ export default function WebSocketPage() {
         //   // })
         // }
       })
-
-      ws.onclose = () => {}
-      ws.onerror = () => {}
     }
 
     connect()
