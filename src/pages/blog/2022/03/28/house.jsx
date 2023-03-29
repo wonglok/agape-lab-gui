@@ -118,10 +118,10 @@ export default function WebSocketPage() {
         onCreated={(st) => {
           st.gl.physicallyCorrectLights = true
           st.gl.useLegacyLights = true
-          st.scene.background = new Color('#000000')
+          // st.scene.background = new Color('#000000')
         }}
         className='w-full h-full'>
-        {/* <Environment preset='apartment' background></Environment> */}
+        <Environment preset='night' background></Environment>
         <Content></Content>
         <OrbitControls object-position={[0, 0, 20]} target={[0, 0, 0]}></OrbitControls>
       </Canvas>
