@@ -1,24 +1,25 @@
 import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { useEffect } from 'react'
-import { Matrix4, Object3D, Quaternion, Vector3 } from 'three'
+import { useCallback, useEffect } from 'react'
+import { Color, Matrix4, Object3D, Quaternion, Vector3 } from 'three'
 import { create } from 'zustand'
 
 let useLink = create((set, get) => {
   return {
     all: [],
-    lights: [],
   }
 })
 
 export default function WebSocketPage() {
-  let setup = () => {
+  let setup = useCallback(() => {
+    let yoTryAgain = 0
     let ws = new WebSocket(`ws://localhost:8765`)
     let rAFID = 0
     ws.addEventListener('open', (ev) => {
+      clearInterval(yoTryAgain)
       let rAF = () => {
         rAFID = requestAnimationFrame(rAF)
-        ws.send('list:lights')
+        // ws.send('list:lights')
         ws.send('list:all')
       }
       rAFID = requestAnimationFrame(rAF)
@@ -49,30 +50,47 @@ export default function WebSocketPage() {
         it.position = o3.position.toArray()
         it.quaternion = o3.quaternion.toArray()
 
+        if (json.type === 'LIGHT') {
+          console.log(it.type, it.power)
+        }
+
         return it
       })
 
-      if (json.type === 'list:lights') {
-        useLink.setState({ lights: json.data })
-      }
+      // if (json.type === 'list:lights') {
+      //   useLink.setState({ lights: json.data })
+      // }
       if (json.type === 'list:all') {
         useLink.setState({ all: json.data })
       }
     })
 
+    ws.addEventListener('error', () => {
+      yoTryAgain = setInterval(() => {
+        setup()
+      }, 3000)
+    })
+
     return () => {
       cancelAnimationFrame(rAFID)
       ws.close()
+      clearInterval(yoTryAgain)
     }
-  }
+  }, [])
 
   useEffect(() => {
     return setup()
-  }, [])
+  }, [setup])
 
   return (
     <div className='w-full h-full'>
-      <Canvas className='w-full h-full'>
+      <Canvas
+        onCreated={(st) => {
+          st.gl.physicallyCorrectLights = true
+          st.gl.useLegacyLights = true
+          // st.scene.background = new Color('#000000')
+        }}
+        className='w-full h-full'>
         <Environment preset='apartment' background></Environment>
         <Content></Content>
         <OrbitControls object-position={[0, 0, 20]} target={[0, 0, 0]}></OrbitControls>
@@ -86,7 +104,7 @@ export default function WebSocketPage() {
 
 function Content() {
   let all = useLink((r) => r.all)
-  let lights = useLink((r) => r.lights)
+  // let lights = useLink((r) => r.lights)
 
   return (
     <group>
@@ -113,13 +131,15 @@ function Content() {
           )
         })}
 
-      {lights.map((item) => {
-        return (
-          <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'lights'}>
-            <pointLight color={'red'} intensity={3} />
-          </group>
-        )
-      })}
+      {all
+        .filter((r) => r.type === 'LIGHT')
+        .map((item) => {
+          return (
+            <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'lights'}>
+              <pointLight color={'red'} intensity={1} power={item.power} />
+            </group>
+          )
+        })}
     </group>
   )
 }
