@@ -50,10 +50,6 @@ export default function WebSocketPage() {
         it.position = o3.position.toArray()
         it.quaternion = o3.quaternion.toArray()
 
-        if (json.type === 'LIGHT') {
-          console.log(it.type, it.power)
-        }
-
         return it
       })
 
