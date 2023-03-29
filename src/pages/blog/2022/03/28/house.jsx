@@ -30,9 +30,6 @@ export default function WebSocketPage() {
             console.log('closed')
 
             cancelAnimationFrame(rAFID)
-            setTimeout(() => {
-              connect()
-            }, 1000)
           } else if (ws.readyState === ws.CLOSING) {
             // console.log('closing')
           } else {
