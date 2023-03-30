@@ -26,7 +26,7 @@ export default function WebSocketPage() {
 
         let geoTT = setInterval(() => {
           ws.send('geo:all')
-        }, 3000)
+        }, 1000)
 
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
