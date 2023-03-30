@@ -24,6 +24,10 @@ export default function WebSocketPage() {
 
         ws.send('geo:all')
 
+        let geoTT = setInterval(() => {
+          ws.send('geo:all')
+        }, 3000)
+
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
 
@@ -34,7 +38,7 @@ export default function WebSocketPage() {
             // console.log('sending')
           } else if (ws.readyState === ws.CLOSED) {
             console.log('closed')
-
+            clearInterval(geoTT)
             cancelAnimationFrame(rAFID)
           } else if (ws.readyState === ws.CLOSING) {
             // console.log('closing')
@@ -61,15 +65,16 @@ export default function WebSocketPage() {
         let payload = JSON.parse(ev.data)
 
         if (payload.type === 'geo:all') {
-          console.log(payload.data)
+          // console.log(payload.data)
 
-          let url = URL.createObjectURL(new Blob([payload.data]))
-          let results = await objLoader.loadAsync(url)
+          // let url = URL.createObjectURL(new Blob([payload.data]))
+          let results = await objLoader.parse(payload.data)
 
           let geos = []
 
           results.traverse((it) => {
             if (it.geometry) {
+              it.geometry.applyMatrix4(m4)
               geos.push({
                 name: it.name,
                 geometry: it.geometry,
@@ -85,8 +90,7 @@ export default function WebSocketPage() {
             o3.up.set(0, 0, 1)
 
             o3.position.fromArray(it.position)
-            o3.scale.fromArray(it.scale)
-            o3.scale.multiplyScalar(1)
+            o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
             o3.rotation.fromArray(it.euler)
 
             o3.applyMatrix4(m4)
