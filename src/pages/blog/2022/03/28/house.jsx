@@ -23,7 +23,17 @@ let useLink = create((set, get) => {
 })
 
 export default function WebSocketPage() {
-  let setup = () => {
+  useEffect(() => {
+    let send = () => console.log('no-op')
+
+    let hh = (ev) => {
+      if ((ev.metaKey || ev.ctrlKey) && ev.key === 's') {
+        ev.preventDefault()
+        send()
+      }
+    }
+    window.addEventListener('keydown', hh)
+
     let ws = null
     let rAFID = 0
 
@@ -34,13 +44,9 @@ export default function WebSocketPage() {
 
         ws.send('geo:all')
 
-        let hh = (ev) => {
-          if ((ev.metaKey || ev.ctrlKey) && ev.key === 's') {
-            ev.preventDefault()
-            ws.send('geo:all')
-          }
+        send = () => {
+          ws.send('geo:all')
         }
-        window.addEventListener('keydown', hh)
 
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
@@ -52,7 +58,7 @@ export default function WebSocketPage() {
             // console.log('sending')
           } else if (ws.readyState === ws.CLOSED) {
             console.log('closed')
-            window.removeEventListener('keydown', hh)
+
             cancelAnimationFrame(rAFID)
           } else if (ws.readyState === ws.CLOSING) {
             // console.log('closing')
@@ -146,11 +152,10 @@ export default function WebSocketPage() {
     }
 
     connect()
-    return () => {}
-  }
-
-  useEffect(() => {
-    return setup()
+    return () => {
+      cancelAnimationFrame(rAFID)
+      window.removeEventListener('keydown', hh)
+    }
   }, [])
 
   return (
