@@ -1,12 +1,14 @@
 import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { useCallback, useEffect } from 'react'
-import { Color, Matrix4, Object3D, Quaternion, Vector3 } from 'three'
+import { useCallback, useEffect, useMemo } from 'react'
+import { BufferAttribute, BufferGeometry, Color, Matrix4, Object3D, ObjectLoader, Quaternion, Vector3 } from 'three'
 import { create } from 'zustand'
 import ReconnectingWebSocket from 'reconnecting-websocket'
+import { OBJLoader } from 'three-stdlib'
 let useLink = create((set, get) => {
   return {
     all: [],
+    geo: [],
   }
 })
 
@@ -18,12 +20,16 @@ export default function WebSocketPage() {
     let connect = () => {
       ws = new ReconnectingWebSocket(`ws://localhost:8765`)
       ws.addEventListener('open', (ev) => {
-        console.log(ev)
+        // console.log(ev)
+
+        ws.send('geo:all')
+
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
 
           if (ws.readyState === ws.OPEN) {
             ws.send('list:all')
+
             // ws.send('patch:lights')
             // console.log('sending')
           } else if (ws.readyState === ws.CLOSED) {
@@ -48,36 +54,58 @@ export default function WebSocketPage() {
       m4.fromArray([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1])
       m4.invert()
 
-      ws.addEventListener('message', (ev) => {
+      let objLoader = new OBJLoader()
+      ws.addEventListener('message', async (ev) => {
         // console.log('receive data from blender', JSON.parse(ev.data))
 
         let payload = JSON.parse(ev.data)
 
-        payload.data = payload.data.map((it) => {
-          o3.up.set(0, 0, 1)
+        if (payload.type === 'geo:all') {
+          console.log(payload.data)
 
-          o3.position.fromArray(it.position)
-          o3.scale.fromArray(it.scale)
-          o3.scale.multiplyScalar(2)
-          o3.rotation.fromArray(it.euler)
+          let url = URL.createObjectURL(new Blob([payload.data]))
+          let results = await objLoader.loadAsync(url)
 
-          o3.applyMatrix4(m4)
-          o3.updateMatrix()
+          let geos = []
 
-          it.scale = o3.scale.toArray()
-          it.position = o3.position.toArray()
-          it.quaternion = o3.quaternion.toArray()
+          results.traverse((it) => {
+            if (it.geometry) {
+              geos.push({
+                name: it.name,
+                geometry: it.geometry,
+              })
+            }
+          })
 
-          if (it.color) {
-            it.color = '#' + new Color().fromArray(it.color).getHexString()
-          }
-
-          return it
-        })
+          useLink.setState({ geo: geos })
+        }
 
         if (payload.type === 'list:all') {
+          payload.data = payload.data.map((it) => {
+            o3.up.set(0, 0, 1)
+
+            o3.position.fromArray(it.position)
+            o3.scale.fromArray(it.scale)
+            o3.scale.multiplyScalar(1)
+            o3.rotation.fromArray(it.euler)
+
+            o3.applyMatrix4(m4)
+            o3.updateMatrix()
+
+            it.scale = o3.scale.toArray()
+            it.position = o3.position.toArray()
+            it.quaternion = o3.quaternion.toArray()
+
+            if (it.color) {
+              it.color = '#' + new Color().fromArray(it.color).getHexString()
+            }
+            return it
+          })
+
           useLink.setState({ all: payload.data })
         }
+
+        //
         // if (payload.type === 'list:lights') {
         //   // console.log(payload.type)
         //   // useLink.setState({ all: payload.data })
@@ -126,6 +154,24 @@ export default function WebSocketPage() {
   )
 }
 
+function GeoStream({ name }) {
+  let geo = useLink((r) => r.geo)
+
+  let item = geo.find((g) => g.name === name)
+
+  // console.log(item)
+
+  return (
+    <>
+      {item && (
+        <mesh geometry={item.geometry}>
+          <meshStandardMaterial color={'white'}></meshStandardMaterial>
+        </mesh>
+      )}
+    </>
+  )
+}
+
 function Content() {
   let all = useLink((r) => r.all)
 
@@ -136,9 +182,11 @@ function Content() {
         .map((item) => {
           return (
             <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'empty'}>
-              <Box>
+              <GeoStream name={item.name}></GeoStream>
+
+              {/* <Box>
                 <meshStandardMaterial color={'white'}></meshStandardMaterial>
-              </Box>
+              </Box> */}
             </group>
           )
         })}
