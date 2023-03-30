@@ -24,9 +24,13 @@ export default function WebSocketPage() {
 
         ws.send('geo:all')
 
-        let geoTT = setInterval(() => {
-          ws.send('geo:all')
-        }, 5000)
+        let hh = (ev) => {
+          if ((ev.metaKey || ev.ctrlKey) && ev.key === 's') {
+            ev.preventDefault()
+            ws.send('geo:all')
+          }
+        }
+        window.addEventListener('keydown', hh)
 
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
@@ -38,7 +42,7 @@ export default function WebSocketPage() {
             // console.log('sending')
           } else if (ws.readyState === ws.CLOSED) {
             console.log('closed')
-            clearInterval(geoTT)
+            window.removeEventListener('keydown', hh)
             cancelAnimationFrame(rAFID)
           } else if (ws.readyState === ws.CLOSING) {
             // console.log('closing')
@@ -74,9 +78,11 @@ export default function WebSocketPage() {
 
           results.traverse((it) => {
             if (it.geometry) {
-              it.geometry = it.geometry.clone()
               it.geometry.center()
               it.geometry.rotateX(Math.PI * 0.5)
+              // it.geometry.applyMatrix4(m4)
+
+              // it.geometry.rotateZ(Math.PI * 0.5)
               geos.push({
                 name: it.name,
                 geometry: it.geometry,
