@@ -26,7 +26,7 @@ export default function WebSocketPage() {
 
         let geoTT = setInterval(() => {
           ws.send('geo:all')
-        }, 3000)
+        }, 5000)
 
         let rAF = () => {
           rAFID = requestAnimationFrame(rAF)
@@ -74,11 +74,9 @@ export default function WebSocketPage() {
 
           results.traverse((it) => {
             if (it.geometry) {
-              // it.geometry
-              // it.geometry.rotateX(Math.PI * 0.5)
-              // it.geometry.applyMatrix4(m4)
-
-              // it.geometry.rotateZ(Math.PI * 0.5)
+              it.geometry = it.geometry.clone()
+              it.geometry.center()
+              it.geometry.rotateX(Math.PI * 0.5)
               geos.push({
                 name: it.name,
                 geometry: it.geometry,
