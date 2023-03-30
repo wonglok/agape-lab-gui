@@ -74,7 +74,10 @@ export default function WebSocketPage() {
 
           results.traverse((it) => {
             if (it.geometry) {
-              it.geometry.applyMatrix4(m4)
+              // it.geometry.applyMatrix4(m4)
+
+              it.geometry.rotateX(Math.PI * 0.5)
+              // it.geometry.rotateZ(Math.PI * 0.5)
               geos.push({
                 name: it.name,
                 geometry: it.geometry,
