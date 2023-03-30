@@ -1,14 +1,24 @@
 import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo } from 'react'
-import { BufferAttribute, BufferGeometry, Color, Matrix4, Object3D, ObjectLoader, Quaternion, Vector3 } from 'three'
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  Matrix4,
+  MeshBasicMaterial,
+  Object3D,
+  ObjectLoader,
+  Quaternion,
+  Vector3,
+} from 'three'
 import { create } from 'zustand'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { OBJLoader } from 'three-stdlib'
 let useLink = create((set, get) => {
   return {
     all: [],
-    geo: [],
+    scene: [],
   }
 })
 
@@ -74,23 +84,15 @@ export default function WebSocketPage() {
           // let url = URL.createObjectURL(new Blob([payload.data]))
           let results = await objLoader.parse(payload.data)
 
-          let geos = []
-
           results.traverse((it) => {
             if (it.geometry) {
-              it.geometry.center()
-              it.geometry.rotateX(Math.PI * 0.5)
-              // it.geometry.applyMatrix4(m4)
-
-              // it.geometry.rotateZ(Math.PI * 0.5)
-              geos.push({
-                name: it.name,
-                geometry: it.geometry,
-              })
+              it.material = new MeshBasicMaterial({})
             }
           })
 
-          useLink.setState({ geo: geos })
+          useLink.setState({ scene: results })
+
+          // let geos = []
         }
 
         if (payload.type === 'list:all') {
@@ -111,6 +113,9 @@ export default function WebSocketPage() {
             if (it.color) {
               it.color = '#' + new Color().fromArray(it.color).getHexString()
             }
+
+            // console.log(it.name)
+
             return it
           })
 
@@ -166,43 +171,43 @@ export default function WebSocketPage() {
   )
 }
 
-function GeoStream({ name }) {
-  let geo = useLink((r) => r.geo)
+// function GeoStream({ name }) {
+//   let geo = useLink((r) => r.geo)
 
-  let item = geo.find((g) => g.name === name)
+//   let item = geo.find((g) => g.name === name)
 
-  // console.log(item)
+//   // console.log(item)
 
-  return (
-    <>
-      {item && (
-        <mesh geometry={item.geometry}>
-          <meshStandardMaterial color={'white'}></meshStandardMaterial>
-        </mesh>
-      )}
-    </>
-  )
-}
+//   return (
+//     <>
+//       {item && (
+//         <mesh geometry={item.geometry}>
+//           <meshStandardMaterial color={'white'}></meshStandardMaterial>
+//         </mesh>
+//       )}
+//     </>
+//   )
+// }
 
 function Content() {
-  let all = useLink((r) => r.all)
+  // let all = useLink((r) => r.all)
+  let scene = useLink((r) => r.scene)
 
   return (
     <group>
-      {all
+      {<primitive object={scene}></primitive>}
+      {/* {all
         .filter((r) => r.type === 'MESH')
         .map((item) => {
           return (
             <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'empty'}>
               <GeoStream name={item.name}></GeoStream>
 
-              {/* <Box>
-                <meshStandardMaterial color={'white'}></meshStandardMaterial>
-              </Box> */}
             </group>
           )
-        })}
-      {all
+        })} */}
+
+      {/* {all
         .filter((r) => r.type === 'LIGHT')
         .map((item) => {
           return (
@@ -222,7 +227,7 @@ function Content() {
               <pointLight color={item.color} intensity={1} power={item.power} />
             </group>
           )
-        })}
+        })} */}
     </group>
   )
 }
