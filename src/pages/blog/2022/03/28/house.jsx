@@ -180,10 +180,7 @@ export default function WebSocketPage() {
   )
 }
 
-function AutoPatch({ item, name }) {
-  //
-  let scene = useThree((r) => r.scene)
-
+function AutoPatch({ item, scene }) {
   scene.traverse((it) => {
     if (it.name === `${item.name}_${item.dataName}`) {
       if (it.geometry) {
@@ -205,12 +202,13 @@ function Content() {
   return (
     <group>
       {<primitive object={scene}></primitive>}
+
       {all
         .filter((r) => r.type === 'MESH')
         .map((item) => {
           return (
             <group key={item.name + 'empty'}>
-              <AutoPatch item={item} name={item.name}></AutoPatch>
+              <AutoPatch scene={scene} item={item}></AutoPatch>
             </group>
           )
         })}
