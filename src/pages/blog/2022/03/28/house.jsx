@@ -1,5 +1,5 @@
 import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo } from 'react'
 import {
   BufferAttribute,
@@ -84,11 +84,11 @@ export default function WebSocketPage() {
           // let url = URL.createObjectURL(new Blob([payload.data]))
           let results = await objLoader.parse(payload.data)
 
-          results.traverse((it) => {
-            if (it.geometry) {
-              it.material = new MeshBasicMaterial({})
-            }
-          })
+          // results.traverse((it) => {
+          //   if (it.geometry) {
+          //     it.material = new MeshBasicMaterial({})
+          //   }
+          // })
 
           useLink.setState({ scene: results })
 
@@ -113,6 +113,8 @@ export default function WebSocketPage() {
             if (it.color) {
               it.color = '#' + new Color().fromArray(it.color).getHexString()
             }
+
+            // console.log(it.name)
 
             // console.log(it.name)
 
@@ -171,50 +173,32 @@ export default function WebSocketPage() {
   )
 }
 
-// function GeoStream({ name }) {
-//   let geo = useLink((r) => r.geo)
+function AutoPatch({ item, name }) {
+  //
+  let scene = useThree((r) => r.scene)
 
-//   let item = geo.find((g) => g.name === name)
+  scene.traverse((it) => {
+    if (it.name === item.name) {
+      //!SECTION
+    }
+  })
 
-//   // console.log(item)
-
-//   return (
-//     <>
-//       {item && (
-//         <mesh geometry={item.geometry}>
-//           <meshStandardMaterial color={'white'}></meshStandardMaterial>
-//         </mesh>
-//       )}
-//     </>
-//   )
-// }
+  return null
+}
 
 function Content() {
-  // let all = useLink((r) => r.all)
+  let all = useLink((r) => r.all)
   let scene = useLink((r) => r.scene)
 
   return (
     <group>
       {<primitive object={scene}></primitive>}
-      {/* {all
+      {all
         .filter((r) => r.type === 'MESH')
         .map((item) => {
           return (
-            <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'empty'}>
-              <GeoStream name={item.name}></GeoStream>
-
-            </group>
-          )
-        })} */}
-
-      {/* {all
-        .filter((r) => r.type === 'LIGHT')
-        .map((item) => {
-          return (
-            <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'empty'}>
-              <Sphere>
-                <meshStandardMaterial wireframe color={item.color}></meshStandardMaterial>
-              </Sphere>
+            <group key={item.name + 'empty'}>
+              <AutoPatch item={item} name={item.name}></AutoPatch>
             </group>
           )
         })}
@@ -224,10 +208,13 @@ function Content() {
         .map((item) => {
           return (
             <group position={item.position} scale={item.scale} quaternion={item.quaternion} key={item.name + 'lights'}>
+              <Sphere>
+                <meshStandardMaterial wireframe color={item.color}></meshStandardMaterial>
+              </Sphere>
               <pointLight color={item.color} intensity={1} power={item.power} />
             </group>
           )
-        })} */}
+        })}
     </group>
   )
 }
