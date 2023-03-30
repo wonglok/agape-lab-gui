@@ -84,6 +84,8 @@ export default function WebSocketPage() {
 
         let payload = JSON.parse(ev.data)
 
+        // console.log(payload.data)
+
         if (payload.type === 'geo:all') {
           // console.log(payload.data)
 
@@ -183,8 +185,13 @@ function AutoPatch({ item, name }) {
   let scene = useThree((r) => r.scene)
 
   scene.traverse((it) => {
-    if (it.name === item.name) {
-      //!SECTION
+    if (it.name === `${item.name}_${item.dataName}`) {
+      if (it.geometry) {
+        // console.log(it.name)
+        it.position.fromArray(item.position)
+        it.quaternion.fromArray(item.quaternion)
+        it.scale.fromArray(item.scale)
+      }
     }
   })
 
