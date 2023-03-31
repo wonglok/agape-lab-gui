@@ -1,10 +1,11 @@
 import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo } from 'react'
 import {
   BufferAttribute,
   BufferGeometry,
   Color,
+  Float32BufferAttribute,
   Matrix4,
   MeshBasicMaterial,
   Object3D,
@@ -15,11 +16,13 @@ import {
 } from 'three'
 import { create } from 'zustand'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { OBJLoader } from 'three-stdlib'
+import { OBJLoader, PLYLoader } from 'three-stdlib'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 let useLink = create((set, get) => {
   return {
     all: [],
+    listGeo: [],
+    geoList: [],
     scene: new Scene(),
   }
 })
@@ -34,6 +37,8 @@ export default function WebSocketPage() {
         send()
       }
     }
+
+    //
     window.addEventListener('keydown', hh)
 
     let ws = null
@@ -82,6 +87,7 @@ export default function WebSocketPage() {
 
       let objLoader = new OBJLoader()
       let gltfLoader = new GLTFLoader()
+      let plyLoader = new PLYLoader()
 
       const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
         const byteCharacters = atob(b64Data)
@@ -108,6 +114,25 @@ export default function WebSocketPage() {
 
         let payload = JSON.parse(ev.data)
 
+        if (payload.type === 'list:ply') {
+          // console.log(payload.data)
+
+          let geoList = payload.data.map((it) => {
+            let geo = plyLoader.parse(it.ply)
+            it.geo = geo
+            it.matchName = it.name.replace('.', '_') + '_' + it.dataName.replace('.', '_')
+            return it
+          })
+
+          console.log(geoList)
+          // let loader = plyLoader.parse(payload.data)
+          // console.log(loader)
+          useLink.setState({ geoList: geoList })
+        }
+
+        if (payload.type === 'list:geo') {
+          useLink.setState({ listGeo: payload.data })
+        }
         // console.log(payload.data)
 
         if (payload.type === 'geo:all') {
@@ -138,30 +163,30 @@ export default function WebSocketPage() {
         }
 
         if (payload.type === 'list:all') {
-          // payload.data = payload.data.map((it) => {
-          //   // // o3.up.set(0, 0, 1)
+          payload.data = payload.data.map((it) => {
+            // // o3.up.set(0, 0, 1)
 
-          //   // o3.position.fromArray(it.position)
-          //   // o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
-          //   // o3.rotation.fromArray(it.euler)
+            o3.position.fromArray(it.position)
+            o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
+            o3.rotation.fromArray(it.euler)
 
-          //   // o3.applyMatrix4(m4)
-          //   // o3.updateMatrix()
+            o3.applyMatrix4(m4)
+            // o3.updateMatrix()
 
-          //   // it.scale = o3.scale.toArray()
-          //   // it.position = o3.position.toArray()
-          //   // it.quaternion = o3.quaternion.toArray()
+            it.scale = o3.scale.toArray()
+            it.position = o3.position.toArray()
+            it.quaternion = o3.quaternion.toArray()
 
-          //   // if (it.color) {
-          //   //   it.color = '#' + new Color().fromArray(it.color).getHexString()
-          //   // }
+            // if (it.color) {
+            //   it.color = '#' + new Color().fromArray(it.color).getHexString()
+            // }
 
-          //   // console.log(it.name)
+            // console.log(it.name)
 
-          //   // console.log(it.name)
+            // console.log(it.name)
 
-          //   return it
-          // })
+            return it
+          })
 
           useLink.setState({ all: payload.data })
         }
@@ -214,7 +239,8 @@ export default function WebSocketPage() {
   )
 }
 
-function AutoPatch({ item, scene }) {
+function AutoPatch({ item }) {
+  let scene = useThree((r) => r.scene)
   let m4 = useMemo(() => {
     let m4 = new Matrix4()
     m4.fromArray([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1])
@@ -228,45 +254,71 @@ function AutoPatch({ item, scene }) {
   }, [])
   let o3 = useMemo(() => new Object3D(), [])
 
-  scene.traverse((it) => {
-    if (it.name === `${item.name}_${item.dataName}`) {
+  useFrame(() => {
+    scene.traverse((it) => {
       if (it.geometry) {
-        o3.position.fromArray(item.position)
-        o3.position.applyMatrix4(m4)
+        if (it.name === `${item.name}_${item.dataName}`) {
+          it.position.fromArray(item.position)
+          it.scale.fromArray(item.scale)
+          it.quaternion.fromArray(item.quaternion)
 
-        o3.scale.fromArray([item.scale[0], item.scale[2], item.scale[1]])
-        o3.scale.applyMatrix4(m4)
-
-        o3.quaternion.fromArray(item.quaternion)
-        r4.identity()
-        r4.extractRotation(m4)
-        o3.quaternion.setFromRotationMatrix(r4)
-        //
-        it.position.copy(o3.position)
-        it.scale.set(o3.scale)
-
-        it.quaternion.copy(o3.quaternion)
+          // console.log(it.name, `${item.name}_${item.dataName}`)
+          // o3.position.fromArray(item.position)
+          // o3.position.applyMatrix4(m4)
+          // o3.scale.fromArray([item.scale[0], item.scale[2], item.scale[1]])
+          // o3.scale.applyMatrix4(m4)
+          // o3.quaternion.fromArray(item.quaternion)
+          // r4.identity()
+          // r4.extractRotation(m4)
+          // o3.quaternion.setFromRotationMatrix(r4)
+          // //
+          // it.position.copy(o3.position)
+          // it.scale.set(o3.scale)
+          // it.quaternion.copy(o3.quaternion)
+        }
       }
-    }
+    })
   })
 
   return <group></group>
 }
 
+function AutoGeo({ item }) {
+  return (
+    <mesh geometry={item.geo} name={item.matchName}>
+      <meshStandardMaterial color={'white'}></meshStandardMaterial>
+    </mesh>
+  )
+}
+
 function Content() {
   let all = useLink((r) => r.all)
   let scene = useLink((r) => r.scene)
-
+  let geoList = useLink((r) => r.geoList)
   return (
     <group>
       {<primitive object={scene}></primitive>}
 
+      {geoList.map((item) => {
+        return (
+          <group key={item.name + 'empty'}>
+            <AutoGeo item={item}></AutoGeo>
+          </group>
+        )
+      })}
+
+      {geoList
+        // .filter((r) => r.type === 'MESH')
+        .map((item) => {
+          return <group key={item.name + 'geo'}>{/* <AutoPatch item={item}></AutoPatch> */}</group>
+        })}
+
       {all
-        .filter((r) => r.type === 'MESH')
+        // .filter((r) => r.type === 'MESH')
         .map((item) => {
           return (
-            <group key={item.name + 'empty'}>
-              <AutoPatch scene={scene} item={item}></AutoPatch>
+            <group key={item.name + 'geo'}>
+              <AutoPatch item={item}></AutoPatch>
             </group>
           )
         })}
