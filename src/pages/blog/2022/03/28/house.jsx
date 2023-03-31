@@ -10,15 +10,17 @@ import {
   Object3D,
   ObjectLoader,
   Quaternion,
+  Scene,
   Vector3,
 } from 'three'
 import { create } from 'zustand'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { OBJLoader } from 'three-stdlib'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 let useLink = create((set, get) => {
   return {
     all: [],
-    scene: [],
+    scene: new Scene(),
   }
 })
 
@@ -79,6 +81,28 @@ export default function WebSocketPage() {
       m4.invert()
 
       let objLoader = new OBJLoader()
+      let gltfLoader = new GLTFLoader()
+
+      const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
+        const byteCharacters = atob(b64Data)
+        const byteArrays = []
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize)
+
+          const byteNumbers = new Array(slice.length)
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i)
+          }
+
+          const byteArray = new Uint8Array(byteNumbers)
+          byteArrays.push(byteArray)
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType })
+        return blob
+      }
+
       ws.addEventListener('message', async (ev) => {
         // console.log('receive data from blender', JSON.parse(ev.data))
 
@@ -87,47 +111,57 @@ export default function WebSocketPage() {
         // console.log(payload.data)
 
         if (payload.type === 'geo:all') {
-          // console.log(payload.data)
+          // let buffer = window.atob(payload.data)
+          // console.log(atob(payload.data.slice(1, payload.data.length - 2)))
+
+          let blob = b64toBlob(payload.data, 'data:application/octet-stream')
+
+          // console.log(await blob.arrayBuffer())
+          // let url = `data:application/octet-stream;base64,${payload.data}`
 
           // let url = URL.createObjectURL(new Blob([payload.data]))
-          let results = await objLoader.parse(payload.data)
-
+          let glb = await gltfLoader.parseAsync(await blob.arrayBuffer(), '/')
+          //
           // results.traverse((it) => {
           //   if (it.geometry) {
-          //     it.material = new MeshBasicMaterial({})
+          //     it.geometry.computeBoundingSphere()
+          //     let v3 = it.geometry.boundingSphere.center.clone()
+          //     it.geometry.center()
+          //     it.position.add(v3)
+          //     it.geometry.computeBoundingSphere()
+          //     // it.material = new MeshBasicMaterial({})
           //   }
           // })
-
-          useLink.setState({ scene: results })
-
+          //
+          useLink.setState({ scene: glb.scene })
           // let geos = []
         }
 
         if (payload.type === 'list:all') {
-          payload.data = payload.data.map((it) => {
-            o3.up.set(0, 0, 1)
+          // payload.data = payload.data.map((it) => {
+          //   // // o3.up.set(0, 0, 1)
 
-            o3.position.fromArray(it.position)
-            o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
-            o3.rotation.fromArray(it.euler)
+          //   // o3.position.fromArray(it.position)
+          //   // o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
+          //   // o3.rotation.fromArray(it.euler)
 
-            o3.applyMatrix4(m4)
-            o3.updateMatrix()
+          //   // o3.applyMatrix4(m4)
+          //   // o3.updateMatrix()
 
-            it.scale = o3.scale.toArray()
-            it.position = o3.position.toArray()
-            it.quaternion = o3.quaternion.toArray()
+          //   // it.scale = o3.scale.toArray()
+          //   // it.position = o3.position.toArray()
+          //   // it.quaternion = o3.quaternion.toArray()
 
-            if (it.color) {
-              it.color = '#' + new Color().fromArray(it.color).getHexString()
-            }
+          //   // if (it.color) {
+          //   //   it.color = '#' + new Color().fromArray(it.color).getHexString()
+          //   // }
 
-            // console.log(it.name)
+          //   // console.log(it.name)
 
-            // console.log(it.name)
+          //   // console.log(it.name)
 
-            return it
-          })
+          //   return it
+          // })
 
           useLink.setState({ all: payload.data })
         }
@@ -181,18 +215,42 @@ export default function WebSocketPage() {
 }
 
 function AutoPatch({ item, scene }) {
+  let m4 = useMemo(() => {
+    let m4 = new Matrix4()
+    m4.fromArray([1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1])
+    m4.invert()
+
+    return m4
+  }, [])
+
+  let r4 = useMemo(() => {
+    return new Matrix4()
+  }, [])
+  let o3 = useMemo(() => new Object3D(), [])
+
   scene.traverse((it) => {
     if (it.name === `${item.name}_${item.dataName}`) {
       if (it.geometry) {
-        // console.log(it.name)
-        it.position.fromArray(item.position)
-        it.quaternion.fromArray(item.quaternion)
-        it.scale.fromArray(item.scale)
+        o3.position.fromArray(item.position)
+        o3.position.applyMatrix4(m4)
+
+        o3.scale.fromArray([item.scale[0], item.scale[2], item.scale[1]])
+        o3.scale.applyMatrix4(m4)
+
+        o3.quaternion.fromArray(item.quaternion)
+        r4.identity()
+        r4.extractRotation(m4)
+        o3.quaternion.setFromRotationMatrix(r4)
+        //
+        it.position.copy(o3.position)
+        it.scale.set(o3.scale)
+
+        it.quaternion.copy(o3.quaternion)
       }
     }
   })
 
-  return null
+  return <group></group>
 }
 
 function Content() {
