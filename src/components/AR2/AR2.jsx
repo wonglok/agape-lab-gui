@@ -22,7 +22,7 @@ export function AR2() {
             //
             let x = ev.clientX
             let y = ev.clientY
-            addObjectAt(x, y, 0.1)
+            addObjectAt(x, y, 0.5)
           }}
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
