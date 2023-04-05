@@ -130,6 +130,43 @@ export default function WebSocketPage() {
           useLink.setState({ geoList: geoList })
         }
 
+        if (payload.type === 'item:ply') {
+          let it = payload.data
+
+          let geo = plyLoader.parse(payload.data.ply)
+          it.geo = geo
+          it.matchName = it.name.replace('.', '_') + '_' + it.dataName.replace('.', '_')
+          let geoList = useLink.getState().geoList
+
+          if (geoList.some((r) => r.matchName === it.matchName)) {
+            let idx = geoList.findIndex((r) => r.matchName === it.matchName)
+            geoList[idx] = it
+          } else {
+            geoList.push(it)
+          }
+
+          useLink.setState({ geoList: geoList })
+        }
+
+        if (payload.type === 'names:ply') {
+          let geoList = useLink.getState().geoList
+
+          payload.data.forEach((name) => {
+            let it = {
+              name,
+            }
+            it.matchName = it.name.replace('.', '_') + '_' + it.dataName.replace('.', '_')
+
+            let found = geoList.find((r) => r.matchName === it.matchName)
+            if (found) {
+              found.keep = true
+            }
+            //
+          })
+
+          useLink.setState({ geoList: geoList.filter((r) => r.keep) })
+        }
+
         if (payload.type === 'list:geo') {
           useLink.setState({ listGeo: payload.data })
         }
