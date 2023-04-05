@@ -168,7 +168,7 @@ export default function WebSocketPage() {
 
             o3.position.fromArray(it.position)
             o3.scale.fromArray([it.scale[0], it.scale[1], it.scale[2]])
-            o3.rotation.fromArray(it.euler)
+            o3.quaternion.fromArray(it.quaternion)
 
             o3.applyMatrix4(m4)
             // o3.updateMatrix()

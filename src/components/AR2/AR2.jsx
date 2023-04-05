@@ -29,6 +29,7 @@ export function AR2() {
             <ARContent></ARContent>
           </Canvas>
         </div>
+
         <div className=' absolute top-0 right-0'>
           {alva && (
             <button
