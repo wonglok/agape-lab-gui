@@ -161,7 +161,6 @@ export default function WebSocketPage() {
             if (found) {
               found.keep = true
             }
-            //
           })
 
           useLink.setState({ geoList: geoList.filter((r) => r.keep) })
