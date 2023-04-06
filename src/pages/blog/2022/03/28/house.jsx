@@ -2,17 +2,17 @@ import { Box, Environment, OrbitControls, Sphere } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo } from 'react'
 import {
-  BufferAttribute,
-  BufferGeometry,
-  Color,
-  Float32BufferAttribute,
+  // BufferAttribute,
+  // BufferGeometry,
+  // Color,
+  // Float32BufferAttribute,
   Matrix4,
-  MeshBasicMaterial,
+  // MeshBasicMaterial,
   Object3D,
-  ObjectLoader,
-  Quaternion,
+  // ObjectLoader,
+  // Quaternion,
   Scene,
-  Vector3,
+  // Vector3,
 } from 'three'
 import { create } from 'zustand'
 import ReconnectingWebSocket from 'reconnecting-websocket'

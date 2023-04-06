@@ -16,12 +16,13 @@ const pages = [
     name: `LocalLivelink`,
     date: '2022-03-28',
   },
-  {
-    key: md5(v4()),
-    url: `/blog/2022/03/19/web-ar`,
-    name: `WebAR`,
-    date: '2022-03-19',
-  },
+  //
+  // {
+  //   key: md5(v4()),
+  //   url: `/blog/2022/03/19/web-ar`,
+  //   name: `WebAR`,
+  //   date: '2022-03-19',
+  // },
   // {
   //   key: md5(v4()),
   //   url: `/blog/2022/03/18/run-online`,

@@ -10,6 +10,7 @@
     "node": ">=14"
   },
   "scripts": {
+    "lt": "ngrok http 3000 --subdomain wonglok --region ap",
     "lint": "yarn prettier && yarn eslint",
     "eslint": "next lint --fix --dir src",
     "prettier": "prettier -l \"./src/**/*.{js,jsx,md}\"",

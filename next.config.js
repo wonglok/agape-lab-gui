@@ -12,9 +12,9 @@ const nextConfig = {
   // compiler: {
   //   styledComponents: true,
   // },
-  experimental: {},
-  images: {},
-  reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
+  // experimental: {},
+  // images: {},
+  reactStrictMode: false, // Recommended for the `pages` directory, default in `app`.
   webpack(config, { isServer }) {
     // audio support
     config.module.rules.push({
