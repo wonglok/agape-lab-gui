@@ -39,7 +39,6 @@ function Content() {
     return pathfinding
   }, [geo])
 
-  console.log(find)
   let getPath = (aa, bb) => {
     let a = new Vector3(0, 0, 1)
     let b = new Vector3(0, 0, -2)
