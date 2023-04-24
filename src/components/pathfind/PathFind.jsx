@@ -1,4 +1,4 @@
-import { Box, Environment, Line, OrbitControls } from '@react-three/drei'
+import { Box, Environment, Line, OrbitControls, useGLTF } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useMemo, useState } from 'react'
 import { Pathfinding } from 'three-pathfinding'
@@ -14,6 +14,7 @@ export function PathFind() {
 }
 
 function Content() {
+  let glb = useGLTF(`/2022/04/25/pathfind/nyc-5mb.glb`)
   let obj = useLoader(OBJLoader, `/2022/04/25/pathfind/nyc-navmesh.obj`)
   let geo = useMemo(() => {
     let geo = null
@@ -21,7 +22,7 @@ function Content() {
     obj.traverse((it) => {
       if (it.geometry) {
         geo = it.geometry
-        it.material = new MeshStandardMaterial({ color: 'white' })
+        it.material = new MeshStandardMaterial({ color: 'white', transparent: true, opacity: 0.5 })
       }
     })
 
@@ -56,8 +57,15 @@ function Content() {
   }
 
   let [ptsArray, setPTs] = useState(false)
+
+  glb.scene.traverse((it) => {
+    if (it.isLight) {
+      it.visible = false
+    }
+  })
   return (
     <>
+      <primitive object={glb.scene}></primitive>
       <group
         onClick={(ev) => {
           console.log(ev)
@@ -79,7 +87,7 @@ function Content() {
 
               console.log(pts)
               setPTs(pts)
-            }, 100)
+            }, 1)
           }
         }}>
         <primitive object={obj}></primitive>
