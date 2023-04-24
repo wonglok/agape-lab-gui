@@ -1,9 +1,9 @@
-import { Box, Line, OrbitControls } from '@react-three/drei'
+import { Box, Environment, Line, OrbitControls } from '@react-three/drei'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { useMemo, useState } from 'react'
 import { Pathfinding } from 'three-pathfinding'
 import { OBJLoader } from 'three-stdlib'
-import { Vector3 } from 'three147'
+import { MeshStandardMaterial, Vector3 } from 'three147'
 //https://github.com/but0n/recastCLI.js/tree/master
 export function PathFind() {
   return (
@@ -21,6 +21,7 @@ function Content() {
     obj.traverse((it) => {
       if (it.geometry) {
         geo = it.geometry
+        it.material = new MeshStandardMaterial({ color: 'white' })
       }
     })
 
@@ -107,6 +108,8 @@ function Content() {
             )
           })}
       </>
+
+      <Environment preset='forest' background></Environment>
       <OrbitControls></OrbitControls>
     </>
   )
