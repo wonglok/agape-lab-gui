@@ -2,10 +2,13 @@ import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { useAR } from './useAR'
 import {
+  Circle,
   CubeCamera,
+  Cylinder,
   Environment,
   MeshReflectorMaterial,
   MeshRefractionMaterial,
+  MeshTransmissionMaterial,
   useCubeCamera,
   useEnvironment,
   useGLTF,
@@ -38,6 +41,7 @@ export function AR2Ring() {
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
             <ARContent></ARContent>
+            <Cursor></Cursor>
           </Canvas>
         </div>
 
@@ -80,6 +84,37 @@ export function AR2Ring() {
 
       {/*  */}
     </div>
+  )
+}
+
+function Cursor() {
+  let ref = useRef()
+  let ground = useAR((r) => r.ground)
+  useFrame(({ raycaster, camera }) => {
+    if (ground) {
+      raycaster.setFromCamera({ x: 0, y: 0 }, camera)
+
+      let res = raycaster.intersectObject(ground, false)
+      res = res || []
+      let first = res[0]
+      if (first) {
+        // console.log(first.point)
+
+        if (ref.current) {
+          ref.current.position.copy(first.point)
+        }
+      }
+    }
+  })
+
+  //
+  return (
+    <Cylinder ref={ref} args={[2, 2, 0.1, 32, 32]}>
+      {/*  */}
+      {/*  */}
+      <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
+      {/*  */}
+    </Cylinder>
   )
 }
 
