@@ -15,6 +15,7 @@ import {
   useGLTF,
 } from '@react-three/drei'
 import { Color, MeshBasicMaterial } from 'three147'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export function AR2Ring() {
   let refContainer = useRef()
@@ -192,6 +193,10 @@ function ARContent() {
 
       <Environment preset='sunset'></Environment>
       {/*  */}
+
+      <EffectComposer>
+        <Bloom luminanceThreshold={0.96} mipmapBlur intensity={3}></Bloom>
+      </EffectComposer>
       {ground && <primitive object={ground}></primitive>}
     </group>
   )
