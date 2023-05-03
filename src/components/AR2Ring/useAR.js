@@ -84,7 +84,7 @@ export const useAR = create((set, get) => {
       )
 
       ground.rotation.x = Math.PI / -2 // 90 deg
-      ground.position.y = -2
+      ground.position.y = -3
 
       const alva = await AlvaAR.Initialize(canvas.width, canvas.height)
 
