@@ -33,10 +33,11 @@ export function AR2Ring() {
         <canvas id='vidCanvas' className='absolute top-0 left-0 w-full h-full'></canvas>
         <div
           onClick={(ev) => {
-            //
-            let x = ev.clientX
-            let y = ev.clientY
-            addObjectAt(x, y, 0.5)
+            // //
+            // let x = ev.clientX
+            // let y = ev.clientY
+            // addObjectAt(x, y, 0.5)
+            addObjectAt()
           }}
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
@@ -90,6 +91,7 @@ export function AR2Ring() {
 function Cursor() {
   let ref = useRef()
   let ground = useAR((r) => r.ground)
+  let cursor = useAR((r) => r.cursor)
   useFrame(({ raycaster, camera }) => {
     if (ground) {
       raycaster.setFromCamera({ x: 0, y: 0 }, camera)
@@ -102,6 +104,7 @@ function Cursor() {
 
         if (ref.current) {
           ref.current.position.copy(first.point)
+          cursor.position.copy(first.point)
         }
       }
     }

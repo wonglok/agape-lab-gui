@@ -30,6 +30,7 @@ export const useAR = create((set, get) => {
     showStartMenu: true,
 
     ring: new Object3D(),
+    cursor: new Object3D(),
 
     onStart: async () => {
       const config = {
@@ -126,41 +127,44 @@ export const useAR = create((set, get) => {
       console.log('lostCamera')
     },
     addObjectAt: (x, y, scale = 0.2) => {
-      let self = get()
-      const el = self.renderer.domElement
+      // let self = get()
+      // const el = self.renderer.domElement
 
-      const coord = new Vector2((x / el.offsetWidth) * 2 - 1, -(y / el.offsetHeight) * 2 + 1)
+      // const coord = new Vector2((x / el.offsetWidth) * 2 - 1, -(y / el.offsetHeight) * 2 + 1)
 
-      self.raycaster.setFromCamera(coord, self.camera)
+      // self.raycaster.setFromCamera(coord, self.camera)
 
-      const intersections = self.raycaster.intersectObjects([self.ground])
+      // const intersections = self.raycaster.intersectObjects([self.ground])
 
-      if (intersections.length > 0) {
-        const point = intersections[0].point
+      // if (intersections.length > 0) {
+      //   // const point = intersections[0].point
 
-        const object = new Mesh(new IcosahedronGeometry(1, 0), new MeshNormalMaterial({ flatShading: true }))
+      //   // const object = new Mesh(new IcosahedronGeometry(1, 0), new MeshNormalMaterial({ flatShading: true }))
 
-        object.scale.set(scale, scale, scale)
-        object.position.set(point.x, point.y, point.z)
-        object.custom = true
+      //   // object.scale.set(scale, scale, scale)
+      //   // object.position.set(point.x, point.y, point.z)
+      //   // object.custom = true
 
-        self.scene.add(object)
+      //   // self.scene.add(object)
 
-        let ring = get().ring
-        let insertObj = clone(ring)
+      // }
 
-        insertObj.scale.set(12.5, 12.5, 12.5)
-        insertObj.position.set(point.x, point.y, point.z)
-        insertObj.custom = true
+      let ring = get().ring
+      let insertObj = clone(ring)
 
-        let clock = new Clock()
-        let rAF = () => {
-          requestAnimationFrame(rAF)
-          insertObj.rotation.y += clock.getDelta() * 0.8
-        }
+      insertObj.scale.set(12.5, 12.5, 12.5)
+
+      let pos = get().cursor.position
+      insertObj.position.set(pos.x, pos.y, pos.z)
+      insertObj.custom = true
+
+      let clock = new Clock()
+      let rAF = () => {
         requestAnimationFrame(rAF)
-        self.scene.add(insertObj)
+        insertObj.rotation.y += clock.getDelta() * 0.8
       }
+      requestAnimationFrame(rAF)
+      self.scene.add(insertObj)
     },
     onFrame: ({ camera }) => {
       //
