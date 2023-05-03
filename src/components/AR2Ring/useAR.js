@@ -127,7 +127,7 @@ export const useAR = create((set, get) => {
       console.log('lostCamera')
     },
     addObjectAt: (x, y, scale = 0.2) => {
-      // let self = get()
+      let self = get()
       // const el = self.renderer.domElement
 
       // const coord = new Vector2((x / el.offsetWidth) * 2 - 1, -(y / el.offsetHeight) * 2 + 1)
