@@ -149,7 +149,7 @@ export const useAR = create((set, get) => {
         let ring = get().ring
         let insertObj = clone(ring)
 
-        insertObj.scale.set(25, 25, 25)
+        insertObj.scale.set(12.5, 12.5, 12.5)
         insertObj.position.set(point.x, point.y, point.z)
         insertObj.custom = true
 
@@ -192,8 +192,8 @@ export const useAR = create((set, get) => {
             if (pose) {
               get().updateCameraPose(pose, camera.quaternion, camera.position)
 
-              ground.position.x = camera.position.x
-              ground.position.z = camera.position.z
+              // ground.position.x = camera.position.x
+              // ground.position.z = camera.position.z
             } else {
               get().lostCamera()
 
@@ -216,8 +216,8 @@ export const useAR = create((set, get) => {
           if (pose) {
             get().updateCameraPose(pose, camera.quaternion, camera.position)
 
-            ground.position.x = camera.position.x
-            ground.position.z = camera.position.z
+            // ground.position.x = camera.position.x
+            // ground.position.z = camera.position.z
           } else {
             get().lostCamera()
 
