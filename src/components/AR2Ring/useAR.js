@@ -156,7 +156,7 @@ export const useAR = create((set, get) => {
         let clock = new Clock()
         let rAF = () => {
           requestAnimationFrame(rAF)
-          insertObj.rotation.y += clock.getDelta() * 0.1
+          insertObj.rotation.y += clock.getDelta() * 0.8
         }
         requestAnimationFrame(rAF)
         self.scene.add(insertObj)
