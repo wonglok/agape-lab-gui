@@ -144,7 +144,7 @@ function ARContent() {
   ring.scale.setScalar(10)
   let [mat, setMat] = useState(null)
 
-  let envMap = useEnvironment({ preset: 'apartment' })
+  let envMap = useEnvironment({ preset: 'sunset' })
   let cubeCam = useCubeCamera({ resolution: 512, envMap: envMap, near: 0.1, far: 1000, position: [0, 0, 0] })
   useFrame(() => {
     cubeCam.update()
@@ -190,7 +190,7 @@ function ARContent() {
         <primitive object={ring}></primitive>
       </group> */}
 
-      <Environment preset='apartment'></Environment>
+      <Environment preset='sunset'></Environment>
       {/*  */}
       {ground && <primitive object={ground}></primitive>}
     </group>
