@@ -35,10 +35,10 @@ export function AR2Ring() {
         <div
           onClick={(ev) => {
             // //
-            // let x = ev.clientX
-            // let y = ev.clientY
-            // addObjectAt(x, y, 0.5)
-            addObjectAt()
+            let x = ev.clientX
+            let y = ev.clientY
+            addObjectAt(x, y, 0.5)
+            // addObjectAt()
           }}
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
@@ -181,18 +181,18 @@ function ARContent() {
 
       {/*  */}
 
-      <Cursor>
+      {/* <Cursor>
         <Sphere scale={0.1}>
           <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
         </Sphere>
-      </Cursor>
+      </Cursor> */}
       {/* <group position={[0, 0, -3]}>
         <primitive object={ring}></primitive>
       </group> */}
 
       <Environment preset='apartment'></Environment>
       {/*  */}
-      {/* {ground && <primitive object={ground}></primitive>} */}
+      {ground && <primitive object={ground}></primitive>}
     </group>
   )
 }
