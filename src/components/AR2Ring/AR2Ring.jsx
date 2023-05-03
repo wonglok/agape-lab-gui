@@ -173,6 +173,15 @@ function ARContent() {
     <group>
       {ringGLB && (
         <>
+          {createPortal(
+            <meshStandardMaterial
+              metalness={1}
+              envMap={cubeCam.fbo.texture}
+              roughness={0.13}
+              color={'#ffdad1'}></meshStandardMaterial>,
+            ringGLB.scene.getObjectByName('Ring'),
+          )}
+
           {mat && createPortal(mat, ringGLB.scene.getObjectByName('Diamond'))}
 
           {createPortal(<primitive object={ringGLB.scene}></primitive>, ring)}
@@ -187,16 +196,13 @@ function ARContent() {
           <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
         </Sphere>
       </Cursor> */}
-      {/* <group position={[0, 0, -3]}>
+      <group position={[0, 0, -3.5]}>
         <primitive object={ring}></primitive>
-      </group> */}
+      </group>
 
       <Environment preset='sunset'></Environment>
       {/*  */}
 
-      {/* <EffectComposer>
-        <Bloom luminanceThreshold={0.96} mipmapBlur intensity={3}></Bloom>
-      </EffectComposer> */}
       {ground && <primitive object={ground}></primitive>}
     </group>
   )
