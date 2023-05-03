@@ -56,6 +56,7 @@ export function AR2Ring() {
                 list.forEach((it) => {
                   it.removeFromParent()
                 })
+                useAR.setState({ useIMU: true })
               }}>
               Reset
             </button>
