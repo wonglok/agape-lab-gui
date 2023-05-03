@@ -196,6 +196,8 @@ function ARContent() {
           <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
         </Sphere>
       </Cursor> */}
+
+      {/*  */}
       <group position={[0, 0, -3.5]}>
         {process.env.NODE_ENV === 'development' && <primitive object={ring}></primitive>}
       </group>
