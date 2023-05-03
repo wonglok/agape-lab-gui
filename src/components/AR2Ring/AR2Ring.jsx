@@ -139,9 +139,9 @@ function ARContent() {
         </>
       )}
 
-      <group position={[0, 0, -3]}>
+      {/* <group position={[0, 0, -3]}>
         <primitive object={ring}></primitive>
-      </group>
+      </group> */}
 
       {/*  */}
 
