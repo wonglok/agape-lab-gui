@@ -178,7 +178,7 @@ function ARContent() {
               metalness={1}
               envMap={cubeCam.fbo.texture}
               roughness={0.13}
-              color={'#ffdad1'}></meshStandardMaterial>,
+              color={'#ffc6b8'}></meshStandardMaterial>,
             ringGLB.scene.getObjectByName('Ring'),
           )}
 
