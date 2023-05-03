@@ -1,7 +1,16 @@
 import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { useAR } from './useAR'
-import { Environment, useGLTF } from '@react-three/drei'
+import {
+  CubeCamera,
+  Environment,
+  MeshReflectorMaterial,
+  MeshRefractionMaterial,
+  useCubeCamera,
+  useEnvironment,
+  useGLTF,
+} from '@react-three/drei'
+import { Color, MeshBasicMaterial } from 'three147'
 
 export function AR2Ring() {
   let refContainer = useRef()
@@ -92,11 +101,50 @@ function ARContent() {
     }
   })
 
+  ring.scale.setScalar(10)
+  let [mat, setMat] = useState(null)
+
+  let envMap = useEnvironment({ preset: 'apartment' })
+  let cubeCam = useCubeCamera({ resolution: 512, envMap: envMap, near: 0.1, far: 1000, position: [0, 0, 0] })
+  useFrame(() => {
+    cubeCam.update()
+  })
+  useEffect(() => {
+    //
+    setMat(
+      <MeshRefractionMaterial
+        bounces={5}
+        ior={2.4}
+        fresnel={0}
+        aberrationStrength={0.1}
+        fastChroma
+        envMap={cubeCam.fbo.texture}
+      />,
+    )
+
+    //
+
+    //
+
+    // ringGLB.scene.getObjectByName('Diamond').material = new MeshBasicMaterial({ color: new Color('#00ff00') })
+  }, [cubeCam, ringGLB.scene])
   return (
     <group>
+      {ringGLB && (
+        <>
+          {mat && createPortal(mat, ringGLB.scene.getObjectByName('Diamond'))}
+
+          {createPortal(<primitive object={ringGLB.scene}></primitive>, ring)}
+          {/* <primitive object={ring}></primitive> */}
+        </>
+      )}
+
+      <group position={[0, 0, -3]}>
+        <primitive object={ring}></primitive>
+      </group>
+
       {/*  */}
-      {createPortal(<primitive object={ringGLB.scene}></primitive>, ring)}
-      <primitive object={ring}></primitive>
+
       <Environment preset='apartment'></Environment>
       {/*  */}
       {ground && <primitive object={ground}></primitive>}
