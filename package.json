@@ -25,6 +25,8 @@
     "@react-three/fiber": "^8.12.2",
     "@react-three/postprocessing": "^2.7.0",
     "@reactflow/node-resizer": "^2.0.1",
+    "agape-runtime": "*",
+    "agape-sdk": "^0.0.81",
     "animejs": "^3.2.1",
     "antd": "^5.2.2",
     "copy-to-clipboard": "^3.3.2",

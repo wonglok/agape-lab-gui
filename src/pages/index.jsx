@@ -6,6 +6,18 @@ import { v4 } from 'uuid'
 const pages = [
   {
     key: md5(v4()),
+    url: `/blog/2023/05/03/ring-ar`,
+    name: `AR2 Ring`,
+    date: '2023-05-01',
+  },
+  {
+    key: md5(v4()),
+    url: `/blog/2023/05/01/agape-runtime`,
+    name: `Agape Runtime`,
+    date: '2023-05-01',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/04/27/cuhk`,
     name: `CUHK Hospital`,
     date: '2023-04-25',
