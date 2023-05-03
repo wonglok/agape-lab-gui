@@ -42,7 +42,6 @@ export function AR2Ring() {
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
             <ARContent></ARContent>
-            <Cursor></Cursor>
           </Canvas>
         </div>
 
@@ -88,7 +87,7 @@ export function AR2Ring() {
   )
 }
 
-function Cursor() {
+function Cursor({ children }) {
   let ref = useRef()
   let ground = useAR((r) => r.ground)
   let cursor = useAR((r) => r.cursor)
@@ -110,14 +109,15 @@ function Cursor() {
     }
   })
 
-  //
+  //args={[0.5, 0.5, 0.05, 32, 32]}
   return (
-    <Cylinder ref={ref} args={[0.5, 0.5, 0.05, 32, 32]}>
+    <group ref={ref}>
       {/*  */}
       {/*  */}
-      <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
+      {children}
+      {/* <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial> */}
       {/*  */}
-    </Cylinder>
+    </group>
   )
 }
 
@@ -178,11 +178,13 @@ function ARContent() {
         </>
       )}
 
-      {/* <group position={[0, 0, -3]}>
-        <primitive object={ring}></primitive>
-      </group> */}
-
       {/*  */}
+
+      <Cursor>
+        <group position={[0, 0, -3]}>
+          <primitive object={ring}></primitive>
+        </group>
+      </Cursor>
 
       <Environment preset='apartment'></Environment>
       {/*  */}
