@@ -2,20 +2,20 @@ import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { useAR } from './useAR'
 import {
-  Circle,
-  CubeCamera,
-  Cylinder,
+  // Circle,
+  // CubeCamera,
+  // Cylinder,
   Environment,
-  MeshReflectorMaterial,
+  // MeshReflectorMaterial,
   MeshRefractionMaterial,
-  MeshTransmissionMaterial,
-  Sphere,
+  // MeshTransmissionMaterial,
+  // Sphere,
   useCubeCamera,
   useEnvironment,
   useGLTF,
 } from '@react-three/drei'
-import { Color, MeshBasicMaterial } from 'three147'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
+// import { Color, MeshBasicMaterial } from 'three147'
+// import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export function AR2Ring() {
   let refContainer = useRef()
