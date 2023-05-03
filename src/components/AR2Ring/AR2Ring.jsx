@@ -109,7 +109,7 @@ function Cursor() {
 
   //
   return (
-    <Cylinder ref={ref} args={[2, 2, 0.1, 32, 32]}>
+    <Cylinder ref={ref} args={[0.5, 0.5, 0.05, 32, 32]}>
       {/*  */}
       {/*  */}
       <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
@@ -183,7 +183,7 @@ function ARContent() {
 
       <Environment preset='apartment'></Environment>
       {/*  */}
-      {ground && <primitive object={ground}></primitive>}
+      {/* {ground && <primitive object={ground}></primitive>} */}
     </group>
   )
 }
