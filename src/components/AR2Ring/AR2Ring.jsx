@@ -197,7 +197,7 @@ function ARContent() {
         </Sphere>
       </Cursor> */}
       <group position={[0, 0, -3.5]}>
-        <primitive object={ring}></primitive>
+        {process.env.NODE_ENV === 'development' && <primitive object={ring}></primitive>}
       </group>
 
       <Environment preset='sunset'></Environment>
