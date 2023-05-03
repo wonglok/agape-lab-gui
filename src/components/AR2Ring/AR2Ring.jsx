@@ -194,9 +194,9 @@ function ARContent() {
       <Environment preset='sunset'></Environment>
       {/*  */}
 
-      <EffectComposer>
+      {/* <EffectComposer>
         <Bloom luminanceThreshold={0.96} mipmapBlur intensity={3}></Bloom>
-      </EffectComposer>
+      </EffectComposer> */}
       {ground && <primitive object={ground}></primitive>}
     </group>
   )
