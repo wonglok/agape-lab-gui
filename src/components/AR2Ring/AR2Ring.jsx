@@ -9,6 +9,7 @@ import {
   MeshReflectorMaterial,
   MeshRefractionMaterial,
   MeshTransmissionMaterial,
+  Sphere,
   useCubeCamera,
   useEnvironment,
   useGLTF,
@@ -181,10 +182,13 @@ function ARContent() {
       {/*  */}
 
       <Cursor>
-        <group position={[0, 0, -3]}>
-          <primitive object={ring}></primitive>
-        </group>
+        <Sphere scale={0.1}>
+          <MeshTransmissionMaterial samples={5} thickness={1.5} roughness={0.2}></MeshTransmissionMaterial>
+        </Sphere>
       </Cursor>
+      {/* <group position={[0, 0, -3]}>
+        <primitive object={ring}></primitive>
+      </group> */}
 
       <Environment preset='apartment'></Environment>
       {/*  */}
