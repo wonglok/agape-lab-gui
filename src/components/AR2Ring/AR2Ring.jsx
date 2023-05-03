@@ -156,7 +156,7 @@ function ARContent() {
         bounces={5}
         ior={2.4}
         fresnel={0}
-        aberrationStrength={0.1}
+        aberrationStrength={0.01}
         fastChroma
         envMap={cubeCam.fbo.texture}
       />,
