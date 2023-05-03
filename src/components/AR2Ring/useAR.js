@@ -13,7 +13,7 @@ import {
   Vector2,
   Vector3,
 } from 'three'
-import { PlaneGeometry } from 'three147'
+import { Clock, PlaneGeometry } from 'three147'
 import { create } from 'zustand'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 
@@ -153,6 +153,12 @@ export const useAR = create((set, get) => {
         insertObj.position.set(point.x, point.y, point.z)
         insertObj.custom = true
 
+        let clock = new Clock()
+        let rAF = () => {
+          requestAnimationFrame(rAF)
+          insertObj.rotation.y += clock.getDelta() * 0.1
+        }
+        requestAnimationFrame(rAF)
         self.scene.add(insertObj)
       }
     },
