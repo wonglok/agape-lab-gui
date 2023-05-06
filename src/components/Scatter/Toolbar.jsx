@@ -121,10 +121,14 @@ function LoadScatter() {
   let glb = useGLTF(`/2023/05/07/scatter/party-started-v1.glb`)
 
   useEffect(() => {
-    glb.scene.children.forEach((it) => {
-      createOne({ object: it })
+    setTimeout(() => {
+      glb.scene.children.forEach((it) => {
+        createOne({ object: it })
+      })
     })
-  }, [glb])
+
+    return () => {}
+  })
   return <></>
 }
 
