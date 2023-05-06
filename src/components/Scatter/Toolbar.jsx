@@ -84,7 +84,7 @@ function R3f({ oid, object, refTracker }) {
     let bsp = new Sphere()
     box3.getBoundingSphere(bsp)
 
-    setRadius(bsp.radius * 2.3)
+    setRadius(bsp.radius * 2.5)
 
     setCenter(bsp.center.toArray())
     return () => {
@@ -101,7 +101,7 @@ function R3f({ oid, object, refTracker }) {
 
   return (
     <View key={oid + 'View'} track={refTracker}>
-      <group>{object && <primitive object={object}></primitive>}</group>
+      <group rotation={[0.3, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
 
       <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
       <OrbitControls makeDefault target={center} enableZoom={metaKey} enablePan={false}></OrbitControls>
@@ -120,7 +120,6 @@ function LoadScatter() {
   let glb = useGLTF(`/2023/05/07/scatter/party-started-v1.glb`)
 
   useEffect(() => {
-    useScatter.setState({ list: [] })
     glb.scene.children.forEach((it) => {
       createOne({ object: it })
     })
