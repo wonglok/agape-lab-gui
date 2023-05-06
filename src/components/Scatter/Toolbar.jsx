@@ -69,6 +69,7 @@ function R3f({ oid, object, refTracker }) {
   let [radius, setRadius] = useState(15)
   let [metaKey, setMetaKey] = useState(false)
   let [center, setCenter] = useState([0, 0, 0])
+  //
   useEffect(() => {
     let keydown = (e) => {
       setMetaKey(e.metaKey)
