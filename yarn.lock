@@ -1514,7 +1514,7 @@
   resolved "https://registry.yarnpkg.com/@react-spring/types/-/types-9.6.1.tgz#913d3a68c5cbc1124fdb18eff919432f7b6abdde"
   integrity sha512-POu8Mk0hIU3lRXB3bGIGe4VHIwwDsQyoD1F394OK7STTiX9w4dG3cTLljjYswkQN+hDSHRrj4O36kuVa7KPU8Q==
 
-"@react-three/drei@^9.56.10", "@react-three/drei@^9.66.0":
+"@react-three/drei@^9.56.10":
   version "9.66.0"
   resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-9.66.0.tgz#7fd887080763543ee1618d27f3e7a5ac8448c17c"
   integrity sha512-pKlqKFB5j1SwlKbx3BpajlAAPqB7JtAooOhQf3/eOwyfKbt934sGzn6TLSeZJqnlVmABzo6ivsTraep0Kg2ENQ==
@@ -1566,24 +1566,36 @@
     utility-types "^3.10.0"
     zustand "^3.5.13"
 
-"@react-three/fiber@^8.10.1":
+"@react-three/drei@^9.66.4":
+  version "9.66.4"
+  resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-9.66.4.tgz#873db6cf92226f8b9754bba93ee004c83785a568"
+  integrity sha512-RcllQcu7eQX/8NKxYnnDv/d9ll3Hc+LvGhseCpwwDZJq9reqQdzAj5avkaDL3HS6rVNLP+zJTO9EFk15GgKSPA==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    "@react-spring/three" "~9.6.1"
+    "@use-gesture/react" "^10.2.24"
+    camera-controls "^2.3.1"
+    detect-gpu "^5.0.14"
+    glsl-noise "^0.0.0"
+    lodash.clamp "^4.0.3"
+    lodash.omit "^4.5.0"
+    lodash.pick "^4.4.0"
+    maath "^0.5.2"
+    meshline "^3.1.6"
+    react-composer "^5.0.3"
+    react-merge-refs "^1.1.0"
+    stats.js "^0.17.0"
+    suspend-react "^0.0.8"
+    three-mesh-bvh "^0.5.23"
+    three-stdlib "^2.21.8"
+    troika-three-text "^0.47.1"
+    utility-types "^3.10.0"
+    zustand "^3.5.13"
+
+"@react-three/fiber@^8.10.1", "@react-three/fiber@^8.13.0":
   version "8.13.0"
   resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-8.13.0.tgz#c9eabe60f2276a66d7ce9a3b927083894f4202f9"
   integrity sha512-hPFzFNgikEMyEbL+NpSA7q+UWZxInrrkJldWaCR2w34Fwf20x9p68bsyN0/yn9oM2VlWoJcJjR8hw1tN9AxHuA==
-  dependencies:
-    "@babel/runtime" "^7.17.8"
-    "@types/react-reconciler" "^0.26.7"
-    its-fine "^1.0.6"
-    react-reconciler "^0.27.0"
-    react-use-measure "^2.1.1"
-    scheduler "^0.21.0"
-    suspend-react "^0.0.8"
-    zustand "^3.7.1"
-
-"@react-three/fiber@^8.12.2":
-  version "8.12.2"
-  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-8.12.2.tgz#7bdcd1064cb8405d905d1d74d9f739d801d3c22a"
-  integrity sha512-CIjSK02ffXnT6q+/7HJ1JTX9dDS4N67OAs/yYYtUKK5qkO2WUFVt6ymQDAp7yLPRFA+frvYfAHSIIYwQ48dmDQ==
   dependencies:
     "@babel/runtime" "^7.17.8"
     "@types/react-reconciler" "^0.26.7"
@@ -6995,7 +7007,7 @@ three-stdlib@^2.21.8, three-stdlib@^2.8.11:
   resolved "https://registry.yarnpkg.com/three/-/three-0.147.0.tgz#1974af9e8e0c1efb3a8561334d57c0b6c29a7951"
   integrity sha512-LPTOslYQXFkmvceQjFTNnVVli2LaVF6C99Pv34fJypp8NbQLbTlu3KinZ0zURghS5zEehK+VQyvWuPZ/Sm8fzw==
 
-three@^0.150.0:
+three@0.150.1, three@^0.150.0:
   version "0.150.1"
   resolved "https://registry.yarnpkg.com/three/-/three-0.150.1.tgz#870d324a4d2daf1c7d55be97f3f73d83783e28be"
   integrity sha512-5C1MqKUWaHYo13BX0Q64qcdwImgnnjSOFgBscOzAo8MYCzEtqfQqorEKMcajnA3FHy1yVlIe9AmaMQ0OQracNA==

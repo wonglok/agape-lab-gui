@@ -2,7 +2,7 @@ module.exports = {
   mode: 'jit',
   content: [
     //
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,jsx}',
   ], // remove unused styles in production
   darkMode: 'media', // or 'media' or 'class'
   theme: {

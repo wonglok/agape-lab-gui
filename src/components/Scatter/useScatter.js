@@ -8,9 +8,9 @@ export const getID = () => {
 export const useScatter = create((set) => {
   return {
     mode: 'drag',
-    items: [
+    list: [
       //
-      { oid: getID() },
     ],
+    deploy: [],
   }
 })

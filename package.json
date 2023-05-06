@@ -21,8 +21,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@react-three/drei": "^9.66.0",
-    "@react-three/fiber": "^8.12.2",
+    "@react-three/drei": "^9.66.4",
+    "@react-three/fiber": "^8.13.0",
     "@react-three/postprocessing": "^2.7.0",
     "@reactflow/node-resizer": "^2.0.1",
     "agape-sdk": "*",
@@ -46,7 +46,7 @@
     "realism-effects": "^1.0.2",
     "reconnecting-websocket": "^4.4.0",
     "stats.js": "^0.17.0",
-    "three": "^0.150.0",
+    "three": "0.150.1",
     "three-pathfinding": "^1.2.0",
     "three-stdlib": "^2.21.6",
     "three140": "npm:three@^0.140.0",
