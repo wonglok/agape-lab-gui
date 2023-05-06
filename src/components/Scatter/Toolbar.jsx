@@ -113,7 +113,7 @@ function R3f({ oid, object, refTracker }) {
 
 function Html({ oid, refTracker }) {
   return (
-    <div key={oid + 'html'} ref={refTracker} className='inline-block' style={{ width: `200px`, height: `200px` }}></div>
+    <div key={oid + 'html'} ref={refTracker} className='inline-block' style={{ width: `137px`, height: `137px` }}></div>
   )
 }
 
