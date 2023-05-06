@@ -6,6 +6,12 @@ import { v4 } from 'uuid'
 const pages = [
   {
     key: md5(v4()),
+    url: `/blog/2023/05/06/party-animal`,
+    name: `Party Animal`,
+    date: '2023-05-06',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/05/03/ring-ar`,
     name: `AR2 Ring`,
     date: '2023-05-01',
@@ -77,7 +83,7 @@ const pages = [
 
 export default function Index() {
   return (
-    <div className='w-full h-full overflow-hidden'>
+    <div className='w-full h-full overflow-scroll'>
       <div className='mx-4 mt-4 mb-1 text-3xl text-left'>AGAPE LAB</div>
       <div className='mx-4 mb-3 text-xl text-left'>愛加倍 實驗室</div>
 
