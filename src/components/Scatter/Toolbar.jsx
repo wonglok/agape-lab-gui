@@ -9,7 +9,7 @@ import {
   View,
   useGLTF,
 } from '@react-three/drei'
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { getID, useScatter } from './useScatter'
 import { createRef } from 'react'
@@ -93,11 +93,17 @@ function R3f({ oid, object, refTracker }) {
     }
   }, [object])
 
+  useFrame((st, dt) => {
+    //
+
+    object.rotation.y += dt * 0.4
+  }, 1)
+
   return (
     <View key={oid + 'View'} track={refTracker}>
       <group>{object && <primitive object={object}></primitive>}</group>
 
-      <PerspectiveCamera ref={refCam} makeDefault position={[2, 2, radius]}></PerspectiveCamera>
+      <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
       <OrbitControls makeDefault target={center} enableZoom={metaKey} enablePan={false}></OrbitControls>
       <Environment preset='sunset'></Environment>
     </View>
