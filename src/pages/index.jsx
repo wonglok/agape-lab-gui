@@ -16,12 +16,12 @@ const pages = [
     name: `AR2 Ring`,
     date: '2023-05-01',
   },
-  {
-    key: md5(v4()),
-    url: `/blog/2023/05/01/agape-runtime`,
-    name: `Agape Runtime`,
-    date: '2023-05-01',
-  },
+  // {
+  //   key: md5(v4()),
+  //   url: `/blog/2023/05/01/agape-runtime`,
+  //   name: `Agape Runtime`,
+  //   date: '2023-05-01',
+  // },
   {
     key: md5(v4()),
     url: `/blog/2023/04/27/cuhk`,
