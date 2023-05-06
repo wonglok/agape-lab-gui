@@ -1566,7 +1566,7 @@
     utility-types "^3.10.0"
     zustand "^3.5.13"
 
-"@react-three/drei@^9.66.4":
+"@react-three/drei@^9.66.1", "@react-three/drei@^9.66.4":
   version "9.66.4"
   resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-9.66.4.tgz#873db6cf92226f8b9754bba93ee004c83785a568"
   integrity sha512-RcllQcu7eQX/8NKxYnnDv/d9ll3Hc+LvGhseCpwwDZJq9reqQdzAj5avkaDL3HS6rVNLP+zJTO9EFk15GgKSPA==
@@ -1615,6 +1615,16 @@
     react-merge-refs "^1.1.0"
     screen-space-reflections "2.5.0"
     three-stdlib "^2.8.11"
+
+"@react-three/postprocessing@^2.9.1":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@react-three/postprocessing/-/postprocessing-2.10.0.tgz#51536e8f4d078b035a2c24ab8d6441b008494a23"
+  integrity sha512-39jzEJ4DkMoJPWiO6TeT0dmmToNKVMxDd0BbdbAxJrRgCcAEVjE/7zOSkKPiLZYqjIsmXB5izgTohTXw3vbANw==
+  dependencies:
+    maath "^0.5.3"
+    postprocessing "^6.30.2"
+    screen-space-reflections "2.5.0"
+    three-stdlib "^2.21.10"
 
 "@reactflow/background@11.1.8":
   version "11.1.8"
@@ -2134,10 +2144,30 @@
   resolved "https://registry.npmjs.org/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
+"@types/stats.js@*":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@types/stats.js/-/stats.js-0.17.0.tgz#0ed81d48e03b590c24da85540c1d952077a9fe20"
+  integrity sha512-9w+a7bR8PeB0dCT/HBULU2fMqf6BAzvKbxFboYhmDtDkKPiyXYbjoe2auwsXlEFI7CFNMF1dCv3dFH5Poy9R1w==
+
+"@types/three@^0.151.0":
+  version "0.151.0"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.151.0.tgz#ed2f5a9f6716a80ab284435aad056641b98ec695"
+  integrity sha512-hwOyN4szaikHsNzqbYLBfGvXi+TA/1TIKvK3ujJi+cQXzYzE5ZymzlDnOA6/cTSozY1juPFE3u5agToVQKb9TQ==
+  dependencies:
+    "@types/stats.js" "*"
+    "@types/webxr" "*"
+    fflate "~0.6.9"
+    lil-gui "~0.17.0"
+
 "@types/trusted-types@^2.0.2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
+
+"@types/webxr@*":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@types/webxr/-/webxr-0.5.1.tgz#4908349419104bd476a4252d04e4c3abb496748d"
+  integrity sha512-xlFXPfgJR5vIuDefhaHuUM9uUgvPaXB6GKdXy2gdEh8gBWQZ2ul24AJz3foUd8NNKlSTQuWYJpCb1/pL81m1KQ==
 
 "@typescript-eslint/parser@^5.42.0":
   version "5.49.0"
@@ -2262,6 +2292,19 @@ acorn@^8.0.4, acorn@^8.5.0, acorn@^8.8.0:
   version "8.8.2"
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
   integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
+
+agape-runtime@^0.2.12:
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/agape-runtime/-/agape-runtime-0.2.12.tgz#060e520ab5427ce28cbf0ad900de65ae38fafb92"
+  integrity sha512-O98JhckgI/OY2GiuswJq63V/xCIdHuA8RYLi96xKAX7ZtDqPPmCRGh3U15FH0Zv2j03DrzwbWPwanyKKsPVK4Q==
+  dependencies:
+    "@react-three/drei" "^9.66.1"
+    "@react-three/fiber" "^8.13.0"
+    "@react-three/postprocessing" "^2.9.1"
+    "@types/three" "^0.151.0"
+    postprocessing "^6.30.2"
+    three "^0.152.2"
+    zustand "^4.3.7"
 
 agape-sdk@*:
   version "0.0.111"
@@ -3833,7 +3876,7 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-fflate@^0.6.9:
+fflate@^0.6.9, fflate@~0.6.9:
   version "0.6.10"
   resolved "https://registry.npmjs.org/fflate/-/fflate-0.6.10.tgz#5f40f9659205936a2d18abf88b2e7781662b6d43"
   integrity sha512-IQrh3lEPM93wVCEczc9SaAOvkmcoQn/G8Bo1e8ZPlY3X3bnAxWaBdvTdvM1hP62iZp0BXWDy4vTAy4fF0+Dlpg==
@@ -4937,6 +4980,11 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+lil-gui@~0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/lil-gui/-/lil-gui-0.17.0.tgz#b41ae55d0023fcd9185f7395a218db0f58189663"
+  integrity sha512-MVBHmgY+uEbmJNApAaPbtvNh1RCAeMnKym82SBjtp5rODTYKWtM+MXHCifLe2H2Ti1HuBGBtK/5SyG4ShQ3pUQ==
+
 lilconfig@^2.0.5, lilconfig@^2.0.6:
   version "2.0.6"
   resolved "https://registry.npmjs.org/lilconfig/-/lilconfig-2.0.6.tgz#32a384558bd58af3d4c6e077dd1ad1d397bc69d4"
@@ -5034,6 +5082,11 @@ maath@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/maath/-/maath-0.5.2.tgz#b1adc883360e45eff3041a2bce45f8cdc0cd6d43"
   integrity sha512-MFjfnXF5CzZaVnBuKc9y1FJh/BiPGqf19NH8Jm4o/jKTxuQ3RyPkcSIpuwdDhXrWROVKAxi3KjmHFUNMuIndbg==
+
+maath@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/maath/-/maath-0.5.3.tgz#777a1f9b8463c6ffb199ea43406874a357c0cd58"
+  integrity sha512-ut63A4zTd9abtpi+sOHW1fPWPtAFrjK0E17eAthx1k93W/T2cWLKV5oaswyotJVDvvW1EXSdokAqhK5KOu0Qdw==
 
 magic-string@^0.14.0:
   version "0.14.0"
@@ -5599,7 +5652,7 @@ postcss@^8.4.18:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@^6.28.0:
+postprocessing@^6.28.0, postprocessing@^6.30.2:
   version "6.30.2"
   resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.30.2.tgz#8cfb5561bfce63c983fae5d2cd8efa5bbd04fe6d"
   integrity sha512-Vt77s5DkHyUOV4bmk10J46DHJLglBfIo9ARPI0o62UIAx9omANfuPJTKiLVoYlC1ApkV9y3ldBDipF3IldB7YA==
@@ -6963,6 +7016,23 @@ three-pathfinding@^1.2.0:
   resolved "https://registry.yarnpkg.com/three-pathfinding/-/three-pathfinding-1.2.0.tgz#83b936104e22bc23b34bcf9d15574bbba21257ae"
   integrity sha512-TlIfy+mLOdP7OhQG4Mn1dNONYbhu2Xe+AD7jL8SbdKdAHxH/TF68svpk2c8UrSfR/3YWQ87Tq/lp5HQO/QuaMw==
 
+three-stdlib@^2.21.10:
+  version "2.21.11"
+  resolved "https://registry.yarnpkg.com/three-stdlib/-/three-stdlib-2.21.11.tgz#ee058f1522edf17f994b4a80307568dd553bd52e"
+  integrity sha512-fFeaMOc3lpup4A/FrSKHmp/PNYmyxyV8dzMorJpYyZBdIGAn5BmokGSN9ei8t7Wv9thxCW+VLaxA6csxTl5MYg==
+  dependencies:
+    "@babel/runtime" "^7.16.7"
+    "@types/offscreencanvas" "^2019.6.4"
+    "@webgpu/glslang" "^0.0.15"
+    chevrotain "^10.1.2"
+    draco3d "^1.4.1"
+    fflate "^0.6.9"
+    ktx-parse "^0.4.5"
+    mmd-parser "^1.0.4"
+    opentype.js "^1.3.3"
+    potpack "^1.0.1"
+    zstddec "^0.0.2"
+
 three-stdlib@^2.21.6:
   version "2.21.6"
   resolved "https://registry.npmjs.org/three-stdlib/-/three-stdlib-2.21.6.tgz#764711f317a355a47138a8a5abe95bff0a0bbd45"
@@ -7011,6 +7081,11 @@ three@0.150.1, three@^0.150.0:
   version "0.150.1"
   resolved "https://registry.yarnpkg.com/three/-/three-0.150.1.tgz#870d324a4d2daf1c7d55be97f3f73d83783e28be"
   integrity sha512-5C1MqKUWaHYo13BX0Q64qcdwImgnnjSOFgBscOzAo8MYCzEtqfQqorEKMcajnA3FHy1yVlIe9AmaMQ0OQracNA==
+
+three@^0.152.2:
+  version "0.152.2"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.152.2.tgz#2ee0f2c504d31a4bc29b45495c12bded9fda7bfc"
+  integrity sha512-Ff9zIpSfkkqcBcpdiFo2f35vA9ZucO+N8TNacJOqaEE6DrB0eufItVMib8bK8Pcju/ZNT6a7blE1GhTpkdsILw==
 
 throttle-debounce@^5.0.0:
   version "5.0.0"
@@ -7651,7 +7726,7 @@ zustand@^4.3.1, zustand@^4.3.3:
   dependencies:
     use-sync-external-store "1.2.0"
 
-zustand@^4.3.2, zustand@^4.3.8:
+zustand@^4.3.2, zustand@^4.3.7, zustand@^4.3.8:
   version "4.3.8"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.3.8.tgz#37113df8e9e1421b0be1b2dca02b49b76210e7c4"
   integrity sha512-4h28KCkHg5ii/wcFFJ5Fp+k1J3gJoasaIbppdgZFO4BPJnsNxL0mQXBSFgOgAdCdBj35aDTPvdAJReTMntFPGg==
