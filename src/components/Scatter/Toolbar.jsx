@@ -106,7 +106,7 @@ function R3f({ oid, object, refTracker }) {
 
   return (
     <View key={oid + 'View'} track={refTracker}>
-      <group rotation={[0.3, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
+      <group rotation={[0.5, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
 
       <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
       {device === 'desktop' && (
