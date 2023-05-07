@@ -105,12 +105,12 @@ function R3f({ oid, object, refTracker }) {
       <group rotation={[0.3, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
 
       <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
-      <OrbitControls
+      {/* <OrbitControls
         makeDefault
         target={[0, center[1], 0]}
         enableZoom={metaKey}
         enableRotate={false}
-        enablePan={false}></OrbitControls>
+        enablePan={false}></OrbitControls> */}
       <Environment preset='sunset'></Environment>
     </View>
   )
