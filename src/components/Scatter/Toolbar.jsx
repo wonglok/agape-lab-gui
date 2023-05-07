@@ -102,8 +102,6 @@ function R3f({ oid, object, refTracker }) {
   }, [object])
 
   useFrame((st, dt) => {
-    //
-
     object.rotation.y += dt * 0.4
   }, 1)
 
