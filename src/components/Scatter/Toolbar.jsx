@@ -20,8 +20,6 @@ export function ToolBar() {
         <Stats></Stats>
         <div className='absolute top-0 left-0 w-full h-full overflow-scroll'>
           {/* <AddStuff></AddStuff> */}
-
-          {/* <div> </div> */}
           <OutHtml></OutHtml>
         </div>
       </div>
@@ -124,6 +122,7 @@ function LoadScatter() {
   useEffect(() => {
     setTimeout(() => {
       glb.scene.children.forEach((it) => {
+        console.log(it.name)
         createOne({ object: it })
       })
     })
