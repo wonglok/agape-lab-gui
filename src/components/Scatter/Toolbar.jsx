@@ -70,7 +70,11 @@ function R3f({ oid, object, refTracker }) {
   let [metaKey, setMetaKey] = useState(false)
   let [center, setCenter] = useState([0, 0, 0])
   //
+  let [device, setDevice] = useState('loading')
   useEffect(() => {
+    if (window.innerWidth >= 500) {
+      setDevice('desktop')
+    }
     let keydown = (e) => {
       setMetaKey(e.metaKey)
     }
@@ -105,12 +109,14 @@ function R3f({ oid, object, refTracker }) {
       <group rotation={[0.3, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
 
       <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
-      {/* <OrbitControls
-        makeDefault
-        target={[0, center[1], 0]}
-        enableZoom={metaKey}
-        enableRotate={false}
-        enablePan={false}></OrbitControls> */}
+      {device === 'desktop' && (
+        <OrbitControls
+          makeDefault
+          target={[0, center[1], 0]}
+          enableZoom={metaKey}
+          enableRotate={true}
+          enablePan={false}></OrbitControls>
+      )}
       <Environment preset='sunset'></Environment>
     </View>
   )
