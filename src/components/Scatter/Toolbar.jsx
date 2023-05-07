@@ -15,6 +15,7 @@ import { getID, useScatter } from './useScatter'
 import { createRef } from 'react'
 import { Box3, Object3D } from 'three'
 import { Sphere } from 'three'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 //
 export function ToolBar() {
@@ -24,8 +25,8 @@ export function ToolBar() {
     <>
       <div ref={container} className='w-full h-full'>
         <Canvas eventSource={container} className='absolute top-0 left-0 z-30 w-full h-full'>
-          <OutCanvas></OutCanvas>
           <LoadScatter></LoadScatter>
+          <OutCanvas></OutCanvas>
         </Canvas>
 
         <Stats></Stats>
