@@ -72,9 +72,12 @@ function R3f({ oid, object, refTracker }) {
   //
   let [device, setDevice] = useState('loading')
   useEffect(() => {
-    if (window.innerWidth >= 500) {
+    if (!'ontouchstart' in window) {
       setDevice('desktop')
+    } else {
+      setDevice('mobile')
     }
+
     let keydown = (e) => {
       setMetaKey(e.metaKey)
     }
@@ -114,7 +117,7 @@ function R3f({ oid, object, refTracker }) {
           makeDefault
           target={[0, center[1], 0]}
           enableZoom={metaKey}
-          enableRotate={false}
+          enableRotate={true}
           enablePan={false}></OrbitControls>
       )}
       <Environment preset='sunset'></Environment>
