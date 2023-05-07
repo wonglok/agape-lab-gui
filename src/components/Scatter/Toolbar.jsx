@@ -15,7 +15,6 @@ import { getID, useScatter } from './useScatter'
 import { createRef } from 'react'
 import { Box3, Object3D } from 'three'
 import { Sphere } from 'three'
-import { Spherical } from 'three'
 
 //
 export function ToolBar() {
