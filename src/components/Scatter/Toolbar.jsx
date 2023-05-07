@@ -86,7 +86,7 @@ function R3f({ oid, object, refTracker }) {
       setMetaKey(e.metaKey)
     }
     window.addEventListener('keyup', keyup)
-
+    object.rotation.x = 0.5
     let box3 = new Box3()
     box3.expandByObject(object)
     let bsp = new Sphere()
@@ -107,9 +107,9 @@ function R3f({ oid, object, refTracker }) {
 
   return (
     <View key={oid + 'View'} track={refTracker}>
-      <group rotation={[0.5, 0, 0]}>{object && <primitive object={object}></primitive>}</group>
+      <group>{object && <primitive object={object}></primitive>}</group>
 
-      <PerspectiveCamera ref={refCam} makeDefault position={[0, center[1], radius]}></PerspectiveCamera>
+      <PerspectiveCamera ref={refCam} makeDefault fov={40} position={[0, center[1], radius]}></PerspectiveCamera>
       {device === 'desktop' && (
         <OrbitControls
           makeDefault
