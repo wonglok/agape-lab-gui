@@ -1,41 +1,28 @@
-import {
-  Backdrop,
-  Environment,
-  OrbitControls,
-  PerspectiveCamera,
-  Preload,
-  Stage,
-  Stats,
-  View,
-  useGLTF,
-} from '@react-three/drei'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Environment, OrbitControls, PerspectiveCamera, Stats, View, useGLTF } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { getID, useScatter } from './useScatter'
 import { createRef } from 'react'
 import { Box3, Object3D } from 'three'
 import { Sphere } from 'three'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
-//
 export function ToolBar() {
   const container = useRef()
 
   return (
     <>
-      <div ref={container} className='w-full h-full'>
+      <div ref={container} className=' absolute w-full h-full'>
         <Canvas eventSource={container} className='absolute top-0 left-0 z-30 w-full h-full'>
           <LoadScatter></LoadScatter>
           <OutCanvas></OutCanvas>
         </Canvas>
 
         <Stats></Stats>
-        <div className=' absolute top-0 left-0 w-full h-full overflow-scroll'>
-          <AddStuff></AddStuff>
+        <div className='absolute top-0 left-0 w-full h-full overflow-scroll'>
+          {/* <AddStuff></AddStuff> */}
 
-          <div>
-            <OutHtml></OutHtml>
-          </div>
+          {/* <div> </div> */}
+          <OutHtml></OutHtml>
         </div>
       </div>
     </>
@@ -87,6 +74,8 @@ function R3f({ oid, object, refTracker }) {
     }
     window.addEventListener('keyup', keyup)
     object.rotation.x = 0.5
+    object.updateMatrixWorld(true)
+
     let box3 = new Box3()
     box3.expandByObject(object)
     let bsp = new Sphere()
@@ -109,7 +98,7 @@ function R3f({ oid, object, refTracker }) {
     <View key={oid + 'View'} track={refTracker}>
       <group>{object && <primitive object={object}></primitive>}</group>
 
-      <PerspectiveCamera ref={refCam} makeDefault fov={40} position={[0, center[1], radius]}></PerspectiveCamera>
+      <PerspectiveCamera ref={refCam} makeDefault fov={35} position={[0, center[1], radius]}></PerspectiveCamera>
       {device === 'desktop' && (
         <OrbitControls
           makeDefault
