@@ -114,7 +114,7 @@ function R3f({ oid, object, refTracker }) {
           makeDefault
           target={[0, center[1], 0]}
           enableZoom={metaKey}
-          enableRotate={true}
+          enableRotate={false}
           enablePan={false}></OrbitControls>
       )}
       <Environment preset='sunset'></Environment>
