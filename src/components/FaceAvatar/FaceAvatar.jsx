@@ -165,7 +165,7 @@ function VideoYo() {
       video.remove()
     }
   }, [video])
-  return <div className='w-48 h-48' ref={ref}></div>
+  return <div className='w-48 h-48 opacity-80' ref={ref}></div>
 }
 
 function Content() {
