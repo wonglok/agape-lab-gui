@@ -6,6 +6,12 @@ import { v4 } from 'uuid'
 const pages = [
   {
     key: md5(v4()),
+    url: `/blog/2023/05/11/face-ava`,
+    name: `Face Avatar`,
+    date: `2023-05-11`,
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/05/06/party-animal`,
     name: `Party Animal`,
     date: '2023-05-06',
