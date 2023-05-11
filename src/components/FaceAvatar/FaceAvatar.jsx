@@ -2,7 +2,6 @@ import { Environment, OrbitControls, PerspectiveCamera, useGLTF } from '@react-t
 import { Canvas, useFrame } from '@react-three/fiber'
 import { use, useCallback, useEffect, useRef, useState } from 'react'
 import { Clock, MathUtils, Matrix4, Object3D, Quaternion } from 'three'
-import { Vector3 } from 'three147'
 import { create } from 'zustand'
 
 let running = async ({ onLoop, setData = () => {} }) => {
@@ -78,6 +77,7 @@ let running = async ({ onLoop, setData = () => {} }) => {
           m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
 
           setData({
+            video,
             morphTargets: firstFace.categories,
             o3d: o3d,
           })
@@ -120,11 +120,12 @@ const useFaceAvatar = create(() => {
   return {
     morphTargets: [],
     o3d: new Object3D(),
+    video: null,
   }
 })
 export function FaceAvatar() {
-  let onData = useCallback(({ morphTargets, o3d }) => {
-    useFaceAvatar.setState({ morphTargets, o3d })
+  let onData = useCallback(({ morphTargets, o3d, video }) => {
+    useFaceAvatar.setState({ morphTargets, o3d, video })
   }, [])
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
 
@@ -134,7 +135,9 @@ export function FaceAvatar() {
       <Canvas>
         <Content></Content>
       </Canvas>
-
+      <div className=' absolute top-0 right-0'>
+        <VideoYo></VideoYo>
+      </div>
       <div className='absolute top-0 left-0 h-full p-3 overflow-scroll w-80'>
         {morphTargets.map((r, i) => {
           return (
@@ -146,6 +149,23 @@ export function FaceAvatar() {
       </div>
     </>
   )
+}
+
+function VideoYo() {
+  let ref = useRef()
+  let video = useFaceAvatar((s) => s.video)
+
+  useEffect(() => {
+    if (!video) {
+      return
+    }
+    ref.current.append(video)
+
+    return () => {
+      video.remove()
+    }
+  }, [video])
+  return <div className=' w-96' ref={ref}></div>
 }
 
 function Content() {
