@@ -138,7 +138,7 @@ export function FaceAvatar() {
       <div className=' absolute top-0 right-0'>
         <VideoYo></VideoYo>
       </div>
-      <div className='absolute top-0 left-0 h-full p-3 overflow-scroll w-80'>
+      <div className='absolute top-0 left-0 h-full p-3 overflow-scroll'>
         {morphTargets.map((r, i) => {
           return (
             <div key={i} className='bg-gray-200 bg-opacity-75' style={{ width: `calc(100% * ${r.score})` }}>
