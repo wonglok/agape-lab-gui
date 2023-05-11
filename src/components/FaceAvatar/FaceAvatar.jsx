@@ -141,7 +141,7 @@ export function FaceAvatar() {
       <div className='absolute top-0 left-0 h-full p-3 overflow-scroll w-80'>
         {morphTargets.map((r, i) => {
           return (
-            <div key={i} className='bg-gray-200' style={{ width: `calc(100% * ${r.score})` }}>
+            <div key={i} className='bg-gray-200 bg-opacity-75' style={{ width: `calc(100% * ${r.score})` }}>
               {r.categoryName}
             </div>
           )
