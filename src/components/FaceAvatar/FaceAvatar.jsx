@@ -197,7 +197,7 @@ function Avatar() {
             let fromVal = r.morphTargetInfluences[r.morphTargetDictionary[kn]]
             let toVal = foundTarget.score
 
-            r.morphTargetInfluences[r.morphTargetDictionary[kn]] = MathUtils.lerp(fromVal, toVal, 0.95)
+            r.morphTargetInfluences[r.morphTargetDictionary[kn]] = MathUtils.lerp(fromVal, toVal, 0.9)
 
             // MathUtils.damp(
             //   fromVal,
