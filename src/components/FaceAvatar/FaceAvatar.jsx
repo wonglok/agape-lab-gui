@@ -182,9 +182,13 @@ function Content() {
 function Avatar() {
   let glb = useGLTF(`/FaceAvatar/avatar/face.glb`)
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
-
+  let o3d = useFaceAvatar((s) => s.o3d)
   useFrame((st, dt) => {
     glb.scene.traverse((r) => {
+      if (r.isBone && r.name === 'Head') {
+        r.quaternion.slerp(o3d.quaternion, 0.9)
+        r.scale.copy(o3d.scale)
+      }
       if (r.geometry && r.morphTargetDictionary && r.morphTargetInfluences) {
         // morphTargets.find((r) => r.categoryName === 'mouthFunnel').score
         // mouthSmileLeft
