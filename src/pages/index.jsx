@@ -4,6 +4,12 @@ import { v4 } from 'uuid'
 // import path from 'path'
 
 const pages = [
+  // {
+  //   key: md5(v4()),
+  //   url: `/blog/2023/05/20/ai`,
+  //   name: `AI`,
+  //   date: `2023-05-20`,
+  // },
   {
     key: md5(v4()),
     url: `/blog/2023/05/11/face-ava`,

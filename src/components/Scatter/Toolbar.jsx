@@ -145,19 +145,19 @@ let createOne = ({ object }) => {
   useScatter.setState({ list: [...(useScatter.getState().list || []), r] })
 }
 
-function AddStuff() {
-  return (
-    <div className=''>
-      {/*  */}
+// function AddStuff() {
+//   return (
+//     <div className=''>
+//       {/*  */}
 
-      <button
-        onClick={() => {
-          createOne({ object: new Object3D() })
-        }}>
-        Add
-      </button>
+//       <button
+//         onClick={() => {
+//           createOne({ object: new Object3D() })
+//         }}>
+//         Add
+//       </button>
 
-      {/*  */}
-    </div>
-  )
-}
+//       {/*  */}
+//     </div>
+//   )
+// }
