@@ -174,8 +174,8 @@ export const useAR = create((set, get) => {
 
           if (pose) {
             get().updateCameraPose(pose, camera.quaternion, camera.position)
-            offset.set(0, 0, -5)
-            offset.applyQuaternion(camera.quaternion)
+            offset.set(0, 0, 10)
+            // offset.applyQuaternion(camera.quaternion)
 
             camera.position.add(offset)
 
