@@ -89,7 +89,9 @@ function ARContent() {
   })
   return (
     <group>
-      <ParticleRelay></ParticleRelay>
+      <group position={[0, 0, -5]}>
+        <ParticleRelay></ParticleRelay>
+      </group>
       {ground && <primitive object={ground}></primitive>}
     </group>
   )

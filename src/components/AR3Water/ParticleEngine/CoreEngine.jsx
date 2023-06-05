@@ -75,8 +75,7 @@ export function ParticleRelay() {
               //
               applyEmissionGeometryChange()
             }}
-            anchor={[0, 0, 0]}
-          >
+            anchor={[0, 0, 0]}>
             <group position={[-5, -3, 0]}>
               <Addition>
                 <sphereGeometry args={[1, 24, 24]}></sphereGeometry>
@@ -91,8 +90,7 @@ export function ParticleRelay() {
               //
               applyEmissionGeometryChange()
             }}
-            anchor={[0, 0, 0]}
-          >
+            anchor={[0, 0, 0]}>
             <group position={[3, 3, 0]}>
               <Addition>
                 <sphereGeometry args={[1, 24, 24]}></sphereGeometry>
@@ -103,7 +101,7 @@ export function ParticleRelay() {
           {/*  */}
         </Geometry>
 
-        <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial>
+        <meshPhysicalMaterial transmission={0} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial>
         {<ParticleRelayCore surfaceMesh={surfaceMesh} csgRef={csgRef}></ParticleRelayCore>}
       </mesh>
     </>
@@ -204,15 +202,13 @@ function CurveYo() {
             position={pt.position}
             lineWidth={3}
             scale={2}
-            anchor={[0, 0, 0]}
-          >
+            anchor={[0, 0, 0]}>
             <group
               userData={{
                 indexID: i,
                 lineID: 0,
                 type: 'ForceCurve',
-              }}
-            >
+              }}>
               <Box scale={0.1}>
                 <meshStandardMaterial color={'#ff0000'}></meshStandardMaterial>
               </Box>
@@ -233,8 +229,8 @@ function ParticleRelayCore({ surfaceMesh }) {
   let unitGeomtry = new SphereGeometry(0.5, 4, 3)
 
   let roughness = 0.0,
-    metalness = 0,
-    transmission = 1,
+    metalness = 1,
+    transmission = 0,
     thickness = 1.5,
     //
     color = '#00ffff',
@@ -275,8 +271,7 @@ function ParticleRelayCore({ surfaceMesh }) {
             forceTwist: -3.141592 * 2.0 * 2.8,
             forceType: 'vortexZ',
             type: 'ForceField',
-          }}
-        >
+          }}>
           <Sphere scale={[0.1, 0.2, 0.1]}>
             <meshStandardMaterial metalness={1} flatShading></meshStandardMaterial>
           </Sphere>
@@ -329,8 +324,7 @@ function ParticleRelayCore({ surfaceMesh }) {
           transmission={transmission}
           thickness={thickness}
           //!randomness
-          randomness={randomness}
-        ></CoreEngine>
+          randomness={randomness}></CoreEngine>
       )}
     </>
   )
