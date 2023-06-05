@@ -228,9 +228,9 @@ function ParticleRelayCore({ surfaceMesh }) {
 
   let unitGeomtry = new SphereGeometry(0.5, 4, 3)
 
-  let roughness = 0.0,
-    metalness = 1,
-    transmission = 0,
+  let roughness = 0.2,
+    metalness = 0.2,
+    transmission = 1,
     thickness = 1.5,
     //
     color = '#00ffff',
