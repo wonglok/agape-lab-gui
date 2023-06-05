@@ -865,12 +865,14 @@ export function CoreEngine({
       let width = tex.image.width
       let pxAll = width * height
       let i = 0
+      let wp = new Vector3(0, 0, -5)
 
       for (let px = 0; px < pxAll; px++) {
         //
         i++
 
         sampler.sample(posData, normalData)
+        posData.add(wp)
 
         // sampler
         tex.image.data[i * 4 + 0] = posData.x
