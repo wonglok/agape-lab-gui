@@ -10,6 +10,18 @@ const pages = [
   //   name: `AI`,
   //   date: `2023-05-20`,
   // },
+  // {
+  //   key: md5(v4()),
+  //   url: `/blog/2023/05/27/retarget`,
+  //   name: `Retarget`,
+  //   date: `2023-05-27`,
+  // },
+  {
+    key: md5(v4()),
+    url: `/blog/2023/06/06/water`,
+    name: `AR3 Water`,
+    date: '2023-06-06',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/05/11/face-ava`,
@@ -137,12 +149,10 @@ export default function Index() {
       {pages.map((blog) => {
         return (
           <div className='mx-4 mb-3' key={blog.key}>
-            <div className='text-xl'>{blog.name}</div>
-            <div className='text-sm'>
-              <a className='underline' target='_blank' href={`${blog.url}`} rel='noreferrer'>
-                {blog.date}
-              </a>
-            </div>
+            <a className='underline' target='_blank' href={`${blog.url}`} rel='noreferrer'>
+              <div className='text-xl'>{blog.name}</div>
+            </a>
+            <div className='text-sm'>{blog.date}</div>
           </div>
         )
       })}

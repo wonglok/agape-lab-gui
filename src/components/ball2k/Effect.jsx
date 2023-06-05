@@ -3,17 +3,17 @@ import { useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import {
   Clock,
-  Color,
-  DoubleSide,
+  // Color,
+  // DoubleSide,
   EquirectangularReflectionMapping,
   // MeshBasicMaterial,
-  MeshStandardMaterial,
+  // MeshStandardMaterial,
   sRGBEncoding,
 } from 'three'
 import { PMREMGenerator } from 'three'
 import { TextureLoader } from 'three'
-import { Mesh } from 'three'
-import { SphereGeometry } from 'three'
+// import { Mesh } from 'three'
+// import { SphereGeometry } from 'three'
 // import { MeshPhysicalMaterial } from 'three'
 // import { RGBELoader } from 'three-stdlib'
 // import { GroundProjectedEnv } from './realism/GroundProjectedEnv'
@@ -48,9 +48,9 @@ export function Effect() {
   let scene = useThree((s) => s.scene)
   let camera = useThree((s) => s.camera)
 
-  let envMap = useEnvironment({ preset: 'dawn' })
-  envMap.mapping = EquirectangularReflectionMapping
-  scene.environment = envMap
+  // let envMap = useEnvironment({ preset: 'dawn' })
+  // envMap.mapping = EquirectangularReflectionMapping
+  // scene.environment = envMap
 
   let ref = useRef(false)
   useEffect(() => {
@@ -71,6 +71,7 @@ export function Effect() {
       let EffectComposer = await import('postprocessing').then((r) => r.EffectComposer)
       let EffectPass = await import('postprocessing').then((r) => r.EffectPass)
       let LUT3DEffect = await import('postprocessing').then((r) => r.LUT3DEffect)
+      let RenderPass = await import('postprocessing').then((r) => r.RenderPass)
       let { SSGIEffect, VelocityDepthNormalPass } = realism
 
       const composer = new EffectComposer(gl, { multisampling: 4, alpha: true })
@@ -79,7 +80,6 @@ export function Effect() {
       composer.addPass(velocityDepthNormalPass)
 
       const ssgiEffect = new SSGIEffect(scene, camera, velocityDepthNormalPass, options)
-
       let lut = await new LUT3dlLoader().loadAsync('/ssgi/lut.3dl')
 
       const lutEffect = new LUT3DEffect(lut)
@@ -91,8 +91,7 @@ export function Effect() {
       // const motionBlurEffect = new MotionBlurEffect(velocityDepthNormalPass)
 
       // const effectPass = new EffectPass(gl, ssgiEffect, traaEffect, motionBlurEffect)
-      const effectPass = new EffectPass(gl, ssgiEffect, lutEffect)
-
+      const effectPass = new EffectPass(gl, ssgiEffect)
       // public
 
       let texture = await new TextureLoader().loadAsync(`/envMap/ma-galaxy.jpg`)
@@ -102,24 +101,23 @@ export function Effect() {
       scene.background = texture
       scene.environment = texture
 
-      let ballball = new Mesh(
-        new SphereGeometry(5, 32, 32),
-        new MeshStandardMaterial({
-          roughness: 0.4,
-          metalness: 0.5,
-          side: DoubleSide,
-          map: texture,
-          envMapIntensity: 1,
-          color: new Color('#ffffff'),
-          emissiveMap: texture,
-          emissiveIntensity: 10,
-          emissive: new Color('#ffffff'),
-        }),
-      )
+      // let ballball = new Mesh(
+      //   new SphereGeometry(5, 32, 32),
+      //   new MeshStandardMaterial({
+      //     roughness: 0.4,
+      //     metalness: 0.5,
+      //     side: DoubleSide,
+      //     map: texture,
+      //     envMapIntensity: 1,
+      //     color: new Color('#ffffff'),
+      //     emissiveMap: texture,
+      //     emissiveIntensity: 10,
+      //     emissive: new Color('#ffffff'),
+      //   }),
+      // )
 
-      scene.add(ballball)
-
-      effectPass.enabled = true
+      // scene.add(ballball)
+      // composer.addPass(new RenderPass(scene, camera))
       composer.addPass(effectPass)
 
       let rAFID = 0
@@ -129,7 +127,7 @@ export function Effect() {
         //
         let dt = clock.getDelta()
 
-        ballball.rotation.y += dt / 50.0
+        // ballball.rotation.y += dt / 50.0
         composer.render(dt)
       }
       rAFID = requestAnimationFrame(rAF)
@@ -147,9 +145,9 @@ export function Effect() {
 
       clean = () => {
         cancelAnimationFrame(rAFID)
-        ref.current = false
-        ballball.removeFromParent()
-        envMesh.removeFromParent()
+        // ref.current = false
+        // ballball.removeFromParent()
+        // envMesh.removeFromParent()
       }
 
       // setST(composer)
