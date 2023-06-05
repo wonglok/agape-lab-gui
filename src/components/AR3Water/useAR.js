@@ -24,7 +24,7 @@ export const useAR = create((set, get) => {
     renderer: false,
 
     //
-    loading: true,
+    loading: false,
     showStartMenu: true,
 
     onStart: async () => {
