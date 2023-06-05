@@ -235,13 +235,13 @@ function ParticleRelayCore({ surfaceMesh }) {
     //
     color = '#00ffff',
     emissive = '#000000',
-    performanceProfile = 'medium',
+    performanceProfile = 'low',
     surfaceEmissionForce = -0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
-    unitScale = 0.01,
+    unitScale = 0.03,
     randomness = 3
 
   let cursorA = useMemo(() => {
@@ -443,7 +443,7 @@ export function CoreEngine({
       }
     }
     if (performanceProfile === 'low') {
-      size.x = 64
+      size.x = 32
       size.y = 64
       if ('ontouchstart' in window) {
         size.x = 32
