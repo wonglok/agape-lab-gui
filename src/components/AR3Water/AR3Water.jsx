@@ -2,6 +2,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { useAR } from './useAR'
 import { ParticleRelay } from './ParticleEngine/CoreEngine'
+import { Environment } from '@react-three/drei'
 
 export function AR3Water() {
   let refContainer = useRef()
@@ -21,9 +22,9 @@ export function AR3Water() {
         <div
           onClick={(ev) => {
             //
-            let x = ev.clientX
-            let y = ev.clientY
-            addObjectAt(x, y, 0.5)
+            // let x = ev.clientX
+            // let y = ev.clientY
+            // addObjectAt(x, y, 0.5)
           }}
           className='absolute top-0 left-0 w-full h-full'>
           <Canvas>
@@ -89,9 +90,11 @@ function ARContent() {
   })
   return (
     <group>
+      <Environment files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
       <group position={[0, 0, -5]}>
         <ParticleRelay></ParticleRelay>
       </group>
+
       {ground && <primitive object={ground}></primitive>}
     </group>
   )

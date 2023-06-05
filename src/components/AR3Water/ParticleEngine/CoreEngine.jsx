@@ -993,8 +993,8 @@ export function CoreEngine({
       color: new Color('#ffffff'),
       roughness: 0.0,
       metalness: 0.0,
-      transmission: 1,
-      thickness: 1,
+      transmission: 0,
+      thickness: 0,
       flatShading: true,
       side: DoubleSide,
     })

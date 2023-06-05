@@ -162,25 +162,28 @@ export const useAR = create((set, get) => {
         // Stats.stop('video')
 
         // console.log(frame, imu.orientation, imu.motion)
+        try {
+          // Stats.start('slam')
+          const pose = alva.findCameraPoseWithIMU(frame, imu.orientation, imu.motion)
+          // Stats.stop('slam')
 
-        // Stats.start('slam')
-        const pose = alva.findCameraPoseWithIMU(frame, imu.orientation, imu.motion)
-        // Stats.stop('slam')
+          if (pose) {
+            get().updateCameraPose(pose, camera.quaternion, camera.position)
 
-        if (pose) {
-          get().updateCameraPose(pose, camera.quaternion, camera.position)
+            ground.position.x = camera.position.x
+            ground.position.z = camera.position.z
+          } else {
+            get().lostCamera()
 
-          ground.position.x = camera.position.x
-          ground.position.z = camera.position.z
-        } else {
-          get().lostCamera()
+            const dots = alva.getFramePoints()
 
-          const dots = alva.getFramePoints()
-
-          for (const p of dots) {
-            ctx.fillStyle = 'white'
-            ctx.fillRect(p.x, p.y, 2, 2)
+            for (const p of dots) {
+              ctx.fillStyle = 'white'
+              ctx.fillRect(p.x, p.y, 2, 2)
+            }
           }
+        } catch (e) {
+          console.log(e)
         }
       }
     },
