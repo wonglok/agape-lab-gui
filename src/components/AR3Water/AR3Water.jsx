@@ -12,6 +12,7 @@ export function AR3Water() {
   let addObjectAt = useAR((r) => r.addObjectAt)
   let alva = useAR((r) => r.alva)
   let scene = useAR((r) => r.scene)
+  let loading = useAR((r) => r.loading)
 
   return (
     <div className='w-full h-full '>
@@ -62,7 +63,7 @@ export function AR3Water() {
               onClick={() => {
                 onStart()
               }}>
-              Start
+              {loading ? `Loading...` : `Start`}
             </button>
           }
         </div>

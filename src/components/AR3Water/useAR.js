@@ -24,9 +24,11 @@ export const useAR = create((set, get) => {
     renderer: false,
 
     //
+    loading: true,
     showStartMenu: true,
 
     onStart: async () => {
+      set({ loading: true })
       const config = {
         video: {
           facingMode: 'environment',
@@ -84,6 +86,7 @@ export const useAR = create((set, get) => {
 
       setTimeout(() => {
         set({
+          loading: false,
           raycaster: new Raycaster(),
           ground,
           imu: imuResult,
