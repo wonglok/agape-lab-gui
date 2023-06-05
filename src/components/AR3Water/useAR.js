@@ -16,6 +16,7 @@ import { PlaneGeometry } from 'three147'
 import { create } from 'zustand'
 
 export const useAR = create((set, get) => {
+  let offset = new Vector3()
   return {
     imu: false,
     cam: false, // media
@@ -171,6 +172,10 @@ export const useAR = create((set, get) => {
 
           if (pose) {
             get().updateCameraPose(pose, camera.quaternion, camera.position)
+            offset.set(0, 0, 5)
+            offset.applyQuaternion(camera.quaternion)
+
+            camera.position.add(offset)
 
             ground.position.x = camera.position.x
             ground.position.z = camera.position.z

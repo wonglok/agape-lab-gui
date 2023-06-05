@@ -91,9 +91,9 @@ function ARContent() {
   })
   return (
     <group>
-      <group position={[0, 0, 0]}>
+      {/* <group position={[0, 0, -10.0]}>
         <primitive object={camera}></primitive>
-      </group>
+      </group> */}
       <Environment files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
       <group position={[0, 0, -0.01]}>
         <ParticleRelay></ParticleRelay>
