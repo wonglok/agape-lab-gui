@@ -169,6 +169,7 @@ export const useAR = create((set, get) => {
 
           if (pose) {
             get().updateCameraPose(pose, camera.quaternion, camera.position)
+            camera.position.z += 15
 
             ground.position.x = camera.position.x
             ground.position.z = camera.position.z

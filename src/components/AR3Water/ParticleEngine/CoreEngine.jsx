@@ -865,7 +865,7 @@ export function CoreEngine({
       let width = tex.image.width
       let pxAll = width * height
       let i = 0
-      let wp = new Vector3(0, 0, -5)
+      let wp = new Vector3(0, 0, 0)
 
       for (let px = 0; px < pxAll; px++) {
         //
