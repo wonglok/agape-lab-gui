@@ -156,6 +156,8 @@ export const useAR = create((set, get) => {
       //   return
       // }
 
+      //
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       if (!document['hidden']) {
