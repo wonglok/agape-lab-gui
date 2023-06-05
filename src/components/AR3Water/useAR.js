@@ -47,7 +47,6 @@ export const useAR = create((set, get) => {
       const cam = await Camera.Initialize(config)
       //
       const imuResult = await imu
-
       console.log(imuResult)
       const container = document.querySelector('#vidContainer')
       const canvas = document.querySelector('#vidCanvas')
