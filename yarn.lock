@@ -1530,6 +1530,13 @@
   resolved "https://registry.yarnpkg.com/@react-spring/types/-/types-9.6.1.tgz#913d3a68c5cbc1124fdb18eff919432f7b6abdde"
   integrity sha512-POu8Mk0hIU3lRXB3bGIGe4VHIwwDsQyoD1F394OK7STTiX9w4dG3cTLljjYswkQN+hDSHRrj4O36kuVa7KPU8Q==
 
+"@react-three/csg@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@react-three/csg/-/csg-2.2.0.tgz#71600388161b7b6e646e863b45bf1010e968981b"
+  integrity sha512-YgQ9anVePRKWdkZFozyEoQkhrZUYSXxGaUibXzPk3U7RKj5119Fv+Gc9t5EyF/G4ypUm5gSYUiep6owGD8abmA==
+  dependencies:
+    three-bvh-csg "^0.0.5"
+
 "@react-three/drei@^9.56.10":
   version "9.66.0"
   resolved "https://registry.yarnpkg.com/@react-three/drei/-/drei-9.66.0.tgz#7fd887080763543ee1618d27f3e7a5ac8448c17c"
@@ -7047,6 +7054,11 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
+
+three-bvh-csg@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.5.tgz#db8254a0b9472edecc10a836c98adc6286ff1dca"
+  integrity sha512-gxqmaV3HlGHUGB857AV8oLoNxx5Q0T7io1DUs5nrCwmmFqjWZT3a8ue7WapE394wY8awFVAMr+YvdSrzqswpFA==
 
 three-mesh-bvh@^0.5.23:
   version "0.5.23"
