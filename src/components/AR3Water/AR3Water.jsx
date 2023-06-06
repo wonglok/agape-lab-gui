@@ -88,7 +88,10 @@ function ARContent() {
   let ground = useAR((r) => r.ground)
 
   useAR.setState({ renderer: gl, camera, scene })
-  useFrame(({ camera }) => {
+  useFrame(({ camera, scene }) => {
+    scene.traverse((it) => {
+      it.frustumCulled = false
+    })
     if (onFrame) {
       onFrame({ camera })
     }
