@@ -1,6 +1,10 @@
+import { Scene, SphereGeometry, WebGLRenderTarget, sRGBEncoding } from 'three'
+import { Object3D } from 'three'
+import { EquirectangularReflectionMapping } from 'three'
 import {
   BoxGeometry,
   CircleGeometry,
+  CubeCamera,
   DoubleSide,
   IcosahedronGeometry,
   Matrix4,
@@ -12,7 +16,7 @@ import {
   Vector2,
   Vector3,
 } from 'three'
-import { PlaneGeometry } from 'three147'
+import { PlaneGeometry, VideoTexture } from 'three147'
 import { create } from 'zustand'
 
 export const useAR = create((set, get) => {
@@ -82,27 +86,48 @@ export const useAR = create((set, get) => {
         desynchronized: true,
       })
 
-      let ground = new Mesh(
-        new PlaneGeometry(1000, 1000, 200, 200),
-        new MeshBasicMaterial({
-          color: 0xffffff,
-          transparent: true,
-          depthTest: true,
-          opacity: 1,
-          wireframe: true,
-          side: DoubleSide,
-        }),
-      )
+      // let ground = new Mesh(
+      //   new PlaneGeometry(1000, 1000, 200, 200),
+      //   new MeshBasicMaterial({
+      //     color: 0xffffff,
+      //     transparent: true,
+      //     depthTest: true,
+      //     opacity: 1,
+      //     wireframe: true,
+      //     side: DoubleSide,
+      //   }),
+      // )
 
-      ground.rotation.x = Math.PI / -2 // 90 deg
-      ground.position.y = -2
+      // ground.rotation.x = Math.PI / -2 // 90 deg
+      // ground.position.y = -2
 
       const alva = await AlvaAR.Initialize(canvas.width, canvas.height)
       setTimeout(() => {
+        let rtt = new WebGLRenderTarget(64, 64, {
+          depthBuffer: false,
+          stencilBuffer: false,
+        })
+
+        let vTex = new VideoTexture(video)
+        let fs = new Scene()
+        let ball = new Mesh(new SphereGeometry(1, 32, 32), new MeshBasicMaterial({ color: 0xffffff, map: vTex }))
+        ball.rotation.y = Math.PI
+        fs.add(ball)
+
+        fs.background = vTex
+        fs.environment = vTex
+        let cubeCamera = new CubeCamera(0.1, 100, rtt)
+
         set({
+          vTex,
+          processVTex: ({ scene }) => {
+            vTex.needsUpdate = true
+            vTex.mapping = EquirectangularReflectionMapping
+            scene.environment = vTex
+          },
           loading: false,
           raycaster: new Raycaster(),
-          ground,
+          ground: new Object3D(),
           imu: imuResult,
           reset: () => {
             alva.reset()
@@ -113,6 +138,8 @@ export const useAR = create((set, get) => {
           ctx,
           canvas: canvas,
           video: video,
+          rtt,
+          cubeCamera,
         })
 
         set({ showStartMenu: false })

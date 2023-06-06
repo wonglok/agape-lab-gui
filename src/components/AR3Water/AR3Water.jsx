@@ -86,6 +86,7 @@ function ARContent() {
   let gl = useThree((r) => r.gl)
 
   let ground = useAR((r) => r.ground)
+  let processVTex = useAR((r) => r.processVTex)
 
   useAR.setState({ renderer: gl, camera, scene })
   useFrame(({ camera, scene }) => {
@@ -94,6 +95,9 @@ function ARContent() {
     })
     if (onFrame) {
       onFrame({ camera })
+    }
+    if (processVTex) {
+      processVTex({ scene })
     }
   })
   return (
