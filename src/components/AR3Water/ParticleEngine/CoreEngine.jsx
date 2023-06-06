@@ -101,7 +101,7 @@ export function ParticleRelay() {
           {/*  */}
         </Geometry>
 
-        <meshPhysicalMaterial transmission={0} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial>
+        <meshPhysicalMaterial transmission={0} thickness={2.5} roughness={0} ior={1.5}></meshPhysicalMaterial>
         {<ParticleRelayCore surfaceMesh={surfaceMesh} csgRef={csgRef}></ParticleRelayCore>}
       </mesh>
     </>
@@ -231,7 +231,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let roughness = 0.2,
     metalness = 0.2,
     transmission = 1,
-    thickness = 1.5,
+    thickness = 2,
     //
     color = '#00ffff',
     emissive = '#000000',
@@ -247,7 +247,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(0.75, 32, 32),
-      new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
+      new MeshPhysicalMaterial({ transmission: 1, thickness: 2, roughness: 0, ior: 1.5 }),
     )
     o3.position.x = -3
     return o3
@@ -256,7 +256,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let cursorB = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(0.75, 32, 32),
-      new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
+      new MeshPhysicalMaterial({ transmission: 1, thickness: 2, roughness: 0, ior: 1.5 }),
     )
     o3.position.x = 3
     return o3
