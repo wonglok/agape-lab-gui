@@ -770,7 +770,7 @@ export function CoreEngine({
       // }),
     }
 
-    let clock = new Clock()
+    // let clock = new Clock()
 
     let iCoords = accessCoord()
 
@@ -902,9 +902,9 @@ export function CoreEngine({
       // iVar.velocity.material.uniforms.weatherNow = {
       //   value: 1,
       // };
-      iVar.position.material.uniforms.weatherNow = {
-        value: 1,
-      }
+      // iVar.position.material.uniforms.weatherNow = {
+      //   value: 1,
+      // }
     }
     syncMode()
     core.onLoop(syncMode)
@@ -917,8 +917,8 @@ export function CoreEngine({
     }
 
     let gpuSamplerSize = Math.floor(64)
-    let buffer = !useHalfFloat ? new Float32Array(1 * gpuSamplerSize * 4) : new Uint16Array(1 * gpuSamplerSize * 4)
     let total = 1 * gpuSamplerSize
+    let buffer = !useHalfFloat ? new Float32Array(1 * gpuSamplerSize * 4) : new Uint16Array(1 * gpuSamplerSize * 4)
     let buffAttr = new BufferAttribute(buffer, 4)
 
     let items = new Array(gpuSamplerSize)
