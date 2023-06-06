@@ -98,7 +98,6 @@ export const useAR = create((set, get) => {
       ground.position.y = -2
 
       const alva = await AlvaAR.Initialize(canvas.width, canvas.height)
-
       setTimeout(() => {
         set({
           loading: false,
