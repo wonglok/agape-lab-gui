@@ -103,27 +103,19 @@ export const useAR = create((set, get) => {
 
       const alva = await AlvaAR.Initialize(canvas.width, canvas.height)
       setTimeout(() => {
-        let rtt = new WebGLRenderTarget(64, 64, {
-          depthBuffer: false,
-          stencilBuffer: false,
-        })
-
         let vTex = new VideoTexture(video)
-        let fs = new Scene()
-        let ball = new Mesh(new SphereGeometry(1, 32, 32), new MeshBasicMaterial({ color: 0xffffff, map: vTex }))
-        ball.rotation.y = Math.PI
-        fs.add(ball)
 
-        fs.background = vTex
-        fs.environment = vTex
-        let cubeCamera = new CubeCamera(0.1, 100, rtt)
-
+        video.addEventListener('loadeddata', () => {
+          vTex.canRun = true
+        })
         set({
           vTex,
           processVTex: ({ scene }) => {
-            vTex.needsUpdate = true
-            vTex.mapping = EquirectangularReflectionMapping
-            scene.environment = vTex
+            if (vTex.canRun && video) {
+              vTex.needsUpdate = true
+              vTex.mapping = EquirectangularReflectionMapping
+              scene.environment = vTex
+            }
           },
           loading: false,
           raycaster: new Raycaster(),
@@ -138,8 +130,6 @@ export const useAR = create((set, get) => {
           ctx,
           canvas: canvas,
           video: video,
-          rtt,
-          cubeCamera,
         })
 
         set({ showStartMenu: false })
