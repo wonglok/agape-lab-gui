@@ -198,6 +198,11 @@ export const useAR = create((set, get) => {
             ground.position.z = camera.position.z
           } else {
             get().lostCamera()
+            camera.position.set(0, 0, 0)
+            offset.set(0, 0, 10)
+            // offset.applyQuaternion(camera.quaternion)
+
+            camera.position.add(offset)
 
             const dots = alva.getFramePoints()
 
