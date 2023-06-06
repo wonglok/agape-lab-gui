@@ -25,11 +25,29 @@ export const useAR = create((set, get) => {
     renderer: false,
 
     //
+    deps: {},
     loading: false,
     showStartMenu: true,
-
-    onStart: async () => {
+    onPreload: async () => {
       set({ loading: true })
+      let { IMU } = await window.remoteImport('/ar2/imu.js')
+      let { Camera } = await window.remoteImport('/ar2/utils.js')
+      let { AlvaAR } = await window.remoteImport('/ar2/alva_ar.js')
+      // let { ARCamIMUView } = await window.remoteImport('/ar2/view.js')
+      let { onFrame, resize2cover } = await window.remoteImport('/ar2/utils.js')
+
+      set({
+        deps: {
+          IMU,
+          Camera,
+          AlvaAR,
+          onFrame,
+          resize2cover,
+        },
+        loading: false,
+      })
+    },
+    onStart: async () => {
       const config = {
         video: {
           facingMode: 'environment',
@@ -38,11 +56,8 @@ export const useAR = create((set, get) => {
         },
         audio: false,
       }
-      let { IMU } = await window.remoteImport('/ar2/imu.js')
-      let { Camera } = await window.remoteImport('/ar2/utils.js')
-      let { AlvaAR } = await window.remoteImport('/ar2/alva_ar.js')
-      // let { ARCamIMUView } = await window.remoteImport('/ar2/view.js')
-      let { onFrame, resize2cover } = await window.remoteImport('/ar2/utils.js')
+
+      let { IMU, Camera, AlvaAR, onFrame, resize2cover } = get().deps
 
       const imu = await IMU.Initialize()
       const cam = await Camera.Initialize(config)

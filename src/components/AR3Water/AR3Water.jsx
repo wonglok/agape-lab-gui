@@ -13,6 +13,10 @@ export function AR3Water() {
   let alva = useAR((r) => r.alva)
   let scene = useAR((r) => r.scene)
   let loading = useAR((r) => r.loading)
+  let onPreload = useAR((r) => r.onPreload)
+  useEffect(() => {
+    onPreload()
+  }, [onPreload])
 
   return (
     <div className='w-full h-full '>
