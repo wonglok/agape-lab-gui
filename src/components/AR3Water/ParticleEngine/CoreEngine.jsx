@@ -231,7 +231,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let roughness = 0.2,
     metalness = 0.2,
     transmission = 1,
-    thickness = 2,
+    thickness = 3,
     //
     color = '#00ffff',
     emissive = '#000000',
@@ -277,8 +277,8 @@ function ParticleRelayCore({ surfaceMesh }) {
           </Sphere>
         </group>
       </TransformControls>
-      {/*
 
+      {/*
       <TransformControls position={[-1, 0, 0]} lineWidth={3} scale={2} anchor={[0, 0, 0]}>
         <group
           userData={{
@@ -295,9 +295,9 @@ function ParticleRelayCore({ surfaceMesh }) {
       </TransformControls> */}
 
       <CurveYo></CurveYo>
-      <TransformControls object={cursorA}></TransformControls>
+      {/* <TransformControls object={cursorA}></TransformControls>
       <TransformControls object={cursorB}></TransformControls>
-      <Score cursorA={cursorA} cursorB={cursorB}></Score>
+      <Score cursorA={cursorA} cursorB={cursorB}></Score> */}
 
       {surfaceMesh && unitGeomtry && gl && scene && (
         <CoreEngine
@@ -928,52 +928,53 @@ export function CoreEngine({
 
     core.onLoop(() => {
       gpu.compute()
-      gl.readRenderTargetPixels(
-        gpu.getCurrentRenderTarget(iVar.position),
-        0,
-        Math.floor(Math.random() * size.y),
-        gpuSamplerSize,
-        1,
-        buffer,
-      )
 
-      cursorA.inRange = 0
-      cursorB.inRange = 0
-      for (let i = 0; i < total; i++) {
-        let vx = getData(buffAttr.getX(i))
-        let vy = getData(buffAttr.getY(i))
-        let vz = getData(buffAttr.getZ(i))
+      // gl.readRenderTargetPixels(
+      //   gpu.getCurrentRenderTarget(iVar.position),
+      //   0,
+      //   Math.floor(Math.random() * size.y),
+      //   gpuSamplerSize,
+      //   1,
+      //   buffer,
+      // )
 
-        items[i].position.set(vx, vy, vz)
+      // cursorA.inRange = 0
+      // cursorB.inRange = 0
+      // for (let i = 0; i < total; i++) {
+      //   let vx = getData(buffAttr.getX(i))
+      //   let vy = getData(buffAttr.getY(i))
+      //   let vz = getData(buffAttr.getZ(i))
 
-        // console.log(cursorA.position)
+      //   items[i].position.set(vx, vy, vz)
 
-        let distA = cursorA.position.distanceTo(items[i].position)
-        let distB = cursorB.position.distanceTo(items[i].position)
-        if (distA <= 1) {
-          cursorA.inRange++
-        }
+      //   // console.log(cursorA.position)
 
-        if (distB <= 1) {
-          cursorB.inRange++
-        }
-      }
+      //   let distA = cursorA.position.distanceTo(items[i].position)
+      //   let distB = cursorB.position.distanceTo(items[i].position)
+      //   if (distA <= 1) {
+      //     cursorA.inRange++
+      //   }
 
-      useScore.setState((st) => {
-        return {
-          ...st,
+      //   if (distB <= 1) {
+      //     cursorB.inRange++
+      //   }
+      // }
 
-          //
-          //
-          scoreA: Math.floor(st.scoreA + cursorA.inRange),
+      // useScore.setState((st) => {
+      //   return {
+      //     ...st,
 
-          //
-          scoreB: Math.floor(st.scoreB + cursorB.inRange),
-        }
-      })
+      //     //
+      //     //
+      //     scoreA: Math.floor(st.scoreA + cursorA.inRange),
 
-      cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 2.0, 0.5)
-      cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 2.0, 0.5)
+      //     //
+      //     scoreB: Math.floor(st.scoreB + cursorB.inRange),
+      //   }
+      // })
+
+      // cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 2.0, 0.5)
+      // cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 2.0, 0.5)
     })
 
     let geo = new InstancedBufferGeometry()
