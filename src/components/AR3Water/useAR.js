@@ -26,7 +26,7 @@ export const useAR = create((set, get) => {
 
     //
     deps: {},
-    loading: false,
+    loading: true,
     showStartMenu: true,
     onPreload: async () => {
       set({ loading: true })
