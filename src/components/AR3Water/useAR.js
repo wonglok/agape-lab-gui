@@ -6,17 +6,17 @@ import {
   CircleGeometry,
   CubeCamera,
   DoubleSide,
+  MeshBasicMaterial,
   IcosahedronGeometry,
   Matrix4,
   Mesh,
-  MeshBasicMaterial,
   MeshNormalMaterial,
   Quaternion,
   Raycaster,
   Vector2,
   Vector3,
+  VideoTexture,
 } from 'three'
-import { PlaneGeometry, VideoTexture } from 'three147'
 import { create } from 'zustand'
 
 export const useAR = create((set, get) => {
