@@ -95,9 +95,9 @@ function ARContent() {
     })
     if (onFrame) {
       onFrame({ camera })
-    }
-    if (processVTex) {
-      processVTex({ scene })
+      if (processVTex) {
+        processVTex({ scene })
+      }
     }
   })
   return (

@@ -65,16 +65,12 @@ export const useAR = create((set, get) => {
 
       const imu = await IMU.Initialize()
       const cam = await Camera.Initialize(config)
-      //
       const imuResult = await imu
-      console.log(imuResult)
       const container = document.querySelector('#vidContainer')
       const canvas = document.querySelector('#vidCanvas')
       const video = cam.el
 
       const size = resize2cover(video.videoWidth, video.videoHeight, container.clientWidth, container.clientHeight)
-
-      console.log(container.clientWidth, container.clientHeight)
 
       canvas.width = container.clientWidth
       canvas.height = container.clientHeight
@@ -103,18 +99,20 @@ export const useAR = create((set, get) => {
 
       const alva = await AlvaAR.Initialize(canvas.width, canvas.height)
       setTimeout(() => {
-        let vTex = new VideoTexture(video)
+        let vTex
 
         video.addEventListener('loadeddata', () => {
-          vTex.canRun = true
+          vTex = new VideoTexture(video)
         })
         set({
           vTex,
           processVTex: ({ scene }) => {
-            if (vTex.canRun && video) {
+            if (vTex && video) {
               vTex.needsUpdate = true
               vTex.mapping = EquirectangularReflectionMapping
-              scene.environment = vTex
+              if (vTex.image) {
+                scene.environment = vTex
+              }
             }
           },
           loading: false,
