@@ -1100,9 +1100,7 @@ export function CoreEngine({
 
         vec3 geom = position;
 
-        vec3 transformed = vec3( geom * ${MY_SCALE.toFixed(
-          1.0,
-        )} * mix(unitScale, unitScale * (rand(coords.xy) * 2.0 - 1.0), randomness));
+        vec3 transformed = vec3( geom * ${MY_SCALE}.0 * mix(unitScale, unitScale * (rand(coords.xy) * 2.0 - 1.0), randomness));
 
         vec3 diff = (fowradPosData.xyz - backPosData.xyz) * dt;
         diff = normalize(diff) * 3.141592 * 2.0;
