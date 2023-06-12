@@ -120,7 +120,7 @@ export default function WebSocketPage() {
           let geoList = payload.data.map((it) => {
             let geo = plyLoader.parse(it.ply)
             it.geo = geo
-            it.matchName = it.name.replace('.', '_') + '_' + it.dataName.replace('.', '_')
+            it.matchName = it.name.replace('.', '_') + '_' + it.dataName?.replace('.', '_')
             return it
           })
 
@@ -135,7 +135,7 @@ export default function WebSocketPage() {
 
           let geo = plyLoader.parse(payload.data.ply)
           it.geo = geo
-          it.matchName = it.name.replace('.', '_') + '_' + it.dataName.replace('.', '_')
+          it.matchName = it.name.replace('.', '_') + '_' + it.dataName?.replace('.', '_')
           let geoList = useLink.getState().geoList
 
           if (geoList.some((r) => r.matchName === it.matchName)) {

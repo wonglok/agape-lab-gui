@@ -18,6 +18,12 @@ const pages = [
   // },
   {
     key: md5(v4()),
+    url: `/blog/2023/06/12/mind-ar`,
+    name: `MindAR Tracking`,
+    date: '2023-06-12',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/06/06/water`,
     name: `AR3 Water`,
     date: '2023-06-06',
