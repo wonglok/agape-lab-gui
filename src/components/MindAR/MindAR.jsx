@@ -28,6 +28,7 @@ export const useMindAR = create((set, get) => {
     stop: () => {},
   }
 })
+
 export function MindAR() {
   let container = useRef()
 
@@ -35,7 +36,8 @@ export function MindAR() {
     import('mind-ar/dist/mindar-image-three.prod.js').then(async ({ MindARThree }) => {
       let mindarThree = new MindARThree({
         container: container.current,
-        imageTargetSrc: `/2023/06/agape-ar-target/white/targets.mind`,
+        imageTargetSrc: `/2023/06/agape-ar-target/jesus/targets.mind`,
+        // imageTargetSrc: `/2023/06/agape-ar-target/white/targets.mind`,
         uiScanning: false,
         uiLoading: false,
         uiError: false,
@@ -126,6 +128,7 @@ export function MindAR() {
       <div className=' absolute top-0 left-0'>
         <div>
           <img className='m-2 h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
+          <img className='m-2 w-14' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`} />
         </div>
         <button
           className='p-2 m-1 bg-gray-100 rounded-lg'
