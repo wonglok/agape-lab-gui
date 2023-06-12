@@ -124,15 +124,17 @@ export function MindAR() {
       <div ref={container} className='absolute top-0 left-0 w-full h-full'></div>
       <div className=' absolute top-0 left-0'>
         <div>
-          <img className=' h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
+          <img className='m-2 h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
         </div>
         <button
+          className='p-2 m-1 bg-gray-100 rounded-lg'
           onClick={() => {
             start()
           }}>
           Start AR
         </button>
         <button
+          className='p-2 m-1 bg-gray-100 rounded-lg'
           onClick={() => {
             stop()
           }}>
