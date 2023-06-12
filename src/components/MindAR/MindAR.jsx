@@ -46,7 +46,6 @@ export function MindAR() {
       const { renderer, scene, camera } = mindarThree
 
       const rgbe = new RGBELoader()
-      rgbe.setDataType(FloatType)
       rgbe.loadAsync(`/envMap/evening_road_01_puresky_1k.hdr`).then((tex) => {
         tex.mapping = EquirectangularReflectionMapping
         scene.environment = tex
