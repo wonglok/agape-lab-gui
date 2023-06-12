@@ -51,10 +51,11 @@ export function MindAR() {
       })
 
       const anchor = mindarThree.addAnchor(0)
-      const geometry = new PlaneGeometry(1, 852 / 2896)
-      const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
-      const plane = new Mesh(geometry, material)
-      anchor.group.add(plane)
+
+      // const geometry = new PlaneGeometry(1, 852 / 2896)
+      // const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
+      // const plane = new Mesh(geometry, material)
+      // anchor.group.add(plane)
 
       let objectGrouper = new Object3D()
 
