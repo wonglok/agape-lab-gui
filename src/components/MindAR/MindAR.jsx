@@ -7,6 +7,7 @@ import {
   EquirectangularReflectionMapping,
   FloatType,
   GridHelper,
+  HalfFloatType,
   MeshPhysicalMaterial,
   Vector3,
 } from 'three'
@@ -36,8 +37,8 @@ export function MindAR() {
     import('mind-ar/dist/mindar-image-three.prod.js').then(async ({ MindARThree }) => {
       let mindarThree = new MindARThree({
         container: container.current,
-        imageTargetSrc: `/2023/06/agape-ar-target/jesus/targets.mind`,
-        // imageTargetSrc: `/2023/06/agape-ar-target/white/targets.mind`,
+        // imageTargetSrc: `/2023/06/agape-ar-target/jesus/targets.mind`,
+        imageTargetSrc: `/2023/06/agape-ar-target/white/targets.mind`,
         uiScanning: false,
         uiLoading: false,
         uiError: false,
@@ -46,6 +47,7 @@ export function MindAR() {
       const { renderer, scene, camera } = mindarThree
 
       const rgbe = new RGBELoader()
+      rgbe.setDataType(HalfFloatType)
       rgbe.loadAsync(`/envMap/evening_road_01_puresky_1k.hdr`).then((tex) => {
         tex.mapping = EquirectangularReflectionMapping
         scene.environment = tex
