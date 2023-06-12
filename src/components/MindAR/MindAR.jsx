@@ -1,6 +1,15 @@
-import { Canvas } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
-import { Mesh, MeshBasicMaterial, PlaneGeometry } from 'three147'
+import {
+  Box3,
+  CylinderGeometry,
+  EquirectangularReflectionMapping,
+  FloatType,
+  MeshPhysicalMaterial,
+  Vector3,
+} from 'three'
+import { BoxGeometry, Object3D } from 'three'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry } from 'three147'
 import { create } from 'zustand'
 // import * as MindARCore from
 
@@ -20,21 +29,42 @@ export function MindAR() {
     import('mind-ar/dist/mindar-image-three.prod.js').then(({ MindARThree }) => {
       let mindarThree = new MindARThree({
         container: container.current,
-        imageTargetSrc: `/2023/06/agape-ar-target/agape-target.mind`,
+        imageTargetSrc: `/2023/06/agape-ar-target/white/targets.mind`,
         uiScanning: false,
         uiLoading: false,
         uiError: false,
       })
 
       const { renderer, scene, camera } = mindarThree
+
+      const rgbe = new RGBELoader()
+      rgbe.setDataType(FloatType)
+      rgbe.loadAsync(`/envMap/evening_road_01_puresky_1k.hdr`).then((tex) => {
+        tex.mapping = EquirectangularReflectionMapping
+        scene.environment = tex
+      })
+
       const anchor = mindarThree.addAnchor(0)
-      const geometry = new PlaneGeometry(1, 0.55)
+      const geometry = new PlaneGeometry(1, 852 / 2896)
       const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
       const plane = new Mesh(geometry, material)
+
+      let objectGrouper = new Object3D()
+      let volumeMesh = new Mesh(
+        new BoxGeometry(0.5, 0.5, 0.5),
+        new MeshStandardMaterial({ color: '#ffffff', roughness: 0, wireframe: true }),
+      )
+
+      let box3 = new Box3()
+      box3.expandByObject(volumeMesh)
+      let groupSizer = new Vector3()
+      box3.getSize(groupSizer)
+      objectGrouper.add(volumeMesh)
+      objectGrouper.position.set(0, 0, groupSizer.z / 2)
+
+      anchor.group.add(objectGrouper)
+
       anchor.group.add(plane)
-      anchor.onTargetUpdate = (target) => {
-        console.log(target)
-      }
 
       const start = async () => {
         await mindarThree.start()
@@ -44,6 +74,7 @@ export function MindAR() {
       }
 
       const stop = async () => {
+        cancelAnimationFrame(rAFID)
         mindarThree.stop()
         mindarThree.renderer.setAnimationLoop(null)
       }
@@ -60,7 +91,7 @@ export function MindAR() {
       <div ref={container} className='absolute top-0 left-0 w-full h-full'></div>
       <div className=' absolute top-0 left-0'>
         <div>
-          <img className=' h-14' src={`/2023/06/agape-ar-target/Agape_logo.png`}></img>
+          <img className=' h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
         </div>
         <button
           onClick={() => {
