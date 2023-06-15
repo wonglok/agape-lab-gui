@@ -157,7 +157,7 @@ export function MindARCompiler() {
     )
   }
   useEffect(() => {
-    compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png` })
+    // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png` })
   }, [])
 
   let stop = useMindAR((r) => r.stop)
