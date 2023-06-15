@@ -205,7 +205,7 @@ export function MindARCompiler() {
                       canvas.width = 128
                       canvas.height = 128
                       let ctx = canvas.getContext('2d')
-                      ctx.drawImage(videoRef.current, 0, 0, 128, 128)
+                      ctx.drawImage(videoRef.current, 32, 32, 128 - 32, 128 - 32, 0, 0, 128, 128)
                       compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
 
                       videoRef.current.pause()
