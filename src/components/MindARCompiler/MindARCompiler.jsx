@@ -169,80 +169,89 @@ export function MindARCompiler() {
   let stop = useMindAR((r) => r.stop)
   let start = useMindAR((r) => r.start)
   let progress = useMindAR((r) => r.progress)
+
+  let noGUI = useMindAR((r) => r.noGUI)
   return (
     <div className='relative w-full h-full'>
       <div ref={container} className='absolute top-0 left-0 w-full h-full'></div>
-      <div className=' absolute top-0 left-0'>
-        <div>
-          <img className='m-2 h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
-          <img className='m-2 w-14' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`} />
-        </div>
-        <video ref={videoRef}></video>
-        <button
-          className='p-2 m-1 bg-gray-100 rounded-lg'
-          onClick={() => {
-            navigator.mediaDevices
-              .getUserMedia({
-                video: {
-                  width: 128,
-                  height: 128,
-                  facingMode: 'environment',
-                },
-                audio: false,
-              })
-              .then((stream) => {
-                videoRef.current.playsInline = true
-                videoRef.current.addEventListener('canplay', (ev) => {
-                  //
-                  //
-                  videoRef.current.play()
+      {!noGUI && (
+        <>
+          <div className=' absolute top-0 left-0'>
+            <div>
+              <img className='m-2 h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
+              <img className='m-2 w-14' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`} />
+            </div>
+            <video ref={videoRef}></video>
+            <button
+              className='p-2 m-1 bg-gray-100 rounded-lg'
+              onClick={() => {
+                navigator.mediaDevices
+                  .getUserMedia({
+                    video: {
+                      width: 128,
+                      height: 128,
+                      facingMode: 'environment',
+                    },
+                    audio: false,
+                  })
+                  .then((stream) => {
+                    videoRef.current.playsInline = true
+                    videoRef.current.addEventListener('canplay', (ev) => {
+                      //
+                      //
+                      videoRef.current.play()
 
-                  let canvas = document.createElement('canvas')
-                  canvas.width = 128
-                  canvas.height = 128
-                  let ctx = canvas.getContext('2d')
-                  ctx.drawImage(videoRef.current, 0, 0, 128, 128)
-                  compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
+                      let canvas = document.createElement('canvas')
+                      canvas.width = 128
+                      canvas.height = 128
+                      let ctx = canvas.getContext('2d')
+                      ctx.drawImage(videoRef.current, 0, 0, 128, 128)
+                      compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
 
-                  videoRef.current.pause()
-                })
-                videoRef.current.srcObject = stream
-              })
+                      videoRef.current.pause()
 
-            // let inp = document.createElement('input')
-            // inp.type = 'file'
-            // // inp.capture = 'environment'
-            // inp.onchange = (e) => {
-            //   let reader = new FileReader()
-            //   reader.onload = () => {
-            //     compile({ fileURL: reader.result })
-            //   }
-            //   reader.readAsDataURL(e.target.files[0])
-            //   // compile({ fileURL: URL.createObjectURL() })
-            // }
-            // inp.click()
-          }}>
-          Use Other
-        </button>
-        <button
-          className='p-2 m-1 bg-gray-100 rounded-lg'
-          onClick={() => {
-            nProgress.start()
-            setTimeout(() => {
-              start()
-              nProgress.done()
-            }, 1000)
-          }}>
-          {progress}
-        </button>
-        <button
-          className='p-2 m-1 bg-gray-100 rounded-lg'
-          onClick={() => {
-            stop()
-          }}>
-          Stop
-        </button>
-      </div>
+                      useMindAR.setState({ noGUI: true })
+                    })
+                    videoRef.current.srcObject = stream
+                  })
+
+                // let inp = document.createElement('input')
+                // inp.type = 'file'
+                // // inp.capture = 'environment'
+                // inp.onchange = (e) => {
+                //   let reader = new FileReader()
+                //   reader.onload = () => {
+                //     compile({ fileURL: reader.result })
+                //   }
+                //   reader.readAsDataURL(e.target.files[0])
+                //   // compile({ fileURL: URL.createObjectURL() })
+                // }
+                // inp.click()
+              }}>
+              Use Other
+            </button>
+            <button
+              className='p-2 m-1 bg-gray-100 rounded-lg'
+              onClick={() => {
+                nProgress.start()
+                setTimeout(() => {
+                  start()
+                  nProgress.done()
+                }, 1000)
+              }}>
+              {progress}
+            </button>
+            <button
+              className='p-2 m-1 bg-gray-100 rounded-lg'
+              onClick={() => {
+                stop()
+              }}>
+              Stop
+            </button>
+          </div>
+        </>
+      )}
+
       <style
         dangerouslySetInnerHTML={{
           __html: /* css */ `
