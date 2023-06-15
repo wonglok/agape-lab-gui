@@ -188,8 +188,8 @@ export function MindARCompiler() {
                 navigator.mediaDevices
                   .getUserMedia({
                     video: {
-                      width: 512,
-                      height: 512,
+                      width: 256,
+                      height: 256,
                       facingMode: 'environment',
                     },
                     audio: false,
@@ -202,10 +202,10 @@ export function MindARCompiler() {
                       videoRef.current.play()
 
                       let canvas = document.createElement('canvas')
-                      canvas.width = 512
-                      canvas.height = 512
+                      canvas.width = 256
+                      canvas.height = 256
                       let ctx = canvas.getContext('2d')
-                      ctx.drawImage(videoRef.current, 0, 0, 512 - 0, 512 - 0, 0, 0, 512, 512)
+                      ctx.drawImage(videoRef.current, 0, 0, 256 - 0, 256 - 0, 0, 0, 256, 256)
                       compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
 
                       videoRef.current.pause()
