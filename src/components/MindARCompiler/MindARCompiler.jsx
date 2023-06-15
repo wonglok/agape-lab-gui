@@ -119,16 +119,30 @@ export function MindARCompiler() {
 
           autoScale.add(gltf.scene)
 
+          gltf.scene.scale.setScalar(0.25)
           let box3 = new Box3()
           box3.setFromObject(gltf.scene)
           let autoSize = new Vector3()
           box3.getSize(autoSize)
 
-          autoScale.scale.setScalar(0.5 / autoSize.length())
+          autoScale.scale.setScalar(1 / autoSize.length())
 
           // let grid = new GridHelper(1, 10, 0x00ffff, 0x00ffff)
           // objectGrouper.add(grid)
           objectGrouper.add(autoScale)
+
+          let t3 = new Object3D()
+
+          setInterval(() => {
+            objectGrouper.getWorldPosition(t3.position)
+            objectGrouper.getWorldQuaternion(t3.quaternion)
+            objectGrouper.getWorldScale(t3.scale)
+
+            autoScale.position.lerp(t3.position, 0.1)
+            autoScale.scale.lerp(t3.scale, 0.1)
+            autoScale.quaternion.slerp(t3.quaternion, 0.1)
+          })
+          scene.add(autoScale)
 
           motions.mixer.clipAction(gltf.animations[0], gltf.scene).play()
         }
