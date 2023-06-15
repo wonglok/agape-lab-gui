@@ -34,7 +34,7 @@ export const useMindAR = create((set, get) => {
 
 export function MindARCompiler() {
   let container = useRef()
-  let compile = ({ fileURL }) => {
+  let compile = ({ fileURL, autoStart = false }) => {
     Promise.all([
       //
       import('mind-ar/dist/mindar-image-three.prod.js'),
@@ -152,6 +152,10 @@ export function MindARCompiler() {
         }
 
         useMindAR.setState({ start, stop })
+
+        if (autoStart) {
+          start()
+        }
         //
       },
     )
@@ -198,7 +202,9 @@ export function MindARCompiler() {
                   canvas.height = 128
                   let ctx = canvas.getContext('2d')
                   ctx.drawImage(videoRef.current, 0, 0, 128, 128)
-                  compile({ fileURL: ctx.canvas.toDataURL('png', 0.8) })
+                  compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
+
+                  videoRef.current.pause()
                 })
                 videoRef.current.srcObject = stream
               })
