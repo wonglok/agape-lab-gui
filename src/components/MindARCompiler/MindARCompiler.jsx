@@ -59,8 +59,6 @@ export function MindARCompiler() {
 
         await compiler.compileImageTargets(images, (progress) => {
           let pr = 'Loading...' + progress.toFixed(2) + '%'
-          console.log(pr)
-
           useMindAR.setState({ progress: pr })
           if (progress === 100) {
             useMindAR.setState({ progress: 'Start AR' })
