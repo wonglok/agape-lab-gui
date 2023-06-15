@@ -172,7 +172,7 @@ export function MindARCompiler() {
 
   let noGUI = useMindAR((r) => r.noGUI)
   return (
-    <div className='relative w-full h-full'>
+    <div className='relative w-full h-full overflow-hidden'>
       <div ref={container} className='absolute top-0 left-0 w-full h-full'></div>
       {!noGUI && (
         <>
@@ -188,8 +188,8 @@ export function MindARCompiler() {
                 navigator.mediaDevices
                   .getUserMedia({
                     video: {
-                      width: 128,
-                      height: 128,
+                      width: 512,
+                      height: 512,
                       facingMode: 'environment',
                     },
                     audio: false,
@@ -202,10 +202,10 @@ export function MindARCompiler() {
                       videoRef.current.play()
 
                       let canvas = document.createElement('canvas')
-                      canvas.width = 128
-                      canvas.height = 128
+                      canvas.width = 512
+                      canvas.height = 512
                       let ctx = canvas.getContext('2d')
-                      ctx.drawImage(videoRef.current, 32, 32, 128 - 32, 128 - 32, 0, 0, 128, 128)
+                      ctx.drawImage(videoRef.current, 0, 0, 512 - 0, 512 - 0, 0, 0, 512, 512)
                       compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
 
                       videoRef.current.pause()
