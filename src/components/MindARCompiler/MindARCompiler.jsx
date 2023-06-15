@@ -176,7 +176,7 @@ export function MindARCompiler() {
           onClick={() => {
             let inp = document.createElement('input')
             inp.type = 'file'
-            inp.capture = 'environment'
+            // inp.capture = 'environment'
             inp.onchange = (e) => {
               let reader = new FileReader()
               reader.onload = () => {
