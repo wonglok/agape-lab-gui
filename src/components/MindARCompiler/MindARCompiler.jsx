@@ -178,9 +178,12 @@ export function MindARCompiler() {
             inp.type = 'file'
             inp.capture = 'environment'
             inp.onchange = (e) => {
-              console.log()
-
-              compile({ fileURL: URL.createObjectURL(e.target.files[0]) })
+              let reader = new FileReader()
+              reader.onload = () => {
+                compile({ fileURL: reader.result })
+              }
+              reader.readAsDataURL(e.target.files[0])
+              // compile({ fileURL: URL.createObjectURL() })
             }
             inp.click()
           }}>
