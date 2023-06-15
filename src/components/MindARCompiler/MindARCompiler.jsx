@@ -179,7 +179,6 @@ export function MindARCompiler() {
             let inp = document.createElement('input')
             inp.type = 'file'
             inp.capture = 'environment'
-            inp.accept = 'image/*'
             inp.onchange = (e) => {
               console.log()
 
