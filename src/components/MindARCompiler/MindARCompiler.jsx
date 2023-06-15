@@ -126,8 +126,8 @@ export function MindARCompiler() {
 
           autoScale.scale.setScalar(0.5 / autoSize.length())
 
-          let grid = new GridHelper(1, 10, 0x00ffff, 0x00ffff)
-          objectGrouper.add(grid)
+          // let grid = new GridHelper(1, 10, 0x00ffff, 0x00ffff)
+          // objectGrouper.add(grid)
           objectGrouper.add(autoScale)
 
           motions.mixer.clipAction(gltf.animations[0], gltf.scene).play()
@@ -228,9 +228,9 @@ export function MindARCompiler() {
                 // }
                 // inp.click()
               }}>
-              Use Other
+              Start
             </button>
-            <button
+            {/* <button
               className='p-2 m-1 bg-gray-100 rounded-lg'
               onClick={() => {
                 nProgress.start()
@@ -247,7 +247,7 @@ export function MindARCompiler() {
                 stop()
               }}>
               Stop
-            </button>
+            </button> */}
           </div>
         </>
       )}
