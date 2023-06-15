@@ -14,7 +14,7 @@ const nextConfig = {
   // },
   // experimental: {},
   // images: {},
-  reactStrictMode: true, // Recommended for the `pages` directory, default in `app`.
+  reactStrictMode: false, // Recommended for the `pages` directory, default in `app`.
   transpilePackages: ['agape-sdk'],
   webpack(config, { isServer }) {
     //
