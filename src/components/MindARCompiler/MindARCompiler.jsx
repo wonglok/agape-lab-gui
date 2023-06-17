@@ -1,4 +1,4 @@
-import { bu, ca } from 'mind-ar/dist/controller-495b585f'
+import { an, bu, ca } from 'mind-ar/dist/controller-495b585f'
 import nProgress from 'nprogress'
 import { useEffect, useRef, useState } from 'react'
 import {
@@ -11,7 +11,9 @@ import {
   FloatType,
   GridHelper,
   HalfFloatType,
+  Matrix4,
   MeshPhysicalMaterial,
+  Quaternion,
   Vector3,
   sRGBEncoding,
 } from 'three'
@@ -112,11 +114,11 @@ export function MindARCompiler() {
           scene.environment = tex
         })
 
-        const anchor = mindarThree.addAnchor(0)
-
         const geometry = new PlaneGeometry(1, 1 / aspect)
         const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
         const plane = new Mesh(geometry, material)
+
+        const anchor = mindarThree.addAnchor(0)
         anchor.group.add(plane)
 
         let tj = `/thankyou-jesus/tj3b.glb`
@@ -136,12 +138,98 @@ export function MindARCompiler() {
 
         // await motions.get('happy', `/thankyou-jesus/motion/Waving-Gesture.fbx`)
 
-        let setup = ({ gltf, motions }) => {
+        const start = async () => {
+          useMindAR.setState({ start: () => {} })
+          motions.mixer.clipAction(gltf.animations[0], gltf.scene).play()
+
+          await mindarThree.start()
+
+          let position = new Vector3()
+          let quaternion = new Quaternion()
+          let scale = new Vector3()
+
+          let position2 = new Vector3()
+          let quaternion2 = new Quaternion()
+          let scale2 = new Vector3()
+
+          mindarThree.controller.onUpdate = (n) => {
+            if (n.type === 'updateMatrix') {
+              let dat = mindarThree
+              const { targetIndex: o, worldMatrix: u } = n
+              for (let p = 0; p < dat.anchors.length; p++)
+                if (dat.anchors[p].targetIndex === o) {
+                  if (
+                    (dat.anchors[p].css
+                      ? dat.anchors[p].group.children.forEach((m) => {
+                          m.element.style.visibility = u === null ? 'hidden' : 'visible'
+                        })
+                      : (dat.anchors[p].group.visible = u !== null),
+                    u !== null)
+                  ) {
+                    // m.elements = [...u]
+                    // m.multiply(dat.postMatrixs[o])
+                    // dat.anchors[p].css && m.multiply(ui)
+                    // // dat.anchors[p].group.matrix = m
+                    // let wbm = new Matrix4()
+                    // wbm.copy(m)
+                    // let t3 = new Object3D()
+                    // // wbm.decompose(t3.position, t3.quaternion, t3.scale)
+                    // // dat.anchors[p].group = m
+                    // t3.matrixAutoUpdate = false
+                    // t3.matrixWorldAutoUpdate = false
+                    // t3.matrix.elements = [...u]
+                    // t3.matrix.multiply(dat.postMatrixs[o])
+
+                    // t3.updateMatrix(true)
+                    // t3.updateMatrixWorld(true)
+
+                    let m = new Matrix4()
+                    m.elements = [...u]
+                    m.multiply(dat.postMatrixs[o])
+
+                    dat.anchors[p].css && m.multiply(ui)
+
+                    m.decompose(position, quaternion, scale)
+
+                    position2.lerp(position, 0.3)
+                    quaternion2.slerp(quaternion, 0.3)
+                    scale2.lerp(scale, 0.3)
+
+                    let lerpM = new Matrix4()
+
+                    lerpM.compose(position2, quaternion2, scale2)
+
+                    dat.anchors[p].group.matrix = lerpM
+
+                    // dat.anchors[p].group.position.lerp(t3.position, 0.1)
+                    // dat.anchors[p].group.quaternion.slerp(t3.quaternion, 0.1)
+                    // dat.anchors[p].group.scale.lerp(t3.scale, 0.1)
+
+                    // dat.anchors[p].group.matrix
+                    // (1),
+                    // ()
+                  } else {
+                    dat.anchors[p].group.matrix.identity()
+                  }
+                  dat.anchors[p].visible &&
+                    u === null &&
+                    ((dat.anchors[p].visible = !1), dat.anchors[p].onTargetLost && dat.anchors[p].onTargetLost()),
+                    !dat.anchors[p].visible &&
+                      u !== null &&
+                      ((dat.anchors[p].visible = !0), dat.anchors[p].onTargetFound && dat.anchors[p].onTargetFound()),
+                    dat.anchors[p].onTargetUpdate && dat.anchors[p].onTargetUpdate()
+                }
+              dat.anchors.reduce((p, m) => p || m.visible, !1) ? dat.ui.hideScanning() : dat.ui.showScanning()
+            }
+          }
+
+          let clock = new Clock()
+
           let autoScale = new Object3D()
 
           autoScale.add(gltf.scene)
 
-          gltf.scene.scale.setScalar(0.5)
+          // gltf.scene.scale.setScalar(0.5)
           let box3 = new Box3()
           box3.setFromObject(gltf.scene)
           let autoSize = new Vector3()
@@ -158,47 +246,29 @@ export function MindARCompiler() {
           let lerp = new Object3D()
           lerp.add(offset)
 
-          let t3 = new Object3D()
+          anchor.group.add(lerp)
 
-          setInterval(() => {
-            scene.add(lerp)
-
-            plane.getWorldPosition(t3.position)
-            plane.getWorldQuaternion(t3.quaternion)
-            plane.getWorldScale(t3.scale)
-
-            lerp.position.lerp(t3.position, 0.2)
-            lerp.scale.lerp(t3.scale, 0.2)
-            lerp.quaternion.slerp(t3.quaternion, 0.2)
-          })
-
-          motions.mixer.clipAction(gltf.animations[0], gltf.scene).play()
-        }
-
-        setup({ gltf, motions })
-
-        const start = async () => {
-          useMindAR.setState({ start: () => {} })
-
-          await mindarThree.start()
-
-          let clock = new Clock()
-
-          renderer.setAnimationLoop(() => {
+          let update = () => {
             let dt = clock.getDelta()
             motions.mixer.update(dt)
-            renderer.render(scene, camera)
-          })
+          }
+
+          let videoEl = mindarThree.container.querySelector('video')
+
+          videoEl.style.objectFit = 'cover'
+          videoEl.style.top = '0px'
+          videoEl.style.left = '0px'
+          videoEl.style.width = `${window.innerWidth}px`
+          videoEl.style.height = `${window.innerHeight}px`
+
           setTimeout(() => {
-            let videoEl = mindarThree.container.querySelector('video')
-
-            videoEl.style.objectFit = 'cover'
-            videoEl.style.top = '0px'
-            videoEl.style.left = '0px'
-            videoEl.style.width = `${window.innerWidth}px`
-            videoEl.style.height = `${window.innerHeight}px`
-
             useMindAR.setState({ noGUI: true })
+          })
+
+          renderer.setAnimationLoop(() => {
+            update()
+            //
+            renderer.render(scene, camera)
           })
         }
 
@@ -219,7 +289,7 @@ export function MindARCompiler() {
   }
 
   useEffect(() => {
-    compile({ fileURL: `/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`, autoStart: false })
+    compile({ fileURL: `/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`, autoStart: true })
   }, [])
 
   let stop = useMindAR((r) => r.stop)
