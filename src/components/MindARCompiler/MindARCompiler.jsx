@@ -1,9 +1,10 @@
-import { bu } from 'mind-ar/dist/controller-495b585f'
+import { bu, ca } from 'mind-ar/dist/controller-495b585f'
 import nProgress from 'nprogress'
 import { useEffect, useRef, useState } from 'react'
 import {
   AnimationMixer,
   Box3,
+  Camera,
   Clock,
   CylinderGeometry,
   EquirectangularReflectionMapping,
@@ -12,12 +13,14 @@ import {
   HalfFloatType,
   MeshPhysicalMaterial,
   Vector3,
+  sRGBEncoding,
 } from 'three'
 import { BoxGeometry, Object3D } from 'three'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { Mesh, MeshBasicMaterial, PlaneGeometry, VideoTexture } from 'three147'
 // import { Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry } from 'three147'
 import { create } from 'zustand'
 // import * as MindARCore from
@@ -27,7 +30,7 @@ export const useMindAR = create((set, get) => {
   return {
     //
     progress: 0,
-    start: () => {},
+    start: false,
     stop: () => {},
   }
 })
@@ -35,6 +38,7 @@ export const useMindAR = create((set, get) => {
 export function MindARCompiler() {
   let container = useRef()
   let compile = ({ fileURL, autoStart = false }) => {
+    nProgress.start()
     Promise.all([
       //
       import('mind-ar/dist/mindar-image-three.prod.js'),
@@ -47,21 +51,40 @@ export function MindARCompiler() {
       ]) => {
         let compiler = new Compiler()
 
+        let aspect = 1
         let images = await Promise.all(
           [fileURL].map((r) => {
             return new Promise((resolve) => {
               let img = new Image()
-              img.onload = () => resolve(img)
+              img.onload = () => {
+                let canvas = document.createElement('canvas')
+                canvas.width = 512
+                canvas.height = (512 / img.width) * img.height
+
+                aspect = canvas.width / canvas.height
+
+                let ctx = canvas.getContext('2d')
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+                let src = canvas.toDataURL('png', 0.5)
+
+                let img2 = new Image()
+                img2.onload = () => {
+                  resolve(img2)
+                }
+                img2.src = src
+              }
               img.src = r
             })
           }),
         )
 
         await compiler.compileImageTargets(images, (progress) => {
-          let pr = 'Loading...' + progress.toFixed(2) + '%'
+          let pr = '' + progress.toFixed(2) + '%'
           useMindAR.setState({ progress: pr })
           if (progress === 100) {
-            useMindAR.setState({ progress: 'Start AR' })
+            useMindAR.setState({ progress: 'Finishing up...' })
           }
         })
 
@@ -69,15 +92,15 @@ export function MindARCompiler() {
 
         const url = URL.createObjectURL(new Blob([exportedBuffer], { type: 'application/octet-stream' }))
 
-        // console.log(url)
+        container.current.style.width = window.innerWidth + 'px'
+        container.current.style.height = window.innerHeight + 'px'
 
         let mindarThree = new MindARThree({
           container: container.current,
-          // imageTargetSrc: `/2023/06/agape-ar-target/jesus/targets.mind`,
           imageTargetSrc: url, // `/2023/06/agape-ar-target/white/targets.mind`,
-          uiScanning: false,
-          uiLoading: false,
-          uiError: false,
+          uiScanning: true,
+          uiLoading: true,
+          uiError: true,
         })
 
         const { renderer, scene, camera } = mindarThree
@@ -91,12 +114,10 @@ export function MindARCompiler() {
 
         const anchor = mindarThree.addAnchor(0)
 
-        // const geometry = new PlaneGeometry(1, 852 / 2896)
-        // const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
-        // const plane = new Mesh(geometry, material)
-        // anchor.group.add(plane)
-
-        let objectGrouper = new Object3D()
+        const geometry = new PlaneGeometry(1, 1 / aspect)
+        const material = new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.5 })
+        const plane = new Mesh(geometry, material)
+        anchor.group.add(plane)
 
         let tj = `/thankyou-jesus/tj3b.glb`
         let glbLoader = new GLTFLoader()
@@ -106,57 +127,78 @@ export function MindARCompiler() {
         let fbxLoader = new FBXLoader()
         let gltf = await glbLoader.loadAsync(tj)
         let motions = {
-          mixer: new AnimationMixer(),
+          mixer: new AnimationMixer(gltf.scene),
           get: async (name, url) => {
             let clip = (await fbxLoader.loadAsync(url)).animations[0]
             motions[name] = motions.mixer.clipAction(clip, gltf.scene)
           },
         }
-        await motions.get('happy', `/thankyou-jesus/motion/Waving-Gesture.fbx`)
+
+        // await motions.get('happy', `/thankyou-jesus/motion/Waving-Gesture.fbx`)
 
         let setup = ({ gltf, motions }) => {
           let autoScale = new Object3D()
 
           autoScale.add(gltf.scene)
 
-          gltf.scene.scale.setScalar(0.25)
+          gltf.scene.scale.setScalar(0.5)
           let box3 = new Box3()
           box3.setFromObject(gltf.scene)
           let autoSize = new Vector3()
           box3.getSize(autoSize)
 
-          autoScale.scale.setScalar(1 / autoSize.length())
+          autoScale.scale.setScalar((1 / autoSize.length()) * 1.4)
 
-          // let grid = new GridHelper(1, 10, 0x00ffff, 0x00ffff)
-          // objectGrouper.add(grid)
-          objectGrouper.add(autoScale)
+          let offset = new Object3D()
+          offset.add(autoScale)
+
+          offset.position.y = (1 / aspect / 2) * -1
+          offset.position.z += autoSize.z / 2
+
+          let lerp = new Object3D()
+          lerp.add(offset)
 
           let t3 = new Object3D()
 
           setInterval(() => {
-            objectGrouper.getWorldPosition(t3.position)
-            objectGrouper.getWorldQuaternion(t3.quaternion)
-            objectGrouper.getWorldScale(t3.scale)
+            scene.add(lerp)
 
-            autoScale.position.lerp(t3.position, 0.1)
-            autoScale.scale.lerp(t3.scale, 0.1)
-            autoScale.quaternion.slerp(t3.quaternion, 0.1)
+            plane.getWorldPosition(t3.position)
+            plane.getWorldQuaternion(t3.quaternion)
+            plane.getWorldScale(t3.scale)
+
+            lerp.position.lerp(t3.position, 0.2)
+            lerp.scale.lerp(t3.scale, 0.2)
+            lerp.quaternion.slerp(t3.quaternion, 0.2)
           })
-          scene.add(autoScale)
 
           motions.mixer.clipAction(gltf.animations[0], gltf.scene).play()
         }
 
         setup({ gltf, motions })
-        anchor.group.add(objectGrouper)
 
         const start = async () => {
+          useMindAR.setState({ start: () => {} })
+
           await mindarThree.start()
+
           let clock = new Clock()
+
           renderer.setAnimationLoop(() => {
             let dt = clock.getDelta()
             motions.mixer.update(dt)
             renderer.render(scene, camera)
+          })
+          setTimeout(() => {
+            let videoEl = mindarThree.container.querySelector('video')
+
+            videoEl.style.objectFit = 'cover'
+            videoEl.style.top = '0px'
+            videoEl.style.left = '0px'
+            videoEl.style.width = `${window.innerWidth}px`
+            videoEl.style.height = `${window.innerHeight}px`
+
+            useMindAR.setState({ noGUI: true })
           })
         }
 
@@ -165,186 +207,52 @@ export function MindARCompiler() {
           mindarThree.stop()
         }
 
-        useMindAR.setState({ start, stop })
+        useMindAR.setState({ start, stop, progress: '' })
 
         if (autoStart) {
           start()
         }
+        nProgress.done()
         //
       },
     )
   }
-  useEffect(() => {
-    // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png` })
-  }, [])
 
-  let videoRef = useRef()
+  useEffect(() => {
+    compile({ fileURL: `/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`, autoStart: false })
+  }, [])
 
   let stop = useMindAR((r) => r.stop)
   let start = useMindAR((r) => r.start)
   let progress = useMindAR((r) => r.progress)
-
   let noGUI = useMindAR((r) => r.noGUI)
+
   return (
-    <div className='relative w-full h-full overflow-hidden'>
-      <div ref={container} className='absolute top-0 left-0 w-full h-full'></div>
-      {!noGUI && (
-        <>
-          <div className=' absolute top-0 left-0'>
-            <div>
-              <img className='m-2 h-14' src={`/2023/06/agape-ar-target/white/agape-white.png`}></img>
-              <img className='m-2 w-14' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`} />
-            </div>
-            <video ref={videoRef}></video>
-            <button
-              className='p-2 m-1 bg-gray-100 rounded-lg'
-              onClick={() => {
-                navigator.mediaDevices
-                  .getUserMedia({
-                    video: {
-                      width: 256,
-                      height: 256,
-                      facingMode: 'environment',
-                    },
-                    audio: false,
-                  })
-                  .then((stream) => {
-                    videoRef.current.playsInline = true
-                    videoRef.current.addEventListener('canplay', (ev) => {
-                      //
-                      //
-                      videoRef.current.play()
+    <>
+      <div ref={container} className=''></div>
+      <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
+        {!noGUI && start && (
+          <button
+            className='p-2 m-1 bg-blue-300 rounded-2xl'
+            onClick={() => {
+              // start()
+              // // let input = document.createElement('input')
+              // // input.type = 'file'
+              // // input.onchange = () => {
+              // //   let file = input.files[0]
+              // //   compile({ fileURL: `${URL.createObjectURL(file)}`, autoStart: true })
+              // // }
+              // // input.click()
 
-                      let canvas = document.createElement('canvas')
-                      canvas.width = 256
-                      canvas.height = 256
-                      let ctx = canvas.getContext('2d')
-                      ctx.drawImage(videoRef.current, 0, 0, 256 - 0, 256 - 0, 0, 0, 256, 256)
-                      compile({ fileURL: ctx.canvas.toDataURL('png', 0.8), autoStart: true })
+              start()
 
-                      videoRef.current.pause()
-
-                      useMindAR.setState({ noGUI: true })
-                    })
-                    videoRef.current.srcObject = stream
-                  })
-
-                // let inp = document.createElement('input')
-                // inp.type = 'file'
-                // // inp.capture = 'environment'
-                // inp.onchange = (e) => {
-                //   let reader = new FileReader()
-                //   reader.onload = () => {
-                //     compile({ fileURL: reader.result })
-                //   }
-                //   reader.readAsDataURL(e.target.files[0])
-                //   // compile({ fileURL: URL.createObjectURL() })
-                // }
-                // inp.click()
-              }}>
-              Start
-            </button>
-            {/* <button
-              className='p-2 m-1 bg-gray-100 rounded-lg'
-              onClick={() => {
-                nProgress.start()
-                setTimeout(() => {
-                  start()
-                  nProgress.done()
-                }, 1000)
-              }}>
-              {progress}
-            </button>
-            <button
-              className='p-2 m-1 bg-gray-100 rounded-lg'
-              onClick={() => {
-                stop()
-              }}>
-              Stop
-            </button> */}
-          </div>
-        </>
-      )}
-
-      <style
-        dangerouslySetInnerHTML={{
-          __html: /* css */ `
-      /* Make clicks pass-through */
-#nprogress {
-  pointer-events: none;
-}
-
-#nprogress .bar {
-  background: #29d;
-
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-}
-
-/* Fancy blur effect */
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-      -ms-transform: rotate(3deg) translate(0px, -4px);
-          transform: rotate(3deg) translate(0px, -4px);
-}
-
-/* Remove these to get rid of the spinner */
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 15px;
-  right: 15px;
-}
-
-#nprogress .spinner-icon {
-  width: 18px;
-  height: 18px;
-  box-sizing: border-box;
-
-  border: solid 2px transparent;
-  border-top-color: #29d;
-  border-left-color: #29d;
-  border-radius: 50%;
-
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-          animation: nprogress-spinner 400ms linear infinite;
-}
-
-.nprogress-custom-parent {
-  overflow: hidden;
-  position: relative;
-}
-
-.nprogress-custom-parent #nprogress .spinner,
-.nprogress-custom-parent #nprogress .bar {
-  position: absolute;
-}
-
-@-webkit-keyframes nprogress-spinner {
-  0%   { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes nprogress-spinner {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-      `,
-        }}></style>
-    </div>
+              // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png`, autoStart: false })
+            }}>
+            Start
+          </button>
+        )}
+        {progress}
+      </div>
+    </>
   )
 }
