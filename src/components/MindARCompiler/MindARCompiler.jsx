@@ -274,29 +274,31 @@ export function MindARCompiler() {
   return (
     <>
       <div ref={container} className=''></div>
-      <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
+      <div className='absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full'>
         {!noGUI && start && (
-          <button
-            className='p-2 m-1 bg-blue-300 rounded-2xl'
-            onClick={() => {
-              // start()
-              // // let input = document.createElement('input')
-              // // input.type = 'file'
-              // // input.onchange = () => {
-              // //   let file = input.files[0]
-              // //   compile({ fileURL: `${URL.createObjectURL(file)}`, autoStart: true })
-              // // }
-              // // input.click()
+          <>
+            <button
+              className='p-2 m-1 bg-blue-300 rounded-2xl'
+              onClick={() => {
+                // start()
+                // // let input = document.createElement('input')
+                // // input.type = 'file'
+                // // input.onchange = () => {
+                // //   let file = input.files[0]
+                // //   compile({ fileURL: `${URL.createObjectURL(file)}`, autoStart: true })
+                // // }
+                // // input.click()
 
-              start()
+                start()
 
-              // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png`, autoStart: false })
-            }}>
-            Start
-          </button>
+                // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png`, autoStart: false })
+              }}>
+              Start
+            </button>
+            {progress}
+            <img className='w-40' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`}></img>
+          </>
         )}
-        {progress}
-        <img className='w-40' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`}></img>
       </div>
     </>
   )
