@@ -166,23 +166,6 @@ export function MindARCompiler() {
                       : (dat.anchors[p].group.visible = u !== null),
                     u !== null)
                   ) {
-                    // m.elements = [...u]
-                    // m.multiply(dat.postMatrixs[o])
-                    // dat.anchors[p].css && m.multiply(ui)
-                    // // dat.anchors[p].group.matrix = m
-                    // let wbm = new Matrix4()
-                    // wbm.copy(m)
-                    // let t3 = new Object3D()
-                    // // wbm.decompose(t3.position, t3.quaternion, t3.scale)
-                    // // dat.anchors[p].group = m
-                    // t3.matrixAutoUpdate = false
-                    // t3.matrixWorldAutoUpdate = false
-                    // t3.matrix.elements = [...u]
-                    // t3.matrix.multiply(dat.postMatrixs[o])
-
-                    // t3.updateMatrix(true)
-                    // t3.updateMatrixWorld(true)
-
                     let m = new Matrix4()
                     m.elements = [...u]
                     m.multiply(dat.postMatrixs[o])
@@ -195,19 +178,10 @@ export function MindARCompiler() {
                     quaternion2.slerp(quaternion, 0.3)
                     scale2.lerp(scale, 0.3)
 
-                    let lerpM = new Matrix4()
+                    // let lerpM = new Matrix4()
+                    // lerpM
 
-                    lerpM.compose(position2, quaternion2, scale2)
-
-                    dat.anchors[p].group.matrix = lerpM
-
-                    // dat.anchors[p].group.position.lerp(t3.position, 0.1)
-                    // dat.anchors[p].group.quaternion.slerp(t3.quaternion, 0.1)
-                    // dat.anchors[p].group.scale.lerp(t3.scale, 0.1)
-
-                    // dat.anchors[p].group.matrix
-                    // (1),
-                    // ()
+                    dat.anchors[p].group.matrix.compose(position2, quaternion2, scale2)
                   } else {
                     dat.anchors[p].group.matrix.identity()
                   }
