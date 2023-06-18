@@ -263,7 +263,7 @@ export function MindARCompiler() {
   }
 
   useEffect(() => {
-    compile({ fileURL: `/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`, autoStart: true })
+    compile({ fileURL: `/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`, autoStart: false })
   }, [])
 
   let stop = useMindAR((r) => r.stop)
