@@ -296,6 +296,7 @@ export function MindARCompiler() {
           </button>
         )}
         {progress}
+        <img className='w-40' src={`/2023/06/agape-ar-target/jesus/thankyouJESUS.jpg`}></img>
       </div>
     </>
   )
