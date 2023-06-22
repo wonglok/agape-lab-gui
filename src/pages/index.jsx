@@ -18,6 +18,12 @@ const pages = [
   // },
   {
     key: md5(v4()),
+    url: `/blog/2023/06/22/stereo`,
+    name: `Stereo`,
+    date: '2023-06-22',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/06/15/compiler`,
     name: `AR Compiler`,
     date: '2023-06-15',
