@@ -188,6 +188,21 @@ export function FingerDetection({}) {
         },
         runningMode: 'IMAGE',
         numHands: 1,
+        // /**
+        //  * The minimum confidence score for the hand detection to be considered
+        //  * successful. Defaults to 0.5.
+        //  */
+        // minHandDetectionConfidence: 0.4,
+        // /**
+        //  * The minimum confidence score of hand presence score in the hand landmark
+        //  * detection. Defaults to 0.5.
+        //  */
+        // minHandPresenceConfidence: 0.4,
+        // /**
+        //  * The minimum confidence score for the hand tracking to be considered
+        //  * successful. Defaults to 0.5.
+        //  */
+        // minTrackingConfidence: 0.4,
       })
 
       useFinger.setState({ handLandmarker })
