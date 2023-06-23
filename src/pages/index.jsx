@@ -18,6 +18,12 @@ const pages = [
   // },
   {
     key: md5(v4()),
+    url: `/blog/2023/06/23/noodle`,
+    name: `Noodle`,
+    date: '2023-06-23',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/06/22/stereo`,
     name: `Stereo`,
     date: '2023-06-22',
