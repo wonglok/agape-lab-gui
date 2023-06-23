@@ -625,15 +625,15 @@ export function CoreEngine({
       })
 
       for (let idx = 0; idx < totalDataCount; idx++) {
-        sceneDataAlpha[idx * 4 + 0] = getData(0.0)
-        sceneDataAlpha[idx * 4 + 1] = getData(0.0)
-        sceneDataAlpha[idx * 4 + 2] = getData(0.0)
-        sceneDataAlpha[idx * 4 + 3] = getData(1.0)
+        sceneDataTextureAlpha.image.data[idx * 4 + 0] = getData(0.0)
+        sceneDataTextureAlpha.image.data[idx * 4 + 1] = getData(0.0)
+        sceneDataTextureAlpha.image.data[idx * 4 + 2] = getData(0.0)
+        sceneDataTextureAlpha.image.data[idx * 4 + 3] = getData(1.0)
         //
-        sceneDataBeta[idx * 4 + 0] = getData(0.0)
-        sceneDataBeta[idx * 4 + 1] = getData(0.0)
-        sceneDataBeta[idx * 4 + 2] = getData(0.0)
-        sceneDataBeta[idx * 4 + 3] = getData(1.0)
+        sceneDataTextureBeta.image.data[idx * 4 + 0] = getData(0.0)
+        sceneDataTextureBeta.image.data[idx * 4 + 1] = getData(0.0)
+        sceneDataTextureBeta.image.data[idx * 4 + 2] = getData(0.0)
+        sceneDataTextureBeta.image.data[idx * 4 + 3] = getData(1.0)
       }
 
       let entries = sceneObjects.entries()
