@@ -110,7 +110,7 @@ export function CameraFinger() {
                   v1.lerp(hand[8], 0.05)
                   v2.lerp(hand[4], 0.05)
 
-                  spin.current = MathUtils.lerp(spin.current, Math.atan2(v2.y - v1.y, v2.x - v1.x), 0.05)
+                  spin.current = MathUtils.lerp(spin.current, dist, 0.05)
 
                   fVec.copy(middle)
 
@@ -125,19 +125,19 @@ export function CameraFinger() {
                       scale={[1, 1, 1]}>
                       {/*  */}
 
-                      <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
+                      {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
                         {fingerIDX}
-                      </Text>
+                      </Text> */}
 
-                      <group rotation={[0, 0, spin * Math.PI]}>
-                        <Cone position={[0, 1, 0]}></Cone>
-                        <Cone rotation={[0, 0, Math.PI]} position={[0, -1, 0]}></Cone>
+                      <group rotation={[0, 0, spin.current * Math.PI * 2.0 * -5.0]}>
+                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}></Cone>
+                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}></Cone>
                       </group>
 
                       <group
                         userData={{
                           forceSize: dist * 5,
-                          forceTwist: spin,
+                          forceTwist: 5,
                           forceType: 'vortexZ',
                           type: 'ForceField',
                         }}>
