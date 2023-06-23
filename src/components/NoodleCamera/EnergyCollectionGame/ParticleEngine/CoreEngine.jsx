@@ -1330,9 +1330,9 @@ function simPos({ attractorSize, curveSize }) {
       }
 
 
-      data_sim_position.rgb += booster(data_sim_position.rgb, progress, total) * 0.5;
+      data_sim_position.rgb += booster(data_sim_position.rgb, progress, total) * 5.0 * 0.5;
 
-      data_sim_position.rgb += booster(data_sim_position.rgb, progress + 1.0, total) * 1.5;
+      data_sim_position.rgb += booster(data_sim_position.rgb, progress + 1.0, total) * 5.0 * 1.5;
 
 
       //

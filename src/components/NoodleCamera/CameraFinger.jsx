@@ -67,6 +67,9 @@ export function CameraFinger() {
 
   let spin = useRef(0)
 
+  let cl = useThree((r) => r.clock)
+  let t = cl.getElapsedTime()
+
   return (
     <>
       <mesh position={[0, 0, -1]} scale={[1, 1, 1]}>
@@ -129,9 +132,31 @@ export function CameraFinger() {
                         {fingerIDX}
                       </Text> */}
 
-                      <group rotation={[0, 0, spin.current * Math.PI * 2.0 * -5.0]}>
-                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}></Cone>
-                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}></Cone>
+                      <group
+                        scale={(0.1 * Math.PI - spin.current) * 5.0}
+                        rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
+                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}>
+                          <meshPhysicalMaterial
+                            thickness={5}
+                            roughness={0}
+                            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
+                        </Cone>
+                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}>
+                          <meshPhysicalMaterial
+                            thickness={5}
+                            roughness={0}
+                            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
+                        </Cone>
+                      </group>
+
+                      <group scale={1}>
+                        <Sphere args={[0.3, 32, 32]}>
+                          <meshStandardMaterial
+                            roughness={1}
+                            transparent
+                            metalness={0}
+                            color={'lime'}></meshStandardMaterial>
+                        </Sphere>
                       </group>
 
                       <group
@@ -141,13 +166,7 @@ export function CameraFinger() {
                           forceType: 'vortexZ',
                           type: 'ForceField',
                         }}>
-                        <Sphere args={[1, 32, 32]}>
-                          <meshStandardMaterial
-                            roughness={1}
-                            transparent
-                            metalness={0}
-                            color={'lime'}></meshStandardMaterial>
-                        </Sphere>
+                        {/*  */}
                       </group>
                     </group>
                   )
