@@ -135,13 +135,21 @@ export function CameraFinger() {
                       <group
                         scale={(0.1 * Math.PI - spin.current) * 5.0}
                         rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
-                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}>
+                        <Cone
+                          args={[1, 1, 3, 1]}
+                          scale={[0.5, 2, 0.5]}
+                          rotation={[0, 0, Math.PI * -0.5]}
+                          position={[0, 2, 0]}>
                           <meshPhysicalMaterial
                             thickness={5}
                             roughness={0}
                             transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
                         </Cone>
-                        <Cone scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}>
+                        <Cone
+                          args={[1, 1, 3, 1]}
+                          scale={[0.5, 2, 0.5]}
+                          rotation={[0, 0, Math.PI * 0.5]}
+                          position={[0, -2, 0]}>
                           <meshPhysicalMaterial
                             thickness={5}
                             roughness={0}
