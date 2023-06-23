@@ -97,8 +97,6 @@ export function CameraFinger() {
       </group>
 
       {/*  */}
-
-      {/*  */}
     </>
   )
 }
@@ -262,9 +260,9 @@ export function CameraMenu() {
                 //
                 .getUserMedia({
                   video: {
-                    frameRate: 30,
-                    height: { ideal: 640 },
-                    width: { ideal: 640 },
+                    frameRate: 60,
+                    height: { ideal: 720 },
+                    width: { ideal: 1280 },
                   },
                   audio: false,
                 })
