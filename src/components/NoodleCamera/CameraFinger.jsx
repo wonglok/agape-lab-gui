@@ -104,13 +104,15 @@ export function CameraFinger() {
 
                       <group
                         userData={{
-                          forceSize: -1,
+                          forceSize: 1,
                           forceTwist: -3.141592 * 2.0,
                           forceType: 'vortexZ',
                           type: 'ForceField',
                         }}>
                         <Sphere args={[1, 32, 32]}>
-                          <meshPhysicalMaterial metalness={0} roughness={0.1} thickness={1.1}></meshPhysicalMaterial>
+                          <meshPhysicalMaterial metalness={0} transmission={1} thickness={1.5} roughness={0}>
+                            {/*  */}
+                          </meshPhysicalMaterial>
                         </Sphere>
                       </group>
                     </group>

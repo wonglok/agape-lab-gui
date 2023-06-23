@@ -231,7 +231,7 @@ function ParticleRelayCore({ surfaceMesh }) {
     transmission = 1,
     thickness = 1.5,
     //
-    color = '#00ffff',
+    color = '#00ff00',
     emissive = '#000000',
     performanceProfile = 'medium',
     surfaceEmissionForce = -0.6,
@@ -531,7 +531,7 @@ export function CoreEngine({
     //
     //
 
-    let attractorSize = new Vector2(64, 1)
+    let attractorSize = new Vector2(32, 1)
 
     let sceneDataAlpha = []
     let sceneDataBeta = []
@@ -922,8 +922,17 @@ export function CoreEngine({
       items[i] = new Object3D()
     }
 
+    let getDataFrom = (v) => {
+      if (useHalfFloat) {
+        return DataUtils.fromHalfFloat(v)
+      } else {
+        return v
+      }
+    }
+
     core.onLoop(() => {
       gpu.compute()
+
       gl.readRenderTargetPixels(
         gpu.getCurrentRenderTarget(iVar.position),
         0,
@@ -936,9 +945,9 @@ export function CoreEngine({
       cursorA.inRange = 0
       cursorB.inRange = 0
       for (let i = 0; i < total; i++) {
-        let vx = getData(buffAttr.getX(i))
-        let vy = getData(buffAttr.getY(i))
-        let vz = getData(buffAttr.getZ(i))
+        let vx = getDataFrom(buffAttr.getX(i))
+        let vy = getDataFrom(buffAttr.getY(i))
+        let vz = getDataFrom(buffAttr.getZ(i))
 
         items[i].position.set(vx, vy, vz)
 
