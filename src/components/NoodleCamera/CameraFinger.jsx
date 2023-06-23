@@ -23,12 +23,13 @@ export function CameraFinger() {
   let minSS = Math.min(sizeHeight, sizeWidth)
 
   // * video?.videoHeight) / video?.videoWidth
-
-  useFinger.setState({
-    sizeWidth,
-    sizeHeight,
-    maxSS,
-    minSS,
+  useEffect(() => {
+    useFinger.setState({
+      sizeWidth,
+      sizeHeight,
+      maxSS,
+      minSS,
+    })
   })
 
   return (
@@ -68,8 +69,9 @@ export function CameraFinger() {
 }
 
 let getID = () => {
-  return `_${Math.floor(Math.random() * 100000000000000 * 100000000000000)}`
+  return `_${Math.floor(Math.random() * 100000000000000)}`
 }
+
 export function FingerDetection({}) {
   useEffect(() => {
     let tsk = async () => {
@@ -103,34 +105,6 @@ export function FingerDetection({}) {
       const result = handLandmarker.detect(video)
 
       useFinger.setState({ worldLandmarks: result.landmarks })
-
-      // if (!pWorld && result?.worldLandmarks?.length > 0) {
-      //   pWorld = result.worldLandmarks.map((hand) => {
-      //     return hand.map((finger) => {
-      //       let v3 = new Vector3()
-      //       v3.copy(finger)
-      //       v3.oid = getID()
-      //       return v3
-      //     })
-      //   })
-      // }
-      // if (result && pWorld) {
-      //   pWorld.forEach((hand, hIDX) => {
-      //     hand.forEach((finger, fIDX) => {
-      //       let fSrc3 = result.worldLandmarks[hIDX]
-
-      //       if (fSrc3) {
-      //         let value = fSrc3[fIDX]
-
-      //         if (value) {
-      //           finger.copy(value)
-      //           finger.x *= size.width
-      //           finger.y *= size.height
-      //         }
-      //       }
-      //     })
-      //   })
-      // }
     }
   })
 
