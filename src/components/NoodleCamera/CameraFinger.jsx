@@ -136,7 +136,7 @@ export function CameraFinger() {
 
                       <group
                         userData={{
-                          forceSize: dist * 10,
+                          forceSize: dist * 5,
                           forceTwist: spin,
                           forceType: 'vortexZ',
                           type: 'ForceField',

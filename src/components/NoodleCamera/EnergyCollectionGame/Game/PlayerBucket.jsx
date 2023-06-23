@@ -15,8 +15,7 @@ export function PlayerBucket({ playerName = 'player1' }) {
           thickness={3}
           metalness={0.0}
           resolution={128}
-          transmissionSampler
-        ></MeshTransmissionMaterial>
+          transmissionSampler></MeshTransmissionMaterial>
       </Sphere>
 
       {/*  */}
