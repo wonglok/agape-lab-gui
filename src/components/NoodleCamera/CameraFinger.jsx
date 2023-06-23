@@ -10,7 +10,7 @@ import {
 } from 'three'
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Text, Sphere, useEnvironment, MeshTransmissionMaterial, Cone } from '@react-three/drei'
+import { Text, Sphere, useEnvironment, MeshTransmissionMaterial, Cone, OrbitControls } from '@react-three/drei'
 import { use, useEffect, useMemo, useRef } from 'react'
 
 //useGLTF, Box, OrthographicCamera
@@ -39,7 +39,7 @@ export function CameraFinger() {
   if (video) {
     aspect = video?.videoWidth / video?.videoHeight
   }
-  let vp = { width: 25, height: 25 / aspect }
+  let vp = { width: 30, height: 30 / aspect }
   let maxVP = Math.max(vp.width, vp.height)
   let minVP = Math.min(vp.width, vp.height)
 
@@ -61,6 +61,8 @@ export function CameraFinger() {
 
   return (
     <>
+      <OrbitControls object-position={[0, 0, 20]} enablePan={true} makeDefault></OrbitControls>
+
       <mesh position={[0, 0, -1]} scale={[1, 1, 1]}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
         {handLandmarkResult ? (
@@ -246,8 +248,8 @@ export function CameraMenu() {
                 .getUserMedia({
                   video: {
                     frameRate: 30,
-                    height: { ideal: 480 },
-                    width: { ideal: 480 },
+                    height: { ideal: 640 },
+                    width: { ideal: 640 },
                   },
                   audio: false,
                 })
