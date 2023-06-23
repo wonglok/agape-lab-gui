@@ -39,7 +39,7 @@ export function CameraFinger() {
   if (video) {
     aspect = video?.videoWidth / video?.videoHeight
   }
-  let vp = { width: 30, height: 30 / aspect }
+  let vp = { width: 60, height: 60 / aspect }
   let maxVP = Math.max(vp.width, vp.height)
   let minVP = Math.min(vp.width, vp.height)
 
