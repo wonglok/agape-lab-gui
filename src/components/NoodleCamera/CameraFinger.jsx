@@ -112,7 +112,7 @@ export function FingerDetection({}) {
                 key={`${handIDX}_${fingerIDX}`}
                 position={[maxSS * finger.x - maxSS * 0.5, maxSS * -finger.y + maxSS * 0.5, finger.z * 1.0]}
                 scale={[1, 1, 1]}>
-                <Box scale={[10, 10, 10]}>
+                <Box scale={[30, 30, 30]}>
                   <meshBasicMaterial color={'#ff0000'}></meshBasicMaterial>
                 </Box>
               </group>
