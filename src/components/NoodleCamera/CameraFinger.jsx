@@ -197,6 +197,7 @@ export function CameraMenu() {
             onClick={() => {
               useFinger.setState({ menuText: 'Loading...' })
               let video = document.createElement('video')
+              video.playsInline = true
               window.navigator.mediaDevices
                 //
                 .getUserMedia({
