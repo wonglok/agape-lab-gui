@@ -215,7 +215,7 @@ export function FingerDetection({}) {
   let video = useFinger((r) => r.video)
 
   // let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
-  useFrame(({ viewport }) => {
+  useFrame(({}) => {
     if (handLandmarker && video) {
       const result = handLandmarker.detect(video)
 
