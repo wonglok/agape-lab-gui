@@ -35,7 +35,23 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.j
 import { TransformControls, PivotControls, Box, Sphere, Text, Stats, CatmullRomLine, Line } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
+let useHalfFloat = true
 
+let getData = (v) => {
+  if (useHalfFloat) {
+    return DataUtils.toHalfFloat(v)
+  } else {
+    return Number(v)
+  }
+}
+
+let getDataFrom = (v) => {
+  if (useHalfFloat) {
+    return DataUtils.fromHalfFloat(v)
+  } else {
+    return v
+  }
+}
 let useScore = create(() => {
   return {
     scoreA: 0,
@@ -476,7 +492,6 @@ export function CoreEngine({
     // let iOSSafari = iOS && webkit && !ua.match(/CriOS/i)
 
     //
-    let useHalfFloat = true
 
     let curveSize = new Vector3(10, 1)
     let curveSizeCount = curveSize.x * curveSize.y * 4
@@ -493,10 +508,10 @@ export function CoreEngine({
     let syncCurve = () => {
       let texArray = curveTexture.image.data
       for (let idx = 0; idx < curveSizeCount; idx++) {
-        texArray[idx * 4 + 0] = 0.0
-        texArray[idx * 4 + 1] = 0.0
-        texArray[idx * 4 + 2] = 0.0
-        texArray[idx * 4 + 3] = 0.0
+        texArray[idx * 4 + 0] = getData(0.0)
+        texArray[idx * 4 + 1] = getData(0.0)
+        texArray[idx * 4 + 2] = getData(0.0)
+        texArray[idx * 4 + 3] = getData(0.0)
       }
 
       let v3 = new Vector3()
@@ -509,10 +524,10 @@ export function CoreEngine({
           it.getWorldPosition(v3)
           let idx = y * curveSize.y + x
 
-          texArray[idx * 4 + 0] = v3.x
-          texArray[idx * 4 + 1] = v3.y
-          texArray[idx * 4 + 2] = v3.z
-          texArray[idx * 4 + 3] = 1
+          texArray[idx * 4 + 0] = getData(v3.x)
+          texArray[idx * 4 + 1] = getData(v3.y)
+          texArray[idx * 4 + 2] = getData(v3.z)
+          texArray[idx * 4 + 3] = getData(1)
         }
       })
       curveTexture.needsUpdate = true
@@ -560,14 +575,6 @@ export function CoreEngine({
       RGBAFormat,
       !useHalfFloat ? FloatType : HalfFloatType,
     )
-
-    let getData = (v) => {
-      if (useHalfFloat) {
-        return DataUtils.toHalfFloat(v)
-      } else {
-        return Number(v)
-      }
-    }
 
     let sceneObjects = new Map()
 
@@ -920,14 +927,6 @@ export function CoreEngine({
     let items = new Array(gpuSamplerSize)
     for (let i = 0; i < total; i++) {
       items[i] = new Object3D()
-    }
-
-    let getDataFrom = (v) => {
-      if (useHalfFloat) {
-        return DataUtils.fromHalfFloat(v)
-      } else {
-        return v
-      }
     }
 
     core.onLoop(() => {
@@ -1330,9 +1329,9 @@ function simPos({ attractorSize, curveSize }) {
       }
 
 
-      data_sim_position.rgb += booster(data_sim_position.rgb, progress, total) * 5.0 * 0.5;
+      data_sim_position.rgb += booster(data_sim_position.rgb, progress, total) * 0.5;
 
-      data_sim_position.rgb += booster(data_sim_position.rgb, progress + 1.0, total) * 5.0 * 1.5;
+      data_sim_position.rgb += booster(data_sim_position.rgb, progress + 1.0, total) * 1.5;
 
 
       //
