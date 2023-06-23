@@ -8,13 +8,6 @@ export function CameraFinger() {
   let videoTexture = useFinger((r) => r.videoTexture)
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
-  let camera = useThree((r) => r.camera)
-  let maxV = Math.max(video?.videoWidth, video?.videoHeight) || 1024
-  let minV = Math.min(video?.videoWidth, video?.videoHeight) || 1024
-  let vp = useThree((r) => r.viewport)
-  let nowVP = vp.getCurrentViewport(camera, [0, 0, 0], size)
-  let maxVP = Math.max(nowVP.width, nowVP.height)
-  let minVP = Math.min(nowVP.width, nowVP.height)
 
   let sizeHeight = size.height
   let sizeWidth = size.width
@@ -22,7 +15,6 @@ export function CameraFinger() {
   let maxSS = Math.max(sizeHeight, sizeWidth)
   let minSS = Math.min(sizeHeight, sizeWidth)
 
-  // * video?.videoHeight) / video?.videoWidth
   useEffect(() => {
     useFinger.setState({
       sizeWidth,
@@ -66,10 +58,6 @@ export function CameraFinger() {
       {/*  */}
     </>
   )
-}
-
-let getID = () => {
-  return `_${Math.floor(Math.random() * 100000000000000)}`
 }
 
 export function FingerDetection({}) {
