@@ -2,6 +2,7 @@ import {
   AdditiveBlending,
   Color,
   EquirectangularReflectionMapping,
+  MathUtils,
   Object3D,
   Vector3,
   VideoTexture,
@@ -9,7 +10,7 @@ import {
 } from 'three'
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Text, Sphere, useEnvironment, MeshTransmissionMaterial } from '@react-three/drei'
+import { Text, Sphere, useEnvironment, MeshTransmissionMaterial, Cone } from '@react-three/drei'
 import { use, useEffect, useMemo, useRef } from 'react'
 
 //useGLTF, Box, OrthographicCamera
@@ -19,15 +20,15 @@ export function CameraFinger() {
   let videoTexture = useFinger((r) => r.videoTexture)
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
-  // let scene = useThree((r) => r.scene)
-  // let env = useEnvironment({ files: `/lok/shanghai.hdr` })
+  let scene = useThree((r) => r.scene)
+  let env = useEnvironment({ files: `/lok/shanghai.hdr` })
   if (videoTexture) {
     videoTexture.encoding = sRGBEncoding
     // scene.background = videoTexture
   }
-  // env.mapping = EquirectangularReflectionMapping
-  // scene.environment = env
-  // scene.background = env
+  env.mapping = EquirectangularReflectionMapping
+  scene.environment = env
+  scene.background = env
 
   let sizeHeight = size.height
   let sizeWidth = size.width
@@ -59,6 +60,13 @@ export function CameraFinger() {
     })
   })
 
+  let v1 = useMemo(() => new Vector3(), [])
+  let v2 = useMemo(() => new Vector3(), [])
+  let middle = useMemo(() => new Vector3(), [])
+  let fVec = useMemo(() => new Vector3(), [])
+
+  let spin = useRef(0)
+
   return (
     <>
       <mesh position={[0, 0, -1]} scale={[1, 1, 1]}>
@@ -84,35 +92,61 @@ export function CameraFinger() {
               hand
                 // .filter((f, fi) => fi === 4)
                 .map((finger, fingerIDX) => {
-                  if (fingerIDX !== 8) {
+                  if (!(fingerIDX === 8 || fingerIDX === 4)) {
                     return null
                   }
-                  //
+
+                  middle.copy(v1)
+                  middle.lerp(v2, 0.5)
+
+                  let dist = v1.distanceTo(v2)
+
+                  if (dist >= 0.3141592) {
+                    dist = 0.3141592
+                  }
+
+                  dist = 0.3141592 - dist
+
+                  v1.lerp(hand[8], 0.05)
+                  v2.lerp(hand[4], 0.05)
+
+                  spin.current = MathUtils.lerp(spin.current, Math.atan2(v2.y - v1.y, v2.x - v1.x), 0.05)
+
+                  fVec.copy(middle)
+
                   return (
                     <group
                       key={`${handIDX}_${fingerIDX}`}
                       position={[
-                        vp.width * finger.x - vp.width * 0.5,
-                        vp.height * -finger.y + vp.height * 0.5,
-                        finger.z * vpg.distance,
+                        vp.width * fVec.x - vp.width * 0.5,
+                        vp.height * -fVec.y + vp.height * 0.5,
+                        fVec.z * 0.0,
                       ]}
                       scale={[1, 1, 1]}>
                       {/*  */}
+
                       <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
                         {fingerIDX}
                       </Text>
 
+                      <group rotation={[0, 0, spin * Math.PI]}>
+                        <Cone position={[0, 1, 0]}></Cone>
+                        <Cone rotation={[0, 0, Math.PI]} position={[0, -1, 0]}></Cone>
+                      </group>
+
                       <group
                         userData={{
-                          forceSize: 1,
-                          forceTwist: -3.141592 * 2.0,
+                          forceSize: dist * 10,
+                          forceTwist: spin,
                           forceType: 'vortexZ',
                           type: 'ForceField',
                         }}>
                         <Sphere args={[1, 32, 32]}>
-                          <meshPhysicalMaterial metalness={0} transmission={1} thickness={1.5} roughness={0}>
-                            {/*  */}
-                          </meshPhysicalMaterial>
+                          <meshStandardMaterial
+                            roughness={1}
+                            transparent
+                            metalness={0}
+                            color={'lime'}></meshStandardMaterial>
                         </Sphere>
                       </group>
                     </group>
