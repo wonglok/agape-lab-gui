@@ -63,7 +63,7 @@ export function CameraFinger() {
     <>
       <OrbitControls object-position={[0, 0, 20]} enablePan={true} makeDefault></OrbitControls>
 
-      <mesh visible={false} position={[0, 0, -1]} scale={[1, 1, 1]}>
+      <mesh visible={true} position={[0, 0, -1]} scale={[1, 1, 1]}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
         {handLandmarkResult ? (
           <meshBasicMaterial
@@ -187,7 +187,7 @@ export function FingerDetection({}) {
           delegate: 'GPU',
         },
         runningMode: 'IMAGE',
-        numHands: 4,
+        numHands: 1,
       })
 
       useFinger.setState({ handLandmarker })
