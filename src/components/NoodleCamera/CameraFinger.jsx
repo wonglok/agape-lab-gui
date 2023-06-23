@@ -25,7 +25,9 @@ export function CameraFinger() {
     videoTexture.encoding = sRGBEncoding
     // scene.background = videoTexture
   }
+  env.mapping = EquirectangularReflectionMapping
   scene.environment = env
+  scene.background = env
 
   let sizeHeight = size.height
   let sizeWidth = size.width

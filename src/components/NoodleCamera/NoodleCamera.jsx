@@ -12,13 +12,9 @@ export function NoodleCamera() {
       <Canvas>
         {/*  */}
 
-        {/* <EffectComposer disableNormalPass resolutionScale={0.35}>
-          <Bloom intensity={1} mipmapBlur luminanceThreshold={0.5} resolutionScale={0.35}></Bloom>
-        </EffectComposer> */}
         <CameraFinger></CameraFinger>
 
         <FingerDetection></FingerDetection>
-        {/*  */}
 
         <OrbitControls object-position={[0, 0, 15]} enablePan={true} makeDefault></OrbitControls>
         <ParticleRelay />
