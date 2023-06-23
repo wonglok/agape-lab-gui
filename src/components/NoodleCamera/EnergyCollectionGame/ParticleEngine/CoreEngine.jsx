@@ -263,7 +263,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   return (
     <>
       <TransformControls position={[0, 2, 0]} lineWidth={3} scale={2} anchor={[0, 0, 0]}>
-        <group
+        {/* <group
           userData={{
             forceSize: 3 * 0.5,
             forceTwist: -3.141592 * 2.0 * 2.8,
@@ -273,7 +273,7 @@ function ParticleRelayCore({ surfaceMesh }) {
           <Sphere scale={[0.1, 0.2, 0.1]}>
             <meshStandardMaterial metalness={1} flatShading></meshStandardMaterial>
           </Sphere>
-        </group>
+        </group> */}
       </TransformControls>
       {/*
 

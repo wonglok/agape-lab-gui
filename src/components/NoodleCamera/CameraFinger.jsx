@@ -9,9 +9,8 @@ import {
 } from 'three'
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Text } from '@react-three/drei'
+import { Text, Sphere, useEnvironment, MeshTransmissionMaterial } from '@react-three/drei'
 import { use, useEffect, useMemo, useRef } from 'react'
-import { Sphere } from 'three147'
 
 //useGLTF, Box, OrthographicCamera
 // import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolver'
@@ -21,13 +20,12 @@ export function CameraFinger() {
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
   let scene = useThree((r) => r.scene)
-
+  let env = useEnvironment({ files: `/lok/shanghai.hdr` })
   if (videoTexture) {
-    scene.background = new Color('#000000')
     videoTexture.encoding = sRGBEncoding
-    videoTexture.mapping = EquirectangularReflectionMapping
-    scene.environment = videoTexture
+    scene.background = videoTexture
   }
+  scene.environment = env
 
   let sizeHeight = size.height
   let sizeWidth = size.width
@@ -80,36 +78,47 @@ export function CameraFinger() {
           video &&
           handLandmarkResult &&
           handLandmarkResult.map((hand, handIDX) => {
-            return hand
-              .filter((f, fi) => fi === 8)
-              .map((finger, fingerIDX) => {
-                //
-                return (
-                  <group
-                    key={`${handIDX}_${fingerIDX}`}
-                    position={[
-                      vp.width * finger.x - vp.width * 0.5,
-                      vp.height * -finger.y + vp.height * 0.5,
-                      finger.z * vpg.distance,
-                    ]}
-                    scale={[1, 1, 1]}>
-                    {/*  */}
-                    {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
-                      {fingerIDX}
-                    </Text> */}
+            return (
+              hand
+                // .filter((f, fi) => fi === 4)
+                .map((finger, fingerIDX) => {
+                  if (fingerIDX !== 8) {
+                    return null
+                  }
+                  //
+                  return (
+                    <group
+                      key={`${handIDX}_${fingerIDX}`}
+                      position={[
+                        vp.width * finger.x - vp.width * 0.5,
+                        vp.height * -finger.y + vp.height * 0.5,
+                        finger.z * vpg.distance,
+                      ]}
+                      scale={[1, 1, 1]}>
+                      {/*  */}
+                      <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
+                        {fingerIDX}
+                      </Text>
 
-                    {
                       <group
                         userData={{
                           forceSize: 3,
-                          forceTwist: 3.141592 * 2.0 * -1,
+                          forceTwist: -3.141592 * 2.0,
                           forceType: 'vortexZ',
                           type: 'ForceField',
-                        }}></group>
-                    }
-                  </group>
-                )
-              })
+                        }}>
+                        <Sphere args={[1, 32, 32]}>
+                          <MeshTransmissionMaterial
+                            metalness={0}
+                            roughness={0.1}
+                            thickness={1.1}
+                            backsideThickness={1.1}></MeshTransmissionMaterial>
+                        </Sphere>
+                      </group>
+                    </group>
+                  )
+                })
+            )
           })}
       </group>
 
