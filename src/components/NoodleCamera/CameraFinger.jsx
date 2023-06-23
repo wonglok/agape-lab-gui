@@ -1,23 +1,56 @@
-import { AdditiveBlending, Object3D, Vector3, VideoTexture, sRGBEncoding } from 'three'
+import {
+  AdditiveBlending,
+  Color,
+  EquirectangularReflectionMapping,
+  Object3D,
+  Vector3,
+  VideoTexture,
+  sRGBEncoding,
+} from 'three'
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Box, OrthographicCamera, useGLTF } from '@react-three/drei'
+import { Text } from '@react-three/drei'
 import { use, useEffect, useMemo, useRef } from 'react'
-import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolver'
+import { Sphere } from 'three147'
+
+//useGLTF, Box, OrthographicCamera
+// import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolver'
 
 export function CameraFinger() {
   let videoTexture = useFinger((r) => r.videoTexture)
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
+  let scene = useThree((r) => r.scene)
+
+  if (videoTexture) {
+    scene.background = new Color('#000000')
+    scene.environment = videoTexture
+    scene.environment.mapping = EquirectangularReflectionMapping
+  }
 
   let sizeHeight = size.height
   let sizeWidth = size.width
 
-  let maxSS = Math.max(sizeHeight, sizeWidth)
-  let minSS = Math.min(sizeHeight, sizeWidth)
+  let vpg = useThree((r) => r.viewport)
+  // let camera = useThree((r) => r.camera)
+  let aspect = 1
 
+  if (video) {
+    aspect = video?.videoWidth / video?.videoHeight
+  }
+  let vp = { width: 25, height: 25 / aspect }
+  let maxVP = Math.max(vp.width, vp.height)
+  let minVP = Math.min(vp.width, vp.height)
+
+  let maxSS = 1 // maxVP // Math.max(sizeHeight, sizeWidth)
+  let minSS = 1 //minVP // Math.min(sizeHeight, sizeWidth)
+
+  let controls = useThree((r) => r.controls)
+  let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
   useEffect(() => {
     useFinger.setState({
+      maxVP,
+      minVP,
       sizeWidth,
       sizeHeight,
       maxSS,
@@ -27,33 +60,57 @@ export function CameraFinger() {
 
   return (
     <>
-      {/*  */}
+      <mesh position={[0, 0, -1]} scale={[1, 1, 1]}>
+        <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
+        {handLandmarkResult ? (
+          <meshBasicMaterial
+            depthWrite={true}
+            opacity={1}
+            depthTest={true}
+            map={videoTexture}
+            transparent={false}></meshBasicMaterial>
+        ) : (
+          <meshBasicMaterial color={'#000000'}></meshBasicMaterial>
+        )}
+      </mesh>
 
-      {video && (
-        <OrthographicCamera
-          position={[0, 0, 250]}
-          near={1}
-          far={maxSS}
-          top={size.height / 2}
-          right={size.width / 2}
-          bottom={size.height / -2}
-          left={size.width / -2}
-          makeDefault></OrthographicCamera>
-      )}
+      <group position={[0, 0, -1]}>
+        {controls &&
+          video &&
+          handLandmarkResult &&
+          handLandmarkResult.map((hand, handIDX) => {
+            return hand
+              .filter((f, fi) => fi === 8)
+              .map((finger, fingerIDX) => {
+                //
+                return (
+                  <group
+                    key={`${handIDX}_${fingerIDX}`}
+                    position={[
+                      vp.width * finger.x - vp.width * 0.5,
+                      vp.height * -finger.y + vp.height * 0.5,
+                      finger.z * vpg.distance,
+                    ]}
+                    scale={[1, 1, 1]}>
+                    {/*  */}
+                    {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
+                      {fingerIDX}
+                    </Text> */}
 
-      {videoTexture && (
-        <>
-          <mesh position={[0, 0, -100]} scale={[1, 1, 1]}>
-            <planeGeometry args={[maxSS, maxSS]}></planeGeometry>
-            <meshBasicMaterial
-              depthWrite={true}
-              opacity={1}
-              depthTest={true}
-              map={videoTexture}
-              transparent={false}></meshBasicMaterial>
-          </mesh>
-        </>
-      )}
+                    {
+                      <group
+                        userData={{
+                          forceSize: 3,
+                          forceTwist: 3.141592 * 2.0 * -1,
+                          forceType: 'vortexZ',
+                          type: 'ForceField',
+                        }}></group>
+                    }
+                  </group>
+                )
+              })
+          })}
+      </group>
 
       {/*  */}
 
@@ -77,7 +134,7 @@ export function FingerDetection({}) {
           delegate: 'GPU',
         },
         runningMode: 'IMAGE',
-        numHands: 2,
+        numHands: 4,
       })
 
       useFinger.setState({ handLandmarker })
@@ -89,7 +146,7 @@ export function FingerDetection({}) {
   let handLandmarker = useFinger((r) => r.handLandmarker)
   let video = useFinger((r) => r.video)
 
-  let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
+  // let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
   useFrame(({ viewport }) => {
     if (handLandmarker && video) {
       const result = handLandmarker.detect(video)
@@ -98,130 +155,18 @@ export function FingerDetection({}) {
     }
   })
 
-  let sizeHeight = useFinger((r) => r.sizeHeight)
-  let sizeWidth = useFinger((r) => r.sizeWidth)
-  let minSS = useFinger((r) => r.minSS)
-  let maxSS = useFinger((r) => r.maxSS)
+  // let sizeHeight = useFinger((r) => r.sizeHeight)
+  // let sizeWidth = useFinger((r) => r.sizeWidth)
+  // let minSS = useFinger((r) => r.minSS)
+  // let maxSS = useFinger((r) => r.maxSS)
+  // let maxVP = useFinger((r) => r.maxVP)
 
-  return (
-    <>
-      {video && handLandmarkResult && <Hand></Hand>}
-      {video &&
-        handLandmarkResult &&
-        handLandmarkResult.map((hand, handIDX) => {
-          return hand.map((finger, fingerIDX) => {
-            return (
-              <group
-                key={`${handIDX}_${fingerIDX}`}
-                position={[maxSS * finger.x - maxSS * 0.5, maxSS * -finger.y + maxSS * 0.5, finger.z * 1.0]}
-                scale={[1, 1, 1]}>
-                <Box scale={[30, 30, 30]}>
-                  <meshBasicMaterial color={'#ff0000'}></meshBasicMaterial>
-                </Box>
-              </group>
-            )
-          })
-        })}
-    </>
-  )
-}
+  let size = useThree((r) => r.size)
+  let vpg = useThree((r) => r.viewport)
+  let camera = useThree((r) => r.camera)
+  let vp = vpg.getCurrentViewport(camera, [0, 0, -1], size)
 
-function Hand() {
-  let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
-  let glb = useGLTF(`/finger/hand.glb`)
-
-  const OOI = useMemo(() => {
-    let OOI = {
-      MyRoot: new Object3D(),
-    }
-
-    glb.scene.traverse((n) => {
-      console.log(n.name)
-      if (n.name === 'palm_') OOI.PALM = n
-      if (n.name === 'Bone') OOI.Bone = n
-      if (n.name === 'Bone001') OOI.ring0 = n
-      if (n.name === 'Bone011') OOI.ring1 = n
-      if (n.name === 'Bone012') OOI.ring2 = n
-      if (n.name === 'Bone013') OOI.ring3 = n
-
-      if (n.name === 'Bone002') OOI.middle0 = n
-      if (n.name === 'Bone008') OOI.middle1 = n
-      if (n.name === 'Bone009') OOI.middle2 = n
-      if (n.name === 'Bone010') OOI.middle3 = n
-
-      if (n.name === 'Bone003') OOI.index0 = n
-      if (n.name === 'Bone005') OOI.index1 = n
-      if (n.name === 'Bone006') OOI.index2 = n
-      if (n.name === 'Bone007') OOI.index3 = n
-
-      if (n.name === 'Bone004') OOI.pinky0 = n
-      if (n.name === 'Bone014') OOI.pinky1 = n
-      if (n.name === 'Bone015') OOI.pinky2 = n
-      if (n.name === 'Bone016') OOI.pinky3 = n
-
-      if (n.name === 'Bone017') OOI.thumb0 = n
-      if (n.name === 'Bone018') OOI.thumb1 = n
-      if (n.name === 'Bone019') OOI.thumb2 = n
-    })
-
-    return OOI
-  }, [glb])
-
-  const { IKSolver, ccdikhelper } = useMemo(() => {
-    let skinnedMesh = OOI.PALM
-    const iks = [
-      {
-        target: skinnedMesh.skeleton.bones.findIndex((r) => r.name === OOI['ring3'].name), // "target_hand_l"
-        effector: skinnedMesh.skeleton.bones.findIndex((r) => r.name === OOI['ring2'].name), // "hand_l"
-        links: [
-          {
-            index: skinnedMesh.skeleton.bones.findIndex((r) => r.name === OOI['ring1'].name), // "lowerarm_l"
-          },
-          {
-            index: skinnedMesh.skeleton.bones.findIndex((r) => r.name === OOI['ring0'].name), // "lowerarm_l"
-          },
-          {
-            index: skinnedMesh.skeleton.bones.findIndex((r) => r.name === OOI['Bone'].name), // "lowerarm_l"
-          },
-        ],
-      },
-    ]
-
-    const ccdikhelper = new CCDIKHelper(OOI.PALM, iks, 0.01)
-
-    return {
-      IKSolver: new CCDIKSolver(OOI.PALM, iks),
-      ccdikhelper: ccdikhelper,
-    }
-  }, [OOI])
-
-  let gp = useRef()
-  let maxSS = useFinger((r) => r.maxSS)
-  let getPos = (finger) => [maxSS * finger.x - maxSS * 0.5, maxSS * -finger.y + maxSS * 0.5, finger.z * 1.0]
-
-  useFrame(() => {
-    if (IKSolver && handLandmarkResult && handLandmarkResult.length > 0) {
-      // let root = new Vector3().fromArray(getPos(handLandmarkResult[0][0]))
-      // let target = new Vector3().fromArray(getPos(handLandmarkResult[0][8]))
-
-      // OOI.PALM.position.lerp(root, 0.101)
-      // // glb.scene.position.lerp(root, 1)
-      // OOI.ring3.position.lerp(target, 0.1)
-      IKSolver.update()
-    }
-  })
-
-  return (
-    <>
-      <primitive object={ccdikhelper}></primitive>
-      <group ref={gp} position={[0, 0, 0]}>
-        {handLandmarkResult[0] && <group position={getPos(handLandmarkResult[0][0])}></group>}
-      </group>
-      <group scale={50}>
-        <primitive object={glb.scene}></primitive>
-      </group>
-    </>
-  )
+  return <></>
 }
 
 export function CameraMenu() {
@@ -238,7 +183,7 @@ export function CameraMenu() {
           className=' flex items-center justify-center'
           style={{ position: 'absolute', width: '80px', top: `calc(50% - 80px / 2)`, left: `calc(50% - 80px / 2)` }}>
           <div
-            className='p-3 px-6 bg-gray-200 cursor-pointer rounded-3xl'
+            className='p-3 px-6 bg-gray-200 border border-black cursor-pointer rounded-3xl'
             onClick={() => {
               useFinger.setState({ menuText: 'Loading...' })
               let video = document.createElement('video')
@@ -246,7 +191,8 @@ export function CameraMenu() {
                 //
                 .getUserMedia({
                   video: {
-                    height: { ideal: 1280 },
+                    frameRate: 30,
+                    height: { ideal: 720 },
                     width: { ideal: 1280 },
                   },
                   audio: false,
