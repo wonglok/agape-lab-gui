@@ -169,10 +169,10 @@ export function FingerDetection({}) {
   // let maxSS = useFinger((r) => r.maxSS)
   // let maxVP = useFinger((r) => r.maxVP)
 
-  let size = useThree((r) => r.size)
-  let vpg = useThree((r) => r.viewport)
-  let camera = useThree((r) => r.camera)
-  let vp = vpg.getCurrentViewport(camera, [0, 0, -1], size)
+  // let size = useThree((r) => r.size)
+  // let vpg = useThree((r) => r.viewport)
+  // let camera = useThree((r) => r.camera)
+  // let vp = vpg.getCurrentViewport(camera, [0, 0, -1], size)
 
   return <></>
 }
@@ -201,8 +201,8 @@ export function CameraMenu() {
                 .getUserMedia({
                   video: {
                     frameRate: 30,
-                    height: { ideal: 720 },
-                    width: { ideal: 1280 },
+                    height: { ideal: 480 },
+                    width: { ideal: 480 },
                   },
                   audio: false,
                 })
