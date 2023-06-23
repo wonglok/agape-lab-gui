@@ -25,6 +25,7 @@ export function CameraFinger() {
   if (videoTexture) {
     scene.background = new Color('#000000')
     scene.environment = videoTexture
+    scene.environment.encoding = sRGBEncoding
     scene.environment.mapping = EquirectangularReflectionMapping
   }
 
