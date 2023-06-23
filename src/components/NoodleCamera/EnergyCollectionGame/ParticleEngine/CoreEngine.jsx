@@ -72,7 +72,6 @@ export function ParticleRelay() {
             lineWidth={3}
             scale={2}
             onDrag={() => {
-              //
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
@@ -87,7 +86,6 @@ export function ParticleRelay() {
             lineWidth={3}
             scale={2}
             onDrag={() => {
-              //
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>

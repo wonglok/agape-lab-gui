@@ -24,9 +24,9 @@ export function CameraFinger() {
 
   if (videoTexture) {
     scene.background = new Color('#000000')
+    videoTexture.encoding = sRGBEncoding
+    videoTexture.mapping = EquirectangularReflectionMapping
     scene.environment = videoTexture
-    scene.environment.encoding = sRGBEncoding
-    scene.environment.mapping = EquirectangularReflectionMapping
   }
 
   let sizeHeight = size.height
@@ -71,7 +71,7 @@ export function CameraFinger() {
             map={videoTexture}
             transparent={false}></meshBasicMaterial>
         ) : (
-          <meshBasicMaterial color={'#000000'}></meshBasicMaterial>
+          <meshBasicMaterial color={'#bababa'}></meshBasicMaterial>
         )}
       </mesh>
 

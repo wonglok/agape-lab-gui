@@ -20,7 +20,7 @@ export function NoodleCamera() {
         <FingerDetection></FingerDetection>
         {/*  */}
 
-        <OrbitControls enablePan={true} makeDefault></OrbitControls>
+        <OrbitControls object-position={[0, 0, 20]} enablePan={true} makeDefault></OrbitControls>
         <ParticleRelay />
       </Canvas>
 
