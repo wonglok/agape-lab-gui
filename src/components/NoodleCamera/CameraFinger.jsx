@@ -23,7 +23,7 @@ export function CameraFinger() {
   let env = useEnvironment({ files: `/lok/shanghai.hdr` })
   if (videoTexture) {
     videoTexture.encoding = sRGBEncoding
-    scene.background = videoTexture
+    // scene.background = videoTexture
   }
   scene.environment = env
 
