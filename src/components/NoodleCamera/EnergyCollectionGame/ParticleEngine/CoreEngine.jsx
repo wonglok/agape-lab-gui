@@ -768,7 +768,7 @@ export function CoreEngine({
       // }),
     }
 
-    let clock = new Clock()
+    // let clock = new Clock()
 
     let iCoords = accessCoord()
 
