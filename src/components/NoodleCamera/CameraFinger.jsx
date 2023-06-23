@@ -108,11 +108,7 @@ export function CameraFinger() {
                           type: 'ForceField',
                         }}>
                         <Sphere args={[1, 32, 32]}>
-                          <MeshTransmissionMaterial
-                            metalness={0}
-                            roughness={0.1}
-                            thickness={1.1}
-                            backsideThickness={1.1}></MeshTransmissionMaterial>
+                          <meshPhysicalMaterial metalness={0} roughness={0.1} thickness={1.1}></meshPhysicalMaterial>
                         </Sphere>
                       </group>
                     </group>

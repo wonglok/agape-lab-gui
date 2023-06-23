@@ -476,7 +476,7 @@ export function CoreEngine({
     // let iOSSafari = iOS && webkit && !ua.match(/CriOS/i)
 
     //
-    let useHalfFloat = false
+    let useHalfFloat = true
 
     let curveSize = new Vector3(10, 1)
     let curveSizeCount = curveSize.x * curveSize.y * 4
