@@ -19,15 +19,15 @@ export function CameraFinger() {
   let videoTexture = useFinger((r) => r.videoTexture)
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
-  let scene = useThree((r) => r.scene)
-  let env = useEnvironment({ files: `/lok/shanghai.hdr` })
+  // let scene = useThree((r) => r.scene)
+  // let env = useEnvironment({ files: `/lok/shanghai.hdr` })
   if (videoTexture) {
     videoTexture.encoding = sRGBEncoding
     // scene.background = videoTexture
   }
-  env.mapping = EquirectangularReflectionMapping
-  scene.environment = env
-  scene.background = env
+  // env.mapping = EquirectangularReflectionMapping
+  // scene.environment = env
+  // scene.background = env
 
   let sizeHeight = size.height
   let sizeWidth = size.width
