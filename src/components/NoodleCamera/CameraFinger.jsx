@@ -226,6 +226,8 @@ export function FingerDetection({}) {
     }
   })
 
+  //
+
   // let sizeHeight = useFinger((r) => r.sizeHeight)
   // let sizeWidth = useFinger((r) => r.sizeWidth)
   // let minSS = useFinger((r) => r.minSS)
