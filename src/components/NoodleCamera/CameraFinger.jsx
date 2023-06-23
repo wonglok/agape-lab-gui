@@ -63,7 +63,7 @@ export function CameraFinger() {
     <>
       <OrbitControls object-position={[0, 0, 20]} enablePan={true} makeDefault></OrbitControls>
 
-      <mesh position={[0, 0, -1]} scale={[1, 1, 1]}>
+      <mesh visible={false} position={[0, 0, -1]} scale={[1, 1, 1]}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
         {handLandmarkResult ? (
           <meshBasicMaterial

@@ -9,7 +9,15 @@ export function NoodleCamera() {
     <>
       {/*  */}
 
-      <Canvas>
+      <Canvas
+        onCreated={(st) => {
+          st.gl.domElement.ontouchstart = (ev) => {
+            ev.preventDefault()
+          }
+          st.gl.domElement.ontouchmove = (ev) => {
+            ev.preventDefault()
+          }
+        }}>
         {/*  */}
 
         <CameraFinger></CameraFinger>
