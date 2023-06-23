@@ -33,7 +33,6 @@ export function CameraFinger() {
   let sizeHeight = size.height
   let sizeWidth = size.width
 
-  let vpg = useThree((r) => r.viewport)
   // let camera = useThree((r) => r.camera)
   let aspect = 1
 
@@ -59,16 +58,6 @@ export function CameraFinger() {
       minSS,
     })
   })
-
-  let v1 = useMemo(() => new Vector3(), [])
-  let v2 = useMemo(() => new Vector3(), [])
-  let middle = useMemo(() => new Vector3(), [])
-  let fVec = useMemo(() => new Vector3(), [])
-
-  let spin = useRef(0)
-
-  let cl = useThree((r) => r.clock)
-  let t = cl.getElapsedTime()
 
   return (
     <>
@@ -99,85 +88,7 @@ export function CameraFinger() {
                     return null
                   }
 
-                  middle.copy(v1)
-                  middle.lerp(v2, 0.5)
-
-                  let dist = v1.distanceTo(v2)
-
-                  if (dist >= 0.3141592) {
-                    dist = 0.3141592
-                  }
-
-                  dist = 0.3141592 - dist
-
-                  v1.lerp(hand[8], 0.05)
-                  v2.lerp(hand[4], 0.05)
-
-                  spin.current = MathUtils.lerp(spin.current, dist, 0.05)
-
-                  fVec.copy(middle)
-
-                  return (
-                    <group
-                      key={`${handIDX}_${fingerIDX}`}
-                      position={[
-                        vp.width * fVec.x - vp.width * 0.5,
-                        vp.height * -fVec.y + vp.height * 0.5,
-                        fVec.z * 0.0,
-                      ]}
-                      scale={[1, 1, 1]}>
-                      {/*  */}
-
-                      {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
-                        {fingerIDX}
-                      </Text> */}
-
-                      <group
-                        scale={(0.1 * Math.PI - spin.current) * 5.0}
-                        rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
-                        <Cone
-                          args={[1, 1, 3, 1]}
-                          scale={[0.5, 2, 0.5]}
-                          rotation={[0, 0, Math.PI * -0.5]}
-                          position={[0, 2, 0]}>
-                          <meshPhysicalMaterial
-                            thickness={5}
-                            roughness={0}
-                            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
-                        </Cone>
-                        <Cone
-                          args={[1, 1, 3, 1]}
-                          scale={[0.5, 2, 0.5]}
-                          rotation={[0, 0, Math.PI * 0.5]}
-                          position={[0, -2, 0]}>
-                          <meshPhysicalMaterial
-                            thickness={5}
-                            roughness={0}
-                            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
-                        </Cone>
-                      </group>
-
-                      <group scale={1}>
-                        <Sphere args={[0.3, 32, 32]}>
-                          <meshStandardMaterial
-                            roughness={1}
-                            transparent
-                            metalness={0}
-                            color={'lime'}></meshStandardMaterial>
-                        </Sphere>
-                      </group>
-
-                      <group
-                        userData={{
-                          forceSize: dist * 5,
-                          forceTwist: 5,
-                          forceType: 'vortexZ',
-                          type: 'ForceField',
-                        }}>
-                        {/*  */}
-                      </group>
-                    </group>
-                  )
+                  return <Hand key={fingerIDX} handIDX={handIDX} fingerIDX={fingerIDX} vp={vp} hand={hand}></Hand>
                 })
             )
           })}
@@ -187,6 +98,75 @@ export function CameraFinger() {
 
       {/*  */}
     </>
+  )
+}
+
+function Hand({ hand, vp, handIDX, fingerIDX }) {
+  let v1 = useMemo(() => new Vector3(), [])
+  let v2 = useMemo(() => new Vector3(), [])
+  let middle = useMemo(() => new Vector3(), [])
+  let fVec = useMemo(() => new Vector3(), [])
+
+  let spin = useRef(0)
+
+  middle.copy(v1)
+  middle.lerp(v2, 0.5)
+
+  let dist = v1.distanceTo(v2)
+
+  if (dist >= 0.3141592) {
+    dist = 0.3141592
+  }
+
+  dist = 0.3141592 - dist
+
+  v1.lerp(hand[8], 0.05)
+  v2.lerp(hand[4], 0.05)
+
+  spin.current = MathUtils.lerp(spin.current, dist, 0.05)
+
+  fVec.copy(middle)
+
+  return (
+    <group
+      key={`${handIDX}_${fingerIDX}`}
+      position={[vp.width * fVec.x - vp.width * 0.5, vp.height * -fVec.y + vp.height * 0.5, fVec.z * 0.0]}
+      scale={[1, 1, 1]}>
+      {/*  */}
+
+      {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
+                        {fingerIDX}
+                      </Text> */}
+
+      <group scale={(0.1 * Math.PI - spin.current) * 5.0} rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
+        <Cone args={[1, 1, 3, 1]} scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}>
+          <meshPhysicalMaterial
+            thickness={5}
+            roughness={0}
+            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
+        </Cone>
+        <Cone args={[1, 1, 3, 1]} scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}>
+          <meshPhysicalMaterial
+            thickness={5}
+            roughness={0}
+            transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
+        </Cone>
+      </group>
+
+      <group scale={1}>
+        <Sphere args={[0.3, 32, 32]}>
+          <meshStandardMaterial roughness={1} transparent metalness={0} color={'lime'}></meshStandardMaterial>
+        </Sphere>
+      </group>
+
+      <group
+        userData={{
+          forceSize: dist * 10,
+          forceTwist: 5,
+          forceType: 'vortexZ',
+          type: 'ForceField',
+        }}></group>
+    </group>
   )
 }
 
