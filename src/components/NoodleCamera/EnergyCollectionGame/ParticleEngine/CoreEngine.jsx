@@ -35,7 +35,7 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.j
 import { TransformControls, PivotControls, Box, Sphere, Text, Stats, CatmullRomLine, Line } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
-let useHalfFloat = true
+let useHalfFloat = false
 
 let getData = (v) => {
   if (useHalfFloat) {

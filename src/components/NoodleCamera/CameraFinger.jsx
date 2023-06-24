@@ -260,7 +260,6 @@ export function CameraMenu() {
                 //
                 .getUserMedia({
                   video: {
-                    frameRate: 60,
                     height: { ideal: 720 },
                     width: { ideal: 1280 },
                   },
@@ -274,9 +273,11 @@ export function CameraMenu() {
                     let videoTexture = new VideoTexture(video)
                     videoTexture.encoding = sRGBEncoding
                     videoTexture.needsUpdate = true
-                    useFinger.setState({ noMenu: true, menuText: '', video, videoTexture })
                     setTimeout(() => {
-                      window.dispatchEvent(new Event('resize'))
+                      useFinger.setState({ noMenu: true, menuText: '', video, videoTexture })
+                      setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'))
+                      })
                     })
                   }
                   video.srcObject = stream
