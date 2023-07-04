@@ -1,7 +1,8 @@
 import { Environment, OrbitControls, PerspectiveCamera, useGLTF } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { use, useCallback, useEffect, useRef, useState } from 'react'
-import { Clock, MathUtils, Matrix4, Object3D, Quaternion } from 'three'
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Clock, DoubleSide, MathUtils, Matrix4, Object3D, Quaternion } from 'three'
+import { AnimationMixer } from 'three147'
 import { create } from 'zustand'
 
 let running = async ({ onLoop, setData = () => {} }) => {
@@ -184,10 +185,25 @@ function Avatar() {
   let glb = useGLTF(`/FaceAvatar/avatar/stand.glb`)
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
   let o3d = useFaceAvatar((s) => s.o3d)
+  let mixer = useMemo(() => {
+    return new AnimationMixer(glb.scene)
+  }, [glb.scene])
+  useFrame((st, dt) => {
+    mixer.update(dt)
+  })
+  useEffect(() => {
+    glb.animations.forEach((r) => {
+      mixer.clipAction(r).play()
+    })
+  }, [glb, mixer])
+
   useFrame((st, dt) => {
     glb.scene.traverse((r) => {
+      if (r?.material) {
+        r.material.side = DoubleSide
+      }
       if (r.isBone && r.name === 'Head') {
-        r.quaternion.slerp(o3d.quaternion, 0.9)
+        r.quaternion.slerp(o3d.quaternion, 0.2)
         r.scale.copy(o3d.scale)
       }
       if (r.geometry && r.morphTargetDictionary && r.morphTargetInfluences) {
@@ -225,6 +241,12 @@ function Avatar() {
   return (
     <group>
       <primitive object={glb.scene}></primitive>
+
+      <directionalLight
+        position={[0, 1.6, 1]}
+        target-position={[0, 1.5, 0]}
+        color={'#bababa'}
+        intensity={2}></directionalLight>
     </group>
   )
 }
