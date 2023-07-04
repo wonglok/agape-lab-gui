@@ -26,7 +26,7 @@ import {
   LineSegments,
   CatmullRom,
   CatmullRomCurve3,
-} from 'three'
+} from 'three147'
 // import { loadGLTF } from "../world/loadGLTF";
 // import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { CustomGPU } from './CustomGPU'
@@ -35,6 +35,7 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.j
 import { TransformControls, PivotControls, Box, Sphere, Text, Stats, CatmullRomLine, Line } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
+import { WebGLRenderer } from 'three'
 let useHalfFloat = false
 
 let getData = (v) => {
@@ -923,7 +924,7 @@ export function CoreEngine({
       console.error(error)
     }
 
-    let gpuSamplerSize = attractorSize.x * attractorSize.y
+    let gpuSamplerSize = 64 * 1
     let buffer = !useHalfFloat ? new Float32Array(1 * gpuSamplerSize * 4) : new Uint16Array(1 * gpuSamplerSize * 4)
     let total = 1 * gpuSamplerSize
     let buffAttr = new BufferAttribute(buffer, 4)
@@ -939,9 +940,9 @@ export function CoreEngine({
       gl.readRenderTargetPixels(
         gpu.getCurrentRenderTarget(iVar.position),
         0,
-        size.y,
-        attractorSize.x,
-        attractorSize.y,
+        Math.floor(size.y * Math.random()),
+        gpuSamplerSize,
+        1.0,
         buffer,
       )
 
