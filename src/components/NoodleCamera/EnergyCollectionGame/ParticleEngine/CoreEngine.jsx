@@ -240,7 +240,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
 
-  let unitGeomtry = new BoxGeometry(1, 2 * 2, 1)
+  let unitGeomtry = new BoxGeometry(1, 2 * 1, 1)
   unitGeomtry.translate(0, 2, 0)
 
   let roughness = 0.0,
