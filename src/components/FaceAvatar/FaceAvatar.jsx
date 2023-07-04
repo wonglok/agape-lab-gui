@@ -174,7 +174,7 @@ function Content() {
       <PerspectiveCamera makeDefault position={[0, 1.67, 0.6]}></PerspectiveCamera>
       <OrbitControls makeDefault target={[0, 1.67, 0]}></OrbitControls>
       <Avatar></Avatar>
-      <Environment preset='sunset'></Environment>
+      <Environment files={`/lok/shanghai.hdr`}></Environment>
     </group>
   )
 }
