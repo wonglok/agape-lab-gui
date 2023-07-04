@@ -35,7 +35,7 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.j
 import { TransformControls, PivotControls, Box, Sphere, Text, Stats, CatmullRomLine, Line } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
-let useHalfFloat = false
+let useHalfFloat = true
 
 let getData = (v) => {
   if (useHalfFloat) {
@@ -1123,8 +1123,8 @@ export function CoreEngine({
     }
 
     let pts = new Mesh(geo, renderMaterial)
-    pts.castShadow = true
-    pts.receiveShadow = true
+    pts.castShadow = false
+    pts.receiveShadow = false
     pts.frustumCulled = false
     pts.position.x = 0
     pts.position.y = 0
