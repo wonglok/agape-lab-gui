@@ -487,11 +487,14 @@ export function CoreEngine({
 
     let unitGeo = unitGeomtry.clone()
 
-    // let ua = window.navigator.userAgent
-    // let iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i)
-    // let webkit = !!ua.match(/WebKit/i)
-    // let iOSSafari = iOS && webkit && !ua.match(/CriOS/i)
+    let ua = window.navigator.userAgent
+    let iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i)
+    let webkit = !!ua.match(/WebKit/i)
+    let iOSSafari = iOS && webkit && !ua.match(/CriOS/i)
 
+    if (iOSSafari) {
+      useHalfFloat = false
+    }
     //
 
     let curveSize = new Vector3(10, 1)
