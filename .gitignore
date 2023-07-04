@@ -43,3 +43,5 @@ report.*.json
 
 # Local Netlify folder
 .netlify
+
+yarn.lock
