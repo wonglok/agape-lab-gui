@@ -27,7 +27,7 @@ export function NoodleCamera() {
         <ParticleRelay />
       </Canvas>
 
-      {<CameraMenu></CameraMenu>}
+      <CameraMenu></CameraMenu>
 
       {/*  */}
     </>

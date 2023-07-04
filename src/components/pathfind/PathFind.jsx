@@ -116,7 +116,7 @@ function Content() {
           })}
       </>
 
-      <Environment preset='forest' background></Environment>
+      <Environment files={`/lok/shanghai.hdr`} background></Environment>
       <OrbitControls></OrbitControls>
     </>
   )

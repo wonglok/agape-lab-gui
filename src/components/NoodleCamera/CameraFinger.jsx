@@ -185,7 +185,7 @@ export function FingerDetection({}) {
           delegate: 'GPU',
         },
         runningMode: 'IMAGE',
-        numHands: 4,
+        numHands: 1,
         // /**
         //  * The minimum confidence score for the hand detection to be considered
         //  * successful. Defaults to 0.5.
