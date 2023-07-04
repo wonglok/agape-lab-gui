@@ -15,7 +15,7 @@ const nextConfig = {
   // experimental: {},
   // images: {},
   reactStrictMode: false, // Recommended for the `pages` directory, default in `app`.
-  transpilePackages: ['agape-sdk'],
+  // transpilePackages: ['agape-sdk'],
   webpack(config, { isServer }) {
     //
     // // audio support

@@ -550,7 +550,7 @@ export function CoreEngine({
     //
     //
 
-    let attractorSize = new Vector2(32, 1)
+    let attractorSize = new Vector2(8, 8)
 
     let sceneDataAlpha = []
     let sceneDataBeta = []
@@ -923,7 +923,7 @@ export function CoreEngine({
       console.error(error)
     }
 
-    let gpuSamplerSize = Math.floor(64)
+    let gpuSamplerSize = attractorSize.x * attractorSize.y
     let buffer = !useHalfFloat ? new Float32Array(1 * gpuSamplerSize * 4) : new Uint16Array(1 * gpuSamplerSize * 4)
     let total = 1 * gpuSamplerSize
     let buffAttr = new BufferAttribute(buffer, 4)
@@ -939,9 +939,9 @@ export function CoreEngine({
       gl.readRenderTargetPixels(
         gpu.getCurrentRenderTarget(iVar.position),
         0,
-        Math.floor(Math.random() * size.y),
-        gpuSamplerSize,
-        1,
+        size.y,
+        attractorSize.x,
+        attractorSize.y,
         buffer,
       )
 

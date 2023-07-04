@@ -29,7 +29,6 @@
     "@react-three/postprocessing": "^2.7.0",
     "@reactflow/node-resizer": "^2.0.1",
     "agape-runtime": "^0.2.12",
-    "agape-sdk": "*",
     "animejs": "^3.2.1",
     "antd": "^5.2.2",
     "copy-to-clipboard": "^3.3.2",
