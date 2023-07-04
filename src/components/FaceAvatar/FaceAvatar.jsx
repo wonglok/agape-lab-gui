@@ -180,7 +180,8 @@ function Content() {
 }
 
 function Avatar() {
-  let glb = useGLTF(`/FaceAvatar/avatar/face.glb`)
+  // let glb = useGLTF(`/FaceAvatar/avatar/face.glb`)
+  let glb = useGLTF(`/FaceAvatar/avatar/stand.glb`)
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
   let o3d = useFaceAvatar((s) => s.o3d)
   useFrame((st, dt) => {
