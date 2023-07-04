@@ -93,7 +93,7 @@ export function ParticleRelay() {
             anchor={[0, 0, 0]}>
             <group position={[-5, -3, 0]}>
               <Addition>
-                <sphereGeometry args={[1, 24, 24]}></sphereGeometry>
+                <cylinderGeometry args={[1, 1, 5, 24, 24]}></cylinderGeometry>
               </Addition>
             </group>
           </PivotControls>
