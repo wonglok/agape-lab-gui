@@ -174,15 +174,18 @@ function Content() {
     <group>
       <PerspectiveCamera makeDefault position={[0, 1.67, 0.6]}></PerspectiveCamera>
       <OrbitControls makeDefault target={[0, 1.67, 0]}></OrbitControls>
-      <Avatar></Avatar>
+      <group rotation={[0, -0.3, 0]}>
+        <Avatar rotation={[0, 0.3, 0]} position={[-0.15, 0, 0]}></Avatar>
+        <Avatar rotation={[0, 0.3, 0]} position={[0.15, 0, 0]} url={`/FaceAvatar/avatar/face.glb`}></Avatar>
+      </group>
       <Environment files={`/lok/shanghai.hdr`}></Environment>
     </group>
   )
 }
 
-function Avatar() {
+function Avatar({ url = `/FaceAvatar/avatar/stand.glb`, ...props }) {
   // let glb = useGLTF(`/FaceAvatar/avatar/face.glb`)
-  let glb = useGLTF(`/FaceAvatar/avatar/stand.glb`)
+  let glb = useGLTF(url)
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
   let o3d = useFaceAvatar((s) => s.o3d)
   let mixer = useMemo(() => {
@@ -241,14 +244,14 @@ function Avatar() {
     })
   })
   return (
-    <group>
+    <group {...props}>
       <primitive object={glb.scene}></primitive>
 
       <directionalLight
         position={[0, 1, 1]}
         target-position={[0, 1.5, 0]}
         color={'#bababa'}
-        intensity={2}></directionalLight>
+        intensity={0.5}></directionalLight>
     </group>
   )
 }
