@@ -32,7 +32,17 @@ import {
 import { CustomGPU } from './CustomGPU'
 import { useCore } from './useCore'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js'
-import { TransformControls, PivotControls, Box, Sphere, Text, Stats, CatmullRomLine, Line } from '@react-three/drei'
+import {
+  TransformControls,
+  PivotControls,
+  Box,
+  Sphere,
+  Text,
+  Stats,
+  CatmullRomLine,
+  Line,
+  useGLTF,
+} from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
 import { WebGLRenderer } from 'three'
@@ -77,6 +87,17 @@ export function ParticleRelay() {
     applyEmissionGeometryChange()
   }, [applyEmissionGeometryChange])
 
+  // let papers = useGLTF(`/paper/all-paper-webp.glb`)
+  // let meshes = []
+  // papers.scene.traverse((it) => {
+  //   //
+  //   if (it.geometry) {
+  //     meshes.push(it)
+  //   }
+  // })
+
+  // meshes = [meshes[4]]
+
   return (
     <>
       <mesh>
@@ -115,9 +136,9 @@ export function ParticleRelay() {
 
           {/*  */}
         </Geometry>
-
-        <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial>
-        {<ParticleRelayCore surfaceMesh={surfaceMesh} csgRef={csgRef}></ParticleRelayCore>}
+        {/*  */}
+        {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
+        <ParticleRelayCore surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
       </mesh>
     </>
   )
@@ -237,28 +258,27 @@ function CurveYo() {
   )
 }
 
-function ParticleRelayCore({ surfaceMesh }) {
+function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
-
-  let unitGeomtry = new BoxGeometry(1, 2 * 1, 1)
-  unitGeomtry.translate(0, 2, 0)
+  let unitGeomtry = new PlaneGeometry(3, 5) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
+  // unitGeomtry.translate(0, 2, 0)
 
   let roughness = 0.0,
-    metalness = 0,
+    metalness = 0.0,
     transmission = 1,
     thickness = 1.5,
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'medium',
+    performanceProfile = 'low',
     surfaceEmissionForce = -0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
     unitScale = 0.01,
-    randomness = 3
+    randomness = 3 * rand
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
@@ -317,6 +337,7 @@ function ParticleRelayCore({ surfaceMesh }) {
 
       {surfaceMesh && unitGeomtry && gl && scene && (
         <CoreEngine
+          unitMaterial={unitMaterial}
           cursorA={cursorA}
           cursorB={cursorB}
           key={'__' + performanceProfile + unitGeomtry.uuid + surfaceMesh.uuid + 'corenegine'}
@@ -368,6 +389,7 @@ export function CoreEngine({
   surfaceMesh,
   unitScale,
   randomness,
+  unitMaterial,
 }) {
   let core = useCore()
   let unitScaleRef = useRef(0)
