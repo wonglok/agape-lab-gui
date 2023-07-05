@@ -101,6 +101,7 @@ export function ParticleRelay() {
   return (
     <>
       <mesh>
+        {/*  */}
         <Geometry ref={csgRef}>
           <Base>
             <boxBufferGeometry args={[0.00001, 0.00001, 0.00001]}></boxBufferGeometry>
@@ -113,7 +114,7 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[-5, -3, 0]}>
+            <group position={[20.975270282995965, 20.138707946806438, -1]}>
               <Addition>
                 <cylinderGeometry args={[1, 1, 5, 24, 24]}></cylinderGeometry>
               </Addition>
@@ -127,7 +128,7 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[3, 3, 0]}>
+            <group position={[-23.178897900275704, 15.078526010830759, -1]}>
               <Addition>
                 <sphereGeometry args={[1, 24, 24]}></sphereGeometry>
               </Addition>
@@ -168,25 +169,22 @@ function Score({ cursorA, cursorB }) {
 function CurveYo() {
   let [pts, setPts] = useState(() => {
     return [
-      {
-        position: [-4, -2, 1],
-      },
-      {
-        position: [-2, -2, -1],
-      },
-      {
-        position: [-1, -2, 0],
-      },
-      {
-        position: [0, -3, 1],
-      },
-      {
-        position: [1, -2, -1],
-      },
-      {
-        position: [2, -3, 0],
-      },
-    ]
+      [-22.183544634338965, 9.075243995128599, -1],
+      [-12.414204926149797, 12.322957125559656, -1],
+      [2.9081871793060268, 13.110336615063162, -1],
+      [16.80852767345023, 10.475559501570194, -1.0000000000000036],
+      [18.361654767800882, -3.4238440535922585, -1],
+      [15.762055580892632, -9.263389870166698, -1],
+      [5.416139144734148, -11.032145258763839, -1.0000000000000036],
+      [1.6291609216209912, -7.445016551915436, -1],
+      [-12.489006962638637, -9.99462418389652, -1],
+      [-10.010382022224803, -0.48666426893016373, -0.9999999999999964],
+      [0.2132707734719954, 5.085348568535161, -1],
+    ].map((r) => {
+      return {
+        position: r,
+      }
+    })
   }, [])
 
   let ref = useRef()

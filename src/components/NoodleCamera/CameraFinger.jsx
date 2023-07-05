@@ -58,12 +58,21 @@ export function CameraFinger() {
       minSS,
     })
   })
-
+  let arr = useMemo(() => {
+    return []
+  }, [])
   return (
     <>
       <OrbitControls object-position={[0, 0, 20]} enablePan={true} makeDefault></OrbitControls>
 
-      <mesh visible={true} position={[0, 0, -1]} scale={[1, 1, 1]}>
+      <mesh
+        onClick={(ev) => {
+          arr.push(ev.point.toArray())
+          console.log(arr)
+        }}
+        visible={true}
+        position={[0, 0, -1]}
+        scale={[1, 1, 1]}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
         {handLandmarkResult ? (
           <meshBasicMaterial
