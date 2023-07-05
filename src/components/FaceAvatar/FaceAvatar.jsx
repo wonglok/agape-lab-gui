@@ -204,6 +204,8 @@ function Avatar() {
       }
       if (r.isBone && r.name === 'Head') {
         r.quaternion.slerp(o3d.quaternion, 0.2)
+        r.rotation.x = -0.25
+        r.rotation.z *= -0.5
         r.scale.copy(o3d.scale)
       }
       if (r.geometry && r.morphTargetDictionary && r.morphTargetInfluences) {
@@ -243,7 +245,7 @@ function Avatar() {
       <primitive object={glb.scene}></primitive>
 
       <directionalLight
-        position={[0, 1.6, 1]}
+        position={[0, 1, 1]}
         target-position={[0, 1.5, 0]}
         color={'#bababa'}
         intensity={2}></directionalLight>
