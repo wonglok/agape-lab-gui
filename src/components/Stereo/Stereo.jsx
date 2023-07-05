@@ -49,7 +49,7 @@ function EyeAdapter({ onSize }) {
   }, [ef])
 
   useFrame(({ scene, size, camera }) => {
-    camera.aspect = size.width / size.height
+    camera.aspect = size.width / size.height / 2
     camera.updateProjectionMatrix()
     ef.render(scene, camera)
   }, 10000)
