@@ -48,8 +48,8 @@ function EyeAdapter({ onSize }) {
     ef.setEyeSeparation(0.005)
   }, [ef])
 
-  useFrame(({ scene, camera }) => {
-    camera.aspect = 3.5
+  useFrame(({ scene, size, camera }) => {
+    camera.aspect = size.width / size.height
     camera.updateProjectionMatrix()
     ef.render(scene, camera)
   }, 10000)
