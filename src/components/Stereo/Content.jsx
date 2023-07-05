@@ -14,7 +14,7 @@ export function Content() {
     <>
       <Stars ref={stars1}></Stars>
       <Sphere ref={sph} scale={2}>
-        <MeshTransmissionMaterial roughness={0.01} transmission={1} thickness={3}></MeshTransmissionMaterial>
+        <meshPhysicalMaterial roughness={0.01} transmission={1} thickness={3}></meshPhysicalMaterial>
       </Sphere>
     </>
   )
