@@ -95,7 +95,6 @@ export function ParticleRelay() {
   //     meshes.push(it)
   //   }
   // })
-
   // meshes = [meshes[4]]
 
   return (
