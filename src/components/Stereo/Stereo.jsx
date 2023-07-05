@@ -34,8 +34,6 @@ export function Stereo() {
 function EyeAdapter({ onSize }) {
   let size = useThree((r) => r.size)
   let gl = useThree((r) => r.gl)
-  let scene = useThree((r) => r.scene)
-  scene.background = new Color('#000000')
 
   let ef = useMemo(() => {
     return new StereoEffect(gl)
