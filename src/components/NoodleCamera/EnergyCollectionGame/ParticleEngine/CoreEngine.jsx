@@ -1138,9 +1138,9 @@ export function CoreEngine({
 
         // transformed *= calcLookAtMatrix(fowradPosData.rgb, backPosData.rgb, 0.0);
 
-        transformed.xyz *= rotation3dX(diff.x);
-        transformed.xyz *= rotation3dY(diff.y);
-        transformed.xyz *= rotation3dZ(diff.z);
+        transformed.xyz *= rotation3dX(diff.x * 3.1415);
+        transformed.xyz *= rotation3dY(diff.y * 3.1415);
+        transformed.xyz *= rotation3dZ(diff.z * 3.1415);
 
         gl_PointSize = 1.0;
         transformed += fowradPosData.xyz;
