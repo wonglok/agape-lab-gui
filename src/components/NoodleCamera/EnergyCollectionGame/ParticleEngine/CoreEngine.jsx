@@ -87,16 +87,6 @@ export function ParticleRelay() {
     applyEmissionGeometryChange()
   }, [applyEmissionGeometryChange])
 
-  // let papers = useGLTF(`/paper/all-paper-webp.glb`)
-  // let meshes = []
-  // papers.scene.traverse((it) => {
-  //   //
-  //   if (it.geometry) {
-  //     meshes.push(it)
-  //   }
-  // })
-  // meshes = [meshes[4]]
-
   return (
     <>
       <mesh>
@@ -256,10 +246,23 @@ function CurveYo() {
   )
 }
 
-function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
+function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
+  let papers = useGLTF(`/paper/all-paper-webp.glb`)
+  let geos = []
+  let mats = []
+  papers.scene.traverse((it) => {
+    //
+    if (it.geometry) {
+      geos.push(it.geometry.clone())
+      mats.push(it.material.clone())
+    }
+  })
+
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
-  let unitGeomtry = new PlaneGeometry(15, 25) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
+  let unitMaterial = mats[6]
+  let unitGeomtry = geos[6]
+  unitGeomtry = unitGeomtry.scale(100, 100, 100) // new PlaneGeometry(15, 25) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
   // unitGeomtry.translate(0, 2, 0)
 
   let roughness = 0.0,
@@ -338,7 +341,7 @@ function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
           unitMaterial={unitMaterial}
           cursorA={cursorA}
           cursorB={cursorB}
-          key={'__' + performanceProfile + unitGeomtry.uuid + surfaceMesh.uuid + 'corenegine'}
+          key={'__' + performanceProfile + unitGeomtry.uuid + 'corenegine'}
           performanceProfile={performanceProfile}
           surfaceMesh={surfaceMesh}
           gl={gl}
@@ -1020,24 +1023,26 @@ export function CoreEngine({
 
     geo.setAttribute('coords', iCoords.iAttr)
 
-    let renderMaterial = new MeshPhysicalMaterial({
-      color: new Color('#ffffff'),
-      roughness: 0.0,
-      metalness: 0.0,
-      transmission: 1,
-      thickness: 1,
-      flatShading: true,
-      side: DoubleSide,
-    })
+    let renderMaterial = unitMaterial
+
+    // new MeshPhysicalMaterial({
+    //   color: new Color('#ffffff'),
+    //   roughness: 0.0,
+    //   metalness: 0.0,
+    //   transmission: 1,
+    //   thickness: 1,
+    //   flatShading: true,
+    //   side: DoubleSide,
+    // })
 
     renderMaterial.onBeforeCompile = (shader, gl) => {
       let sync = () => {
-        renderMaterial.color.set(colorRef.current)
-        renderMaterial.emissive.set(emissiveRef.current)
-        renderMaterial.roughness = roughnessRef.current
-        renderMaterial.metalness = metalnessRef.current
-        renderMaterial.transmission = transmissionRef.current
-        renderMaterial.thickness = thicknessRef.current
+        // renderMaterial.color.set(colorRef.current)
+        // renderMaterial.emissive.set(emissiveRef.current)
+        // renderMaterial.roughness = roughnessRef.current
+        // renderMaterial.metalness = metalnessRef.current
+        // renderMaterial.transmission = transmissionRef.current
+        // renderMaterial.thickness = thicknessRef.current
 
         shader.uniforms.iv_position = shader.uniforms.iv_position || {
           value: null,
