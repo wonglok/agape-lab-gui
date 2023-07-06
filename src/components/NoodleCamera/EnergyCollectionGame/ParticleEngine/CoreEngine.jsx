@@ -1034,6 +1034,8 @@ export function CoreEngine({
     geo.setAttribute('coords', iCoords.iAttr)
 
     let renderMaterial = unitMaterial
+    unitMaterial.roughness = 1
+    unitMaterial.metalness = 9
 
     // new MeshPhysicalMaterial({
     //   color: new Color('#ffffff'),
