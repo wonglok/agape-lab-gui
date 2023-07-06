@@ -277,20 +277,19 @@ function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
 
   let roughness = 0.0,
     metalness = 0.0,
-    c
-  ;(transmission = 1),
-    (thickness = 1.5),
+    transmission = 1,
+    thickness = 1.5,
     //
-    (color = '#00ff00'),
-    (emissive = '#000000'),
-    (performanceProfile = 'low'),
-    (surfaceEmissionForce = -0.6),
-    (playerAttractionForce = 0),
-    (playerSpinningForce = 0),
-    (playerPropulsionForce = 0),
-    (shieldRadius = 0),
-    (unitScale = 0.01),
-    (randomness = 3 * rand)
+    color = '#00ff00',
+    emissive = '#000000',
+    performanceProfile = 'low',
+    surfaceEmissionForce = -0.6,
+    playerAttractionForce = 0,
+    playerSpinningForce = 0,
+    playerPropulsionForce = 0,
+    shieldRadius = 0,
+    unitScale = 0.01,
+    randomness = 3 * rand
 
   randomness = Math.pow(randomness, 3)
 
