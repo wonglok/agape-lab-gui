@@ -219,36 +219,38 @@ function CurveYo() {
 
   return (
     <>
-      {pts.map((pt, i) => {
-        return (
-          <TransformControls
-            onObjectChange={(ev) => {
-              //
-              // console.log(ev.target.worldPosition)
-              pt.position[0] = ev.target.worldPosition.x
-              pt.position[1] = ev.target.worldPosition.y
-              pt.position[2] = ev.target.worldPosition.z
-
-              sync()
-            }}
-            key={'ctrl__' + i}
-            position={pt.position}
-            lineWidth={3}
-            scale={2}
-            anchor={[0, 0, 0]}>
+      <group>
+        {pts.map((pt, i) => {
+          return (
             <group
-              userData={{
-                indexID: i,
-                lineID: 0,
-                type: 'ForceCurve',
-              }}>
-              <Box scale={0.1}>
-                <meshStandardMaterial color={'#ff0000'}></meshStandardMaterial>
-              </Box>
+              onObjectChange={(ev) => {
+                //
+                // console.log(ev.target.worldPosition)
+                pt.position[0] = ev.target.worldPosition.x
+                pt.position[1] = ev.target.worldPosition.y
+                pt.position[2] = ev.target.worldPosition.z
+
+                sync()
+              }}
+              key={'ctrl__' + i}
+              position={pt.position}
+              lineWidth={3}
+              scale={2}
+              anchor={[0, 0, 0]}>
+              <group
+                userData={{
+                  indexID: i,
+                  lineID: 0,
+                  type: 'ForceCurve',
+                }}>
+                <Box scale={0.1}>
+                  <meshStandardMaterial color={'#ff0000'}></meshStandardMaterial>
+                </Box>
+              </group>
             </group>
-          </TransformControls>
-        )
-      })}
+          )
+        })}
+      </group>
 
       <Line color={'black'} ref={ref} lineWidth={1} points={points}></Line>
     </>
@@ -297,8 +299,8 @@ function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
 
   return (
     <>
-      <TransformControls position={[0, 2, 0]} lineWidth={3} scale={2} anchor={[0, 0, 0]}>
-        {/* <group
+      {/* <TransformControls position={[0, 2, 0]} lineWidth={3} scale={2} anchor={[0, 0, 0]}> */}
+      {/* <group
           userData={{
             forceSize: 3 * 0.5,
             forceTwist: -3.141592 * 2.0 * 2.8,
@@ -309,7 +311,7 @@ function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
             <meshStandardMaterial metalness={1} flatShading></meshStandardMaterial>
           </Sphere>
         </group> */}
-      </TransformControls>
+      {/* </TransformControls> */}
       {/*
 
       <TransformControls position={[-1, 0, 0]} lineWidth={3} scale={2} anchor={[0, 0, 0]}>
@@ -328,8 +330,8 @@ function ParticleRelayCore({ rand, unitGeo, unitMaterial, surfaceMesh }) {
       </TransformControls> */}
 
       <CurveYo></CurveYo>
-      <TransformControls object={cursorA}></TransformControls>
-      <TransformControls object={cursorB}></TransformControls>
+      {/* <TransformControls object={cursorA}></TransformControls>
+      <TransformControls object={cursorB}></TransformControls> */}
       <Score cursorA={cursorA} cursorB={cursorB}></Score>
 
       {surfaceMesh && unitGeomtry && gl && scene && (
