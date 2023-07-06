@@ -130,7 +130,7 @@ export function ParticleRelay() {
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
         <ParticleRelayCore idx={0} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
         <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
-        <ParticleRelayCore idx={2} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
       </mesh>
     </>
   )
@@ -274,8 +274,6 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
   let gl = useThree((r) => r.gl)
   let unitMaterial = mats[idx]
   let unitGeomtry = geos[idx].clone()
-  unitGeomtry = unitGeomtry.scale(60, 60, 60) // new PlaneGeometry(15, 25) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
-  // unitGeomtry.translate(0, 2, 0)
 
   let roughness = 0.0,
     metalness = 0.0,
@@ -290,7 +288,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
-    unitScale = 0.05,
+    unitScale = 3,
     randomness = 1 * rand
 
   let cursorA = useMemo(() => {
