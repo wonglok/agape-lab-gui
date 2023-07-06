@@ -128,7 +128,9 @@ export function ParticleRelay() {
         </Geometry>
         {/*  */}
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
-        <ParticleRelayCore surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={0} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={2} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
       </mesh>
     </>
   )
@@ -256,7 +258,7 @@ function CurveYo() {
   )
 }
 
-function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
+function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
   let papers = useGLTF(`/paper/all-paper-webp.glb`)
   let geos = []
   let mats = []
@@ -270,9 +272,9 @@ function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
 
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
-  let unitMaterial = mats[6]
-  let unitGeomtry = geos[6].clone()
-  unitGeomtry = unitGeomtry.scale(30, 30, 30) // new PlaneGeometry(15, 25) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
+  let unitMaterial = mats[idx]
+  let unitGeomtry = geos[idx].clone()
+  unitGeomtry = unitGeomtry.scale(60, 60, 60) // new PlaneGeometry(15, 25) // unitGeo.clone().scale(50, 50, 50) //  new BoxGeometry(1, 2 * 1, 1)
   // unitGeomtry.translate(0, 2, 0)
 
   let roughness = 0.0,
@@ -282,7 +284,7 @@ function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'low',
+    performanceProfile = 'some',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
