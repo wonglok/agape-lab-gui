@@ -291,6 +291,8 @@ function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
     unitScale = 0.01,
     randomness = 3 * rand
 
+  randomness = Math.pow(randomness, 3)
+
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(0.75, 32, 32),
@@ -1036,6 +1038,8 @@ export function CoreEngine({
     let renderMaterial = unitMaterial
     unitMaterial.roughness = 1
     unitMaterial.metalness = 9
+    unitMaterial.emissive = new Color('#ffffff')
+    unitMaterial.emissiveMap = unitMaterial.map
 
     // new MeshPhysicalMaterial({
     //   color: new Color('#ffffff'),
