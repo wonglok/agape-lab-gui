@@ -175,10 +175,8 @@ function CurveYo() {
       [-1.3105547816868024, -9.739804854808748, -0.9999999999999964],
       [-4.855009759430661, -6.612344580328878, -1],
       [-15.369233348872523, -10.72272094107385, -1],
-      [-14.892667973713683, -7.7144020103836874, -1],
-      [-5.063507111062653, -3.8125230012707045, -1],
-      [-6.701700588171157, 2.7998215790581717, -1],
-      [2.9189629228478804, 3.574240313691284, -1],
+      [-14.892667973713683, 1.7144020103836874, -1],
+      [-5.063507111062653, 1.8125230012707045, -1],
     ].map((r) => {
       return {
         position: r,
@@ -222,7 +220,7 @@ function CurveYo() {
       <group>
         {pts.map((pt, i) => {
           return (
-            <group
+            <TransformControls
               onObjectChange={(ev) => {
                 //
                 // console.log(ev.target.worldPosition)
@@ -247,7 +245,7 @@ function CurveYo() {
                   <meshStandardMaterial color={'#ff0000'}></meshStandardMaterial>
                 </Box>
               </group>
-            </group>
+            </TransformControls>
           )
         })}
       </group>
@@ -532,7 +530,7 @@ export function CoreEngine({
     }
     //
 
-    let curveSize = new Vector3(10, 1)
+    let curveSize = new Vector3(64, 1)
     let curveSizeCount = curveSize.x * curveSize.y * 4
     let cuveArray = new Array(curveSizeCount)
     let bufferCurve = !useHalfFloat ? new Float32Array(cuveArray) : new Uint16Array(cuveArray)
