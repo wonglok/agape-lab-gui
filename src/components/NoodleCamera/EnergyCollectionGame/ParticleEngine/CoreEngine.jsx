@@ -283,15 +283,13 @@ function ParticleRelayCore({ rand, unitGeo, surfaceMesh }) {
     color = '#00ff00',
     emissive = '#000000',
     performanceProfile = 'low',
-    surfaceEmissionForce = -0.6,
+    surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
-    unitScale = 0.01,
-    randomness = 3 * rand
-
-  randomness = Math.pow(randomness, 3)
+    unitScale = 0.05,
+    randomness = 1 * rand
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
@@ -1379,9 +1377,8 @@ function simPos({ attractorSize, curveSize }) {
 
       data_sim_position.rgb += booster(data_sim_position.rgb, progress + 1.0, total) * 1.5;
 
+      data_sim_position.rgb += booster(data_sim_position.rgb, progress + 2.0, total) * 1.5;
 
-      //
-      //
       //
       //
       //
