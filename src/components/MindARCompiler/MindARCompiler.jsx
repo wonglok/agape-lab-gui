@@ -1,4 +1,4 @@
-import { an, bu, ca } from 'mind-ar/dist/controller-495b585f'
+// import { an, bu, ca } from 'mind-ar/dist/controller-495b585f'
 import nProgress from 'nprogress'
 import { useEffect, useRef, useState } from 'react'
 import {

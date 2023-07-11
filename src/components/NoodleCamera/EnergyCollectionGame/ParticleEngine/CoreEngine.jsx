@@ -128,9 +128,9 @@ export function ParticleRelay() {
         </Geometry>
         {/*  */}
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
-        <ParticleRelayCore idx={0} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
-        <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
-        <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
+        {/* <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
+        <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore> */}
       </mesh>
     </>
   )
@@ -160,24 +160,24 @@ function Score({ cursorA, cursorB }) {
 function CurveYo() {
   let [pts, setPts] = useState(() => {
     return [
-      [-16.59043212271704, 9.412166159387047, 7],
+      [-16.59043212271704, 9.412166159387047, 0.000001],
       [-9.620663511019039, 13.999107895290864, -1],
-      [-5.301789798642071, 9.26323947964991, 7],
+      [-5.301789798642071, 9.26323947964991, 0.000001],
       [-0.3574240313691271, 13.671469199869161, -1],
-      [3.0678896025850153, 8.905815448280782, 7],
+      [3.0678896025850153, 8.905815448280782, 0.000001],
       [11.3184276600224, 13.46297184823717, -1.0000000000000036],
       [10.573794261336717, 9.144098135860201, -0.9999999999999964],
-      [23.232562038993343, 8.935600784228209, 7],
+      [23.232562038993343, 8.935600784228209, 0.000001],
       [16.82871481029646, -1.102057430054812, -1],
-      [23.41127405467791, -7.744187346331116, 7],
+      [23.41127405467791, -7.744187346331116, 0.000001],
       [14.594814614239414, -11.497139675706963, -1.0000000000000036],
       [12.867265129288619, -6.254920548959746, -0.9999999999999964],
-      [4.974151103220374, -14.356531926659988, 7],
+      [4.974151103220374, -14.356531926659988, 0.000001],
       [2.2339001960570517, -7.267621971172275, -1],
       [-1.3105547816868024, -9.739804854808748, -0.9999999999999964],
-      [-4.855009759430661, -6.612344580328878, 7],
+      [-4.855009759430661, -6.612344580328878, 0.000001],
       [-15.369233348872523, -10.72272094107385, -1],
-      [-14.892667973713683, 1.7144020103836874, 7],
+      [-14.892667973713683, 1.7144020103836874, 0.000001],
       [-5.063507111062653, 1.8125230012707045, -1],
     ].map((r) => {
       r[2] += 4
@@ -282,14 +282,14 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'some',
+    performanceProfile = 'low',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
-    unitScale = 3,
-    randomness = 1 * rand
+    unitScale = 1 / 5,
+    randomness = 5 * rand
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
@@ -341,7 +341,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
         </group>
       </TransformControls> */}
 
-      <CurveYo></CurveYo>
+      {/* <CurveYo></CurveYo> */}
       {/* <TransformControls object={cursorA}></TransformControls>
       <TransformControls object={cursorB}></TransformControls> */}
       <Score cursorA={cursorA} cursorB={cursorB}></Score>
