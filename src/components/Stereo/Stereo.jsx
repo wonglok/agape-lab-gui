@@ -1,8 +1,6 @@
-import { Box, Stars } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { StereoEffect } from 'three-stdlib'
-import { Color } from 'three'
 import { Content } from './Content'
 
 export function Stereo() {
@@ -13,6 +11,7 @@ export function Stereo() {
       <div className='flex items-center justify-center w-full h-full bg-black'>
         <div className=' w-full h-full bg-white' ref={container}>
           <Canvas>
+            <color attach={'background'} args={['#000000']}></color>
             {/*  */}
 
             <EyeAdapter
@@ -45,7 +44,7 @@ function EyeAdapter({ onSize }) {
   }, [size, ef, onSize])
 
   useEffect(() => {
-    ef.setEyeSeparation(0.005 * 50)
+    ef.setEyeSeparation(0.005 * 40)
   }, [ef])
 
   useFrame(({ scene, size, camera }) => {

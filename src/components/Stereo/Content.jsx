@@ -41,7 +41,7 @@ export function Content() {
   return (
     <>
       <OrbitControls object-position={[0, 1.5, 5]} target={[0, 1.5, 0]}></OrbitControls>
-      <Environment background files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
+      <Environment files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
       <Stars ref={stars1}></Stars>
       {/* <Sphere ref={sph} scale={2}>
         <meshPhysicalMaterial roughness={0.01} metalness={0} transmission={1} thickness={1}></meshPhysicalMaterial>
