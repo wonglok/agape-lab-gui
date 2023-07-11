@@ -45,7 +45,7 @@ function EyeAdapter({ onSize }) {
   }, [size, ef, onSize])
 
   useEffect(() => {
-    ef.setEyeSeparation(0.005)
+    ef.setEyeSeparation(0.005 * 50)
   }, [ef])
 
   useFrame(({ scene, size, camera }) => {
