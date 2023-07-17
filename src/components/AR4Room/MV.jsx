@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 export function MV() {
   let [show, setShow] = useState(false)
   useEffect(() => {
-    import('@google/model-viewer').then(() => {
+    window.remoteImport('https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js').then(() => {
       setShow(true)
     })
-  })
+  }, [])
   return (
     <>
       {show && (
