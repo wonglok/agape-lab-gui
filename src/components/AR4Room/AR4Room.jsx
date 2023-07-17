@@ -104,7 +104,7 @@ function ARContent() {
     <group>
       <Environment files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
       <group position={[0, 0, 0.0]}>{/* <ParticleRelay></ParticleRelay> */}</group>
-      <group position={[0, -2.5, 5]} scale={3}>
+      <group position={[0, -1.5 * 2, 5]} scale={2}>
         <Gltf src={`/room/room.glb`}></Gltf>
       </group>
       {ground && <primitive object={ground}></primitive>}
