@@ -53,16 +53,9 @@ function Content() {
         <Plane
           rotation={[0, 0, 0]}
           onPointerMove={(ev) => {
-            // let newPt = ev.object.worldToLocal(ev.point).multiplyScalar(1)
-
-            // if (api) {
-            //   api.updateMouse(newPt.x, newPt.y, newPt.z)
-            // }
-
             if (api) {
               ev.uv.addScalar(-0.5)
               uvLerp.copy(ev.uv)
-              // console.log(ev.uv)
             }
           }}
           onPointerLeave={(ev) => {
