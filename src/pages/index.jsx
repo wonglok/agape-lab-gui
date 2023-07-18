@@ -16,6 +16,13 @@ const pages = [
   //   name: `Retarget`,
   //   date: `2023-05-27`,
   // },
+  //src
+  {
+    key: md5(v4()),
+    url: `/blog/2023/07/18/WaterSurface`,
+    name: `WaterSurface`,
+    date: '2023-07-18',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/07/17/mv`,
