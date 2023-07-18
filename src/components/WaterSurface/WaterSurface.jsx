@@ -75,7 +75,7 @@ function Content() {
           material={api.displayMaterial}></Plane>
       )}
 
-      <OrbitControls position={[0, 0, 10]}></OrbitControls>
+      {/* <OrbitControls position={[0, 0, 10]}></OrbitControls> */}
       <Environment files={`/lok/shanghai.hdr`}></Environment>
     </>
   )
