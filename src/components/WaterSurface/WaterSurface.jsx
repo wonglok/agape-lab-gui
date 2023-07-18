@@ -33,7 +33,7 @@ function Content() {
   }, [gl, WIDTH])
 
   let uvLerp = useMemo(() => {
-    return new Vector3()
+    return new Vector3(10000, 100000, 10000)
   }, [])
 
   useFrame(() => {
