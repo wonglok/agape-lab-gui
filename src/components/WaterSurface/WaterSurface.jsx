@@ -64,7 +64,7 @@ function Content() {
               uvLerp.set(10000, 10000)
             }
           }}
-          args={[5, 5, WIDTH, WIDTH]}
+          args={[7.5, 7.5, WIDTH, WIDTH]}
           material={api.displayMaterial}></Plane>
       )}
 
