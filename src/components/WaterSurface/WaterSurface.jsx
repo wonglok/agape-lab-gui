@@ -48,9 +48,11 @@ function Content() {
   })
 
   let bgMap = useTexture(`/pattern/square-agape.png`)
+  let viewport = useThree((r) => r.viewport)
+  let ww = viewport.width
   return (
     <>
-      <Box args={[7, 7, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.5]}>
+      <Box args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.2]}>
         <meshStandardMaterial map={bgMap}></meshStandardMaterial>
       </Box>
       {api && (
@@ -68,7 +70,7 @@ function Content() {
               uvLerp.set(10000, 10000)
             }
           }}
-          args={[7, 7, 0.1, WIDTH - 1, WIDTH - 1, 1]}
+          args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]}
           // args={[7 / 2, 32]}
           material={api.displayMaterial}></Box>
       )}

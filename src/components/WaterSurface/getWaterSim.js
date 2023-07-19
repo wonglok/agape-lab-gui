@@ -87,7 +87,7 @@ export function getWaterSim({ renderer, WIDTH }) {
     roughness: 0.0,
     metalness: 0.0,
     transmission: 1,
-    thickness: 10.0,
+    thickness: 3.3,
     ior: 2.4,
     reflectivity: 0.5,
     transparent: true,
