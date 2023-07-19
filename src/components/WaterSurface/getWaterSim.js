@@ -84,14 +84,17 @@ export function getWaterSim({ renderer, WIDTH }) {
 
   let displayMaterial = new MeshPhysicalMaterial({
     color: 'white',
-    roughness: 0.1,
-    metalness: 0.3,
+    roughness: 0.0,
+    metalness: 0.0,
     transmission: 1,
-    thickness: 10,
-    ior: 1.5,
-    reflectivity: 2,
+    thickness: 10.0,
+    ior: 2.4,
+    reflectivity: 0.5,
     transparent: true,
-    thicknessMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),
+    //
+
+    // alphaTest: 0.5,
+    // map: new TextureLoader().load(`/pattern/square-agape.png`),
   })
 
   let api = {}
@@ -104,7 +107,9 @@ export function getWaterSim({ renderer, WIDTH }) {
       let tex = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture
       shader.uniforms.heightmap.value = tex
       // displayMaterial.needsUpdate = true
-      displayMaterial.map = tex
+      displayMaterial.roughnessMap = tex
+      displayMaterial.metalnessMap = tex
+      tex.needsUpdate = true
     }
 
     shader.vertexShader = shader.vertexShader.replace(
@@ -118,7 +123,7 @@ export function getWaterSim({ renderer, WIDTH }) {
       `#include <begin_vertex>`,
       `
         float heightValue = texture2D( heightmap, uv ).x;
-        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.5 );
+        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 1.0 );
 
       `,
     )

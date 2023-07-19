@@ -1,4 +1,4 @@
-import { Box, Environment, OrbitControls, Plane, Sphere } from '@react-three/drei'
+import { Box, Circle, Environment, OrbitControls, Plane, Sphere, useTexture } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
@@ -19,7 +19,7 @@ export function WaterSurface({}) {
 }
 
 function Content() {
-  let WIDTH = 100
+  let WIDTH = 128
   let gl = useThree((it) => it.gl)
   let [api, setAPI] = useState(null)
   useEffect(() => {
@@ -47,8 +47,12 @@ function Content() {
     //
   })
 
+  let bgMap = useTexture(`/pattern/square-agape.png`)
   return (
     <>
+      <Box args={[7, 7, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.5]}>
+        <meshStandardMaterial map={bgMap}></meshStandardMaterial>
+      </Box>
       {api && (
         <Box
           rotation={[0, 0, 0]}
@@ -64,7 +68,8 @@ function Content() {
               uvLerp.set(10000, 10000)
             }
           }}
-          args={[10, 10, 0.1, WIDTH - 1, WIDTH - 1, 1]}
+          args={[7, 7, 0.1, WIDTH - 1, WIDTH - 1, 1]}
+          // args={[7 / 2, 32]}
           material={api.displayMaterial}></Box>
       )}
 
