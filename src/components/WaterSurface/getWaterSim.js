@@ -84,17 +84,17 @@ export function getWaterSim({ renderer, WIDTH }) {
 
   let displayMaterial = new MeshPhysicalMaterial({
     color: 'white',
-    roughness: 0.0,
-    metalness: 0.0,
+    roughness: 0.15,
+    metalness: 0.5,
     transmission: 1,
-    thickness: 3.3,
+    thickness: 10.0,
     ior: 2.4,
     reflectivity: 0.5,
     transparent: true,
     //
 
-    // alphaTest: 0.5,
-    // map: new TextureLoader().load(`/pattern/square-agape.png`),
+    alphaTest: 0.5,
+    alphaMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),
   })
 
   let api = {}
@@ -123,7 +123,7 @@ export function getWaterSim({ renderer, WIDTH }) {
       `#include <begin_vertex>`,
       `
         float heightValue = texture2D( heightmap, uv ).x;
-        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 1.0 );
+        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.5 );
 
       `,
     )

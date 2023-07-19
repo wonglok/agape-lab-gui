@@ -47,14 +47,15 @@ function Content() {
     //
   })
 
-  let bgMap = useTexture(`/pattern/square-agape.png`)
+  // let bgMap = useTexture(`/pattern/square-agape.png`)
   let viewport = useThree((r) => r.viewport)
   let ww = viewport.width
   return (
     <>
-      <Box args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.2]}>
+      {/* <Box args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.2]}>
         <meshStandardMaterial map={bgMap}></meshStandardMaterial>
-      </Box>
+      </Box> */}
+
       {api && (
         <Box
           rotation={[0, 0, 0]}
