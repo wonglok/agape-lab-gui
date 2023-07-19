@@ -1,8 +1,8 @@
-import { Clock, MeshPhysicalMaterial, Vector2 } from 'three'
+import { Clock, MeshPhysicalMaterial, TextureLoader, Vector2 } from 'three'
 import { GPUComputationRenderer } from 'three-stdlib'
 
 export function getWaterSim({ renderer }) {
-  let WIDTH = 256
+  let WIDTH = 128
   // Creates the gpu computation class and sets it up
   let heightMapCode = /* glsl */ `
 
@@ -37,7 +37,7 @@ export function getWaterSim({ renderer }) {
 
 				// Mouse influence
 				float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) * vec2(BOUNDS, -BOUNDS) ) * PI / mouseSize, 0.0, PI );
-				newHeight += ( cos( mousePhase ) + 1.0 ) * dt * 1.75;
+				newHeight += ( cos( mousePhase ) + 1.0 ) * dt * 2.5;
 
 				heightmapValue.y = heightmapValue.x;
 				heightmapValue.x = newHeight;
@@ -75,7 +75,7 @@ export function getWaterSim({ renderer }) {
 
   heightmapVariable.material.uniforms['mousePos'] = { value: new Vector2(1000, 1000) }
   heightmapVariable.material.uniforms['dt'] = { value: 1 / 60 }
-  heightmapVariable.material.uniforms['mouseSize'] = { value: 24.0 }
+  heightmapVariable.material.uniforms['mouseSize'] = { value: 5.0 }
   heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.98 }
   heightmapVariable.material.uniforms['heightCompensation'] = { value: 0 }
   heightmapVariable.material.defines.BOUNDS = WIDTH.toFixed(1)
@@ -84,12 +84,14 @@ export function getWaterSim({ renderer }) {
 
   let displayMaterial = new MeshPhysicalMaterial({
     color: 'white',
-    roughness: 0,
-    metalness: 1,
-    // transmission: 1,
-    // thickness: 5,
-    // ior: 1.5,
-    // reflectivity: 2,
+    roughness: 0.1,
+    metalness: 0.3,
+    transmission: 1,
+    thickness: 10,
+    ior: 1.5,
+    reflectivity: 2,
+    transparent: true,
+    thicknessMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),
   })
 
   let api = {}
@@ -99,8 +101,10 @@ export function getWaterSim({ renderer }) {
     shader.uniforms.heightmap = { value: null }
 
     api.updateMaterial = () => {
-      shader.uniforms.heightmap.value = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture
+      let tex = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture
+      shader.uniforms.heightmap.value = tex
       // displayMaterial.needsUpdate = true
+      displayMaterial.map = tex
     }
 
     shader.vertexShader = shader.vertexShader.replace(
@@ -114,7 +118,7 @@ export function getWaterSim({ renderer }) {
       `#include <begin_vertex>`,
       `
         float heightValue = texture2D( heightmap, uv ).x;
-        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.1 );
+        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.5 );
 
       `,
     )
@@ -122,6 +126,7 @@ export function getWaterSim({ renderer }) {
     shader.vertexShader = shader.vertexShader.replace(
       `#include <beginnormal_vertex>`,
       `
+
         vec2 cellSize = 1.0 / vec2(${WIDTH.toFixed(1)});
         vec3 objectNormal = vec3(
             ( texture2D( heightmap, uv + vec2( - cellSize.x, 0 ) ).x - texture2D( heightmap, uv + vec2( cellSize.x, 0 ) ).x ),

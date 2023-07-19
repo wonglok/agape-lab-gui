@@ -1,4 +1,4 @@
-import { Box, Environment, OrbitControls, Plane } from '@react-three/drei'
+import { Box, Environment, OrbitControls, Plane, Sphere } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
@@ -19,7 +19,7 @@ export function WaterSurface({}) {
 }
 
 function Content() {
-  let WIDTH = 256
+  let WIDTH = 128
   let gl = useThree((it) => it.gl)
   let [api, setAPI] = useState(null)
   useEffect(() => {
@@ -50,7 +50,7 @@ function Content() {
   return (
     <>
       {api && (
-        <Plane
+        <Box
           rotation={[0, 0, 0]}
           onPointerMove={(ev) => {
             if (api) {
@@ -64,12 +64,12 @@ function Content() {
               uvLerp.set(10000, 10000)
             }
           }}
-          args={[7.5, 7.5, WIDTH, WIDTH]}
-          material={api.displayMaterial}></Plane>
+          args={[10, 10, 0.1, WIDTH - 1, WIDTH - 1, 1]}
+          material={api.displayMaterial}></Box>
       )}
 
-      {/* <OrbitControls position={[0, 0, 10]}></OrbitControls> */}
-      <Environment files={`/lok/shanghai.hdr`}></Environment>
+      <OrbitControls position={[0, 0, 10]}></OrbitControls>
+      <Environment background files={`/lok/shanghai.hdr`}></Environment>
     </>
   )
 }
