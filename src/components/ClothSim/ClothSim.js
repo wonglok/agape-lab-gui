@@ -19,7 +19,7 @@ export function ClothSim() {
   let ball = useRef()
   useFrame((_) => {
     if (wall.current) {
-      wall.current.lookAt(_.camera.position)
+      // wall.current.lookAt(_.camera.position)
     }
     if (ball.current) {
       ball.current.position.copy(point)
@@ -28,15 +28,12 @@ export function ClothSim() {
   return (
     <group>
       <Sphere ref={ball} args={[15, 32, 32]}>
-        <meshPhysicalMaterial
-          transmission={1}
+        <meshStandardMaterial
+          //
           roughness={0}
-          ior={1.5}
-          reflectivity={1.0}
-          thickness={20}
-          metalness={0.1}
+          metalness={1}
           transparent={true}
-          opacity={0.5}></meshPhysicalMaterial>
+          opacity={1}></meshStandardMaterial>
       </Sphere>
       {/*  */}
       <Box
@@ -44,15 +41,21 @@ export function ClothSim() {
         ref={wall}
         onPointerMove={(ev) => {
           //
-          // console.log(ev.point.x, ev.point.y, ev.point.z)
-
-          point.copy(ev.point)
+          if (ev.object) {
+            // console.log(ev.point.x, ev.point.y, ev.point.z)
+            ev.face.normal.multiplyScalar(5)
+            point.copy(ev.point).add(ev.face.normal)
+          }
         }}
         onPointerDown={(ev) => {
           //
           // console.log(ev.point.x, ev.point.y, ev.point.z)
 
-          point.copy(ev.point)
+          if (ev.object) {
+            ev.face.normal.multiplyScalar(5)
+            point.copy(ev.point).add(ev.face.normal)
+          }
+          // point.copy(ev.point)
         }}
         position={[0, 0, 0.0]}
         args={[1000, 1000, 0.1]}

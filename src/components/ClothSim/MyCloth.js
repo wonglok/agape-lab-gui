@@ -26,6 +26,7 @@ import md5 from 'md5'
 import displayFragment from './shader/display.frag'
 import displayVertex from './shader/display.vert'
 import { DoubleSide, sRGBEncoding } from 'three'
+import { PlaneGeometry } from 'three'
 // import { useEffect, useMemo } from 'react'
 // import { create } from 'zustand'
 
@@ -35,6 +36,7 @@ export class MyCloth extends Object3D {
     // In each frame...
 
     let tsks = []
+    let cleans = []
     let rAFID = 0
 
     let rAF = () => {
@@ -45,11 +47,14 @@ export class MyCloth extends Object3D {
     this.core = {
       clean() {
         cancelAnimationFrame(rAFID)
+        cleans.forEach((r) => r())
       },
       onLoop(v) {
         tsks.push(v)
       },
-      onClean() {},
+      onClean(v) {
+        cleans.push(v)
+      },
     }
 
     this.dispose = () => {
@@ -226,8 +231,10 @@ export class MyCloth extends Object3D {
     // this.add(this.pts)
 
     this.plane = new Mesh(
-      new PlaneBufferGeometry(200, 200, this.sizeX * 2.0, this.sizeY * 2.0),
+      new PlaneGeometry((this.sizeX / 512) * 100.0, (this.sizeY / 512) * 100.0, this.sizeX * 2.0, this.sizeY * 2.0),
       getClothMaterial({
+        sizeX: this.sizeX,
+        sizeY: this.sizeY,
         getter: () => {
           return this.getTexAPos()
         },
@@ -267,7 +274,7 @@ export class MyCloth extends Object3D {
   }
 }
 
-let getClothMaterial = ({ getter }) => {
+let getClothMaterial = ({ sizeX, sizeY, getter }) => {
   let mat = new MeshPhysicalMaterial({
     color: '#ffffff',
 
@@ -275,9 +282,9 @@ let getClothMaterial = ({ getter }) => {
     transparent: true,
     transmission: 1.0,
     metalness: 0.0,
-    roughness: 0.3,
+    roughness: 0.5,
     ior: 2.5,
-    reflectivity: 0.0,
+    reflectivity: 1.0,
     thickness: 4,
   })
 
@@ -299,13 +306,14 @@ let getClothMaterial = ({ getter }) => {
     let transformV3Normal = `
         vec4 nPos = texture2D(cloth, uv);
 
-        float seg = 1.0 / 512.0;
+        float segX = 1.0 / ${sizeX.toFixed(1)};
+        float segY = 1.0 / ${sizeY.toFixed(1)};
 
-        vec4 nPosU = texture2D(cloth, vec2(uv.x, uv.y + seg));
-        vec4 nPosD = texture2D(cloth, vec2(uv.x, uv.y - seg));
+        vec4 nPosU = texture2D(cloth, vec2(uv.x, uv.y + segY));
+        vec4 nPosD = texture2D(cloth, vec2(uv.x, uv.y - segY));
 
-        vec4 nPosL = texture2D(cloth, vec2(uv.x + seg, uv.y));
-        vec4 nPosR = texture2D(cloth, vec2(uv.x - seg, uv.y));
+        vec4 nPosL = texture2D(cloth, vec2(uv.x + segX, uv.y));
+        vec4 nPosR = texture2D(cloth, vec2(uv.x - segX, uv.y));
 
         vec3 objectNormal = normalize((
           normalize(nPosU.rgb - nPos.rgb) +
