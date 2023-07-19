@@ -19,7 +19,7 @@ export function WaterSurface({}) {
 }
 
 function Content() {
-  let WIDTH = 128
+  let WIDTH = 256
   let gl = useThree((it) => it.gl)
   let [api, setAPI] = useState(null)
   useEffect(() => {
@@ -77,7 +77,7 @@ function Content() {
       )}
 
       <OrbitControls position={[0, 0, 10]}></OrbitControls>
-      <Environment background files={`/lok/shanghai.hdr`}></Environment>
+      <Environment background files={`/lok/street.hdr`}></Environment>
     </>
   )
 }
