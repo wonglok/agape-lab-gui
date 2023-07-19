@@ -19,7 +19,7 @@ export function WaterSurface({}) {
 }
 
 function Content() {
-  let WIDTH = 128
+  let WIDTH = 100
   let gl = useThree((it) => it.gl)
   let [api, setAPI] = useState(null)
   useEffect(() => {

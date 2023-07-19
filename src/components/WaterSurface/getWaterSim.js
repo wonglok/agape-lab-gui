@@ -1,8 +1,8 @@
 import { Clock, MeshPhysicalMaterial, TextureLoader, Vector2 } from 'three'
 import { GPUComputationRenderer } from 'three-stdlib'
 
-export function getWaterSim({ renderer }) {
-  let WIDTH = 128
+export function getWaterSim({ renderer, WIDTH }) {
+  // let WIDTH = 128
   // Creates the gpu computation class and sets it up
   let heightMapCode = /* glsl */ `
 
