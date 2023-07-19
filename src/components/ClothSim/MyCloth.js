@@ -275,10 +275,10 @@ let getClothMaterial = ({ getter }) => {
     transparent: true,
     transmission: 1.0,
     metalness: 0.0,
-    roughness: 0.0,
-    ior: 1.5,
+    roughness: 0.3,
+    ior: 2.5,
     reflectivity: 0.0,
-    thickness: 2,
+    thickness: 4,
   })
 
   ///public/bg/flower@1x.png
