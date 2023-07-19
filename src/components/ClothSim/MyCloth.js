@@ -277,8 +277,8 @@ let getClothMaterial = ({ getter }) => {
     metalness: 0.0,
     roughness: 0.0,
     ior: 1.5,
-    reflectivity: 0.5,
-    thickness: 1,
+    reflectivity: 0.0,
+    thickness: 2,
   })
 
   ///public/bg/flower@1x.png

@@ -55,6 +55,8 @@ if (mDist < 25.0) {
   hand = normalize(mouse - nowPos.xyz) * 3.0;
 }
 
+// hand += normalize(mouse - nowPos.xyz) * -1.0;
+
 hand /= mass;
 acceleration += hand;
 
