@@ -18,16 +18,16 @@ export function ClothSim() {
   let wall = useRef()
   let ball = useRef()
   useFrame((_) => {
-    if (wall.current) {
-      // wall.current.lookAt(_.camera.position)
-    }
+    // if (wall.current) {
+    //   // wall.current.lookAt(_.camera.position)
+    // }
     if (ball.current) {
       ball.current.position.copy(point)
     }
   })
   return (
     <group>
-      <Sphere ref={ball} args={[15, 32, 32]}>
+      <Sphere ref={ball} args={[10, 32, 32]}>
         <meshStandardMaterial
           //
           roughness={0}
@@ -43,7 +43,7 @@ export function ClothSim() {
           //
           if (ev.object) {
             // console.log(ev.point.x, ev.point.y, ev.point.z)
-            ev.face.normal.multiplyScalar(5)
+            // ev.face.normal.multiplyScalar(3.0)
             point.copy(ev.point).add(ev.face.normal)
           }
         }}
@@ -52,14 +52,15 @@ export function ClothSim() {
           // console.log(ev.point.x, ev.point.y, ev.point.z)
 
           if (ev.object) {
-            ev.face.normal.multiplyScalar(5)
+            // ev.face.normal.multiplyScalar(3.0)
             point.copy(ev.point).add(ev.face.normal)
           }
           // point.copy(ev.point)
         }}
-        position={[0, 0, 0.0]}
-        args={[1000, 1000, 0.1]}
-        visible={false}></Box>
+        position={[0, 0, 10]}
+        args={[200, 200, 0.1]}>
+        <meshBasicMaterial wireframe></meshBasicMaterial>
+      </Box>
       {/*  */}
       {ready && <Yo key={ready} gl={gl} point={point} ready={ready}></Yo>}
       {/*  */}
@@ -70,11 +71,13 @@ export function ClothSim() {
 function Yo({ gl, point, ready }) {
   let ref = useRef()
   useEffect(() => {}, [])
-  return (
-    <group
+  /*
       onClick={() => {
         ref.current.load()
-      }}>
+      }}
+  */
+  return (
+    <group>
       <myCloth
         ref={ref}
         args={[{ gl, mouse: point }]}

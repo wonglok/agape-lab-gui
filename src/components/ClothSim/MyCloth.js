@@ -4,18 +4,13 @@ import {
   BufferAttribute,
   BufferGeometry,
   Clock,
-  Color,
-  InstancedBufferGeometry,
   Mesh,
   MeshPhysicalMaterial,
   // Mesh,
   // MeshStandardMaterial,
   // SphereBufferGeometry,
   Object3D,
-  PlaneBufferGeometry,
-  Points,
   ShaderMaterial,
-  TextureLoader,
 } from 'three'
 import { CustomGPU } from './CustomGPU'
 import fragmentShaderVel from './shader/fragmentShaderVel.frag'
@@ -25,7 +20,7 @@ import computeBody from './shader/computeBody.frag'
 import md5 from 'md5'
 import displayFragment from './shader/display.frag'
 import displayVertex from './shader/display.vert'
-import { DoubleSide, sRGBEncoding } from 'three'
+import { DoubleSide } from 'three'
 import { PlaneGeometry } from 'three'
 // import { useEffect, useMemo } from 'react'
 // import { create } from 'zustand'
@@ -62,8 +57,8 @@ export class MyCloth extends Object3D {
     }
 
     this.gl = gl
-    this.sizeX = 512
-    this.sizeY = 512
+    this.sizeX = 256
+    this.sizeY = 256
     this.count = this.sizeX * this.sizeY
     this.gpu = new CustomGPU(this.sizeX, this.sizeY, this.gl)
     // Compute!
@@ -231,7 +226,7 @@ export class MyCloth extends Object3D {
     // this.add(this.pts)
 
     this.plane = new Mesh(
-      new PlaneGeometry((this.sizeX / 512) * 100.0, (this.sizeY / 512) * 100.0, this.sizeX * 2.0, this.sizeY * 2.0),
+      new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY),
       getClothMaterial({
         sizeX: this.sizeX,
         sizeY: this.sizeY,
@@ -243,27 +238,26 @@ export class MyCloth extends Object3D {
     this.plane.frustumCulled = false
     this.add(this.plane)
 
-    let arr = [`/bg/flower@1x.png`, `/bg/john-16-33.png`, `/bg/red@1x.png`, `/bg/anthem@1x.png`]
-    let cursor = 0
+    // let arr = [`/bg/flower@1x.png`, `/bg/john-16-33.png`, `/bg/red@1x.png`, `/bg/anthem@1x.png`]
+    // let cursor = 0
 
-    let load = ({ mat }) => {
-      new TextureLoader().loadAsync(arr[cursor]).then((tex) => {
-        tex.encoding = sRGBEncoding
-        tex.generateMipmaps = false
-
-        // mat.roughnessMap = tex
-        // mat.metalnessMap = tex
-        mat.map = tex
-        mat.color = new Color('#ffffff')
-        mat.emissiveMap = tex
-        mat.emissive = new Color('#ffffff')
-        cursor++
-        cursor = cursor % arr.length
-      })
-    }
+    // let load = ({ mat }) => {
+    //   new TextureLoader().loadAsync(arr[cursor]).then((tex) => {
+    //     tex.encoding = sRGBEncoding
+    //     tex.generateMipmaps = false
+    //     // mat.roughnessMap = tex
+    //     // mat.metalnessMap = tex
+    //     mat.map = tex
+    //     mat.color = new Color('#ffffff')
+    //     mat.emissiveMap = tex
+    //     mat.emissive = new Color('#ffffff')
+    //     cursor++
+    //     cursor = cursor % arr.length
+    //   })
+    // }
 
     this.load = () => {
-      load({ mat: this.plane.material })
+      // load({ mat: this.plane.material })
     }
 
     //
@@ -275,6 +269,8 @@ export class MyCloth extends Object3D {
 }
 
 let getClothMaterial = ({ sizeX, sizeY, getter }) => {
+  //
+  //
   let mat = new MeshPhysicalMaterial({
     color: '#ffffff',
 
@@ -282,10 +278,10 @@ let getClothMaterial = ({ sizeX, sizeY, getter }) => {
     transparent: true,
     transmission: 1.0,
     metalness: 0.0,
-    roughness: 0.5,
+    roughness: 0.3,
     ior: 2.5,
     reflectivity: 1.0,
-    thickness: 4,
+    thickness: 14,
   })
 
   ///public/bg/flower@1x.png
