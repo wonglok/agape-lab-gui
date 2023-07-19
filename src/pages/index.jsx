@@ -17,6 +17,14 @@ const pages = [
   //   date: `2023-05-27`,
   // },
   //src
+
+  //src/pages/
+  {
+    key: md5(v4()),
+    url: `/blog/2023/07/18/ClothSimPage`,
+    name: `ClothSimPage`,
+    date: '2023-07-19',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/07/18/WaterSurface`,
