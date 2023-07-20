@@ -131,7 +131,7 @@ export function ParticleRelay() {
         </Geometry>
         {/*  */}
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
-        <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
+        <ParticleRelayCore idx={3} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
         {/* <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
         <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore> */}
       </mesh>
