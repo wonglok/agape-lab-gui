@@ -139,7 +139,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
   return (
     <group
       key={`${handIDX}_${fingerIDX}`}
-      position={[vp.width * fVec.x - vp.width * 0.5, vp.height * -fVec.y + vp.height * 0.5, fVec.z * 0.0]}
+      position={[vp.width * fVec.x - vp.width * 0.5, vp.height * -fVec.y + vp.height * 0.5, fVec.z * 1.0]}
       scale={[1, 1, 1]}>
       {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
                         {fingerIDX}
@@ -186,7 +186,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         <>
           <group
             userData={{
-              forceSize: -2.5,
+              forceSize: -3.5,
               forceTwist: 5,
               forceType: 'attract',
               type: 'ForceField',
