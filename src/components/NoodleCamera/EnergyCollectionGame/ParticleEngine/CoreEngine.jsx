@@ -145,12 +145,12 @@ function Score({ cursorA, cursorB }) {
   return (
     <>
       <primitive object={cursorA}>
-        <Text scale={0.5} position={[0, 0, 1.5]}>
+        <Text scale={[-1, 1, 1]} position={[0, 0, 4]}>
           {scoreA}
         </Text>
       </primitive>
       <primitive object={cursorB}>
-        <Text scale={0.5} position={[0, 0, 1.5]}>
+        <Text scale={[-1, 1, 1]} position={[0, 0, 4]}>
           {scoreB}
         </Text>
       </primitive>
@@ -296,7 +296,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
-      new SphereGeometry(0.75, 32, 32),
+      new SphereGeometry(2, 32, 32),
       new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
     )
     o3.position.x = -3
@@ -305,7 +305,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
 
   let cursorB = useMemo(() => {
     let o3 = new Mesh(
-      new SphereGeometry(0.75, 32, 32),
+      new SphereGeometry(2, 32, 32),
       new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
     )
     o3.position.x = 3
@@ -989,17 +989,17 @@ export function CoreEngine({
         let vy = getDataFrom(buffAttr.getY(i))
         let vz = getDataFrom(buffAttr.getZ(i))
 
-        items[i].position.set(vx, vy, vz)
+        items[i].position.set(-vx, vy, vz)
 
         // console.log(cursorA.position)
 
         let distA = cursorA.position.distanceTo(items[i].position)
         let distB = cursorB.position.distanceTo(items[i].position)
-        if (distA <= 1) {
+        if (distA <= 3) {
           cursorA.inRange++
         }
 
-        if (distB <= 1) {
+        if (distB <= 3) {
           cursorB.inRange++
         }
       }
@@ -1007,8 +1007,6 @@ export function CoreEngine({
       useScore.setState((st) => {
         return {
           ...st,
-
-          //
           //
           scoreA: Math.floor(st.scoreA + cursorA.inRange),
 
@@ -1017,8 +1015,8 @@ export function CoreEngine({
         }
       })
 
-      cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 2.0, 0.5)
-      cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 2.0, 0.5)
+      cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 10.0, 0.5)
+      cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 10.0, 0.5)
     })
 
     let geo = new InstancedBufferGeometry()
