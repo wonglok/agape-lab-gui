@@ -71,7 +71,7 @@ export function CameraFinger() {
           console.log(arr)
         }}
         visible={true}
-        position={[0, 0, -1]}
+        position={[0, 0, -3]}
         scale={[1, 1, 1]}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
         {handLandmarkResult ? (

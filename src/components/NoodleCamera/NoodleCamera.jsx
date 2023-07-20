@@ -26,9 +26,9 @@ export function NoodleCamera() {
           <ParticleRelay />
         </group>
 
-        <EffectComposer>
+        {/* <EffectComposer>
           <Bloom luminanceThreshold={0.2}></Bloom>
-        </EffectComposer>
+        </EffectComposer> */}
       </Canvas>
 
       <CameraMenu></CameraMenu>

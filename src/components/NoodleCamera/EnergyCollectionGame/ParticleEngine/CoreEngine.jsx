@@ -1036,6 +1036,7 @@ export function CoreEngine({
     let renderMaterial = unitMaterial
     unitMaterial.roughness = 1
     unitMaterial.metalness = 0
+    unitMaterial.side = DoubleSide
     // unitMaterial.emissive = new Color('#ffffff')
     // unitMaterial.emissiveMap = unitMaterial.map
     unitMaterial.map = new TextureLoader().load(`/leaf/color-map.jpg`)
@@ -1158,9 +1159,9 @@ export function CoreEngine({
 
         // transformed *= calcLookAtMatrix(fowradPosData.rgb, backPosData.rgb, 0.0);
 
-        transformed.xyz *= rotation3dX(diff.x * 3.1415);
-        transformed.xyz *= rotation3dY(diff.y * 3.1415);
-        transformed.xyz *= rotation3dZ(diff.z * 3.1415);
+        transformed.xyz *= rotation3dX(coords.x + diff.x * 3.1415);
+        transformed.xyz *= rotation3dY(coords.x + diff.y * 3.1415);
+        transformed.xyz *= rotation3dZ(coords.x + diff.z * 3.1415);
 
         gl_PointSize = 1.0;
         transformed += fowradPosData.xyz;
