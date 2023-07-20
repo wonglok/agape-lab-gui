@@ -103,7 +103,7 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[20.975270282995965, 1.138707946806438, 10]}>
+            <group scale={[1, 1, 2]} position={[20.975270282995965, 1.138707946806438, 10]}>
               <Addition>
                 {/* <boxBufferGeometry args={[10, 0.1, 0.1]}></boxBufferGeometry> */}
                 <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
@@ -120,7 +120,7 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[-23.178897900275704, 1.078526010830759, 10]}>
+            <group scale={[1, 1, 2]} position={[-23.178897900275704, 1.078526010830759, 10]}>
               <Addition>
                 <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
               </Addition>
