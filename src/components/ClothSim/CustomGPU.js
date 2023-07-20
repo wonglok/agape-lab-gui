@@ -122,10 +122,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
       value: null,
     },
   }
-  let passThruShader = createShaderMaterial(
-    getPassThroughFragmentShader(),
-    passThruUniforms
-  )
+  let passThruShader = createShaderMaterial(getPassThroughFragmentShader(), passThruUniforms)
   let mesh = new Mesh(new PlaneGeometry(2, 2), passThruShader)
   scene.add(mesh)
 
@@ -134,11 +131,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
     return this
   }
 
-  this.addVariable = function (
-    variableName,
-    computeFragmentShader,
-    initialValueTexture
-  ) {
+  this.addVariable = function (variableName, computeFragmentShader, initialValueTexture) {
     let material = this.createShaderMaterial(computeFragmentShader)
     let variable = {
       name: variableName,
@@ -160,10 +153,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
   }
 
   this.init = function () {
-    if (
-      renderer.capabilities.isWebGL2 === false &&
-      renderer.extensions.has('OES_texture_float') === false
-    ) {
+    if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has('OES_texture_float') === false) {
       return 'No OES_texture_float support for float textures.'
     }
 
@@ -180,7 +170,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
         variable.wrapS,
         variable.wrapT,
         variable.minFilter,
-        variable.magFilter
+        variable.magFilter,
       )
       variable.renderTargets[1] = this.createRenderTarget(
         sizeX,
@@ -188,16 +178,10 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
         variable.wrapS,
         variable.wrapT,
         variable.minFilter,
-        variable.magFilter
+        variable.magFilter,
       )
-      this.renderTexture(
-        variable.initialValueTexture,
-        variable.renderTargets[0]
-      )
-      this.renderTexture(
-        variable.initialValueTexture,
-        variable.renderTargets[1]
-      ) // Adds dependencies uniforms to the ShaderMaterial
+      this.renderTexture(variable.initialValueTexture, variable.renderTargets[0])
+      this.renderTexture(variable.initialValueTexture, variable.renderTargets[1]) // Adds dependencies uniforms to the ShaderMaterial
 
       let material = variable.material
       let uniforms = material.uniforms
@@ -218,23 +202,14 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
             }
 
             if (!found) {
-              return (
-                'Variable dependency not found. Variable=' +
-                variable.name +
-                ', dependency=' +
-                depVar.name
-              )
+              return 'Variable dependency not found. Variable=' + variable.name + ', dependency=' + depVar.name
             }
           }
 
           uniforms[depVar.name] = {
             value: null,
           }
-          material.fragmentShader =
-            '\nuniform sampler2D ' +
-            depVar.name +
-            ';\n' +
-            material.fragmentShader
+          material.fragmentShader = '\nuniform sampler2D ' + depVar.name + ';\n' + material.fragmentShader
         }
       }
     }
@@ -255,15 +230,11 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
 
         for (let d = 0, dl = variable.dependencies.length; d < dl; d++) {
           let depVar = variable.dependencies[d]
-          uniforms[depVar.name].value =
-            depVar.renderTargets[currentTextureIndex].texture
+          uniforms[depVar.name].value = depVar.renderTargets[currentTextureIndex].texture
         }
       } // Performs the computation for this variable
 
-      this.doRenderTarget(
-        variable.material,
-        variable.renderTargets[nextTextureIndex]
-      )
+      this.doRenderTarget(variable.material, variable.renderTargets[nextTextureIndex])
     }
 
     this.currentTextureIndex = nextTextureIndex
@@ -278,8 +249,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
   }
 
   function addResolutionDefine(materialShader) {
-    materialShader.defines.resolution =
-      'vec2( ' + sizeX.toFixed(1) + ', ' + sizeY.toFixed(1) + ' )'
+    materialShader.defines.resolution = 'vec2( ' + sizeX.toFixed(1) + ', ' + sizeY.toFixed(1) + ' )'
   }
 
   this.addResolutionDefine = addResolutionDefine // The following functions can be used to compute things manually
@@ -297,14 +267,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
 
   this.createShaderMaterial = createShaderMaterial
 
-  this.createRenderTarget = function (
-    sizeXTexture,
-    sizeYTexture,
-    wrapS,
-    wrapT,
-    minFilter,
-    magFilter
-  ) {
+  this.createRenderTarget = function (sizeXTexture, sizeYTexture, wrapS, wrapT, minFilter, magFilter) {
     sizeXTexture = sizeXTexture || sizeX
     sizeYTexture = sizeYTexture || sizeY
     wrapS = wrapS || ClampToEdgeWrapping
@@ -348,12 +311,7 @@ let CustomGPU = function (sizeX, sizeY, renderer) {
 
   function getPassThroughVertexShader() {
     return (
-      'attribute vec3 position;' +
-      'void main()	{\n' +
-      '\n' +
-      '	gl_Position = vec4( position, 1.0 );\n' +
-      '\n' +
-      '}\n'
+      'attribute vec3 position;' + 'void main()	{\n' + '\n' + '	gl_Position = vec4( position, 1.0 );\n' + '\n' + '}\n'
     )
   }
 

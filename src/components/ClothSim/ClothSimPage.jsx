@@ -20,7 +20,7 @@ function Content() {
   //
   return (
     <>
-      <Environment files={`/lok/shanghai.hdr`} background />
+      <Environment files={`/lok/street.hdr`} background />
       <ClothSim></ClothSim>
     </>
   )

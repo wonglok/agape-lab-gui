@@ -8,7 +8,7 @@ export function ClothSim() {
   //
 
   let gl = useThree((s) => s.gl)
-  let mouse = useThree((s) => s.mouse)
+  // let mouse = useThree((s) => s.mouse)
   let [ready, setReady] = useState(false)
   let point = new Vector3(0, -100, 200)
   useEffect(() => {
@@ -17,6 +17,7 @@ export function ClothSim() {
 
   let wall = useRef()
   let ball = useRef()
+  //
   useFrame((_) => {
     // if (wall.current) {
     //   // wall.current.lookAt(_.camera.position)
@@ -32,8 +33,7 @@ export function ClothSim() {
           //
           roughness={0}
           metalness={1}
-          transparent={true}
-          opacity={1}></meshStandardMaterial>
+          transparent={false}></meshStandardMaterial>
       </Sphere>
       {/*  */}
       <Box

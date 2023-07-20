@@ -120,9 +120,6 @@ export class MyCloth extends Object3D {
 
     let posVar = this.gpu.addVariable('texturePosition', updatedFragmentShaderPos, vel0)
 
-    //
-    //
-
     // forceVar.material.uniforms.time = { value: 0 }
     velVar.material.uniforms.time = { value: 0 }
     posVar.material.uniforms.time = { value: 0 }
@@ -233,6 +230,15 @@ export class MyCloth extends Object3D {
         getter: () => {
           return this.getTexAPos()
         },
+        onLoop: (func) => {
+          this.core.onLoop(() => {
+            //
+
+            func()
+
+            //
+          })
+        },
       }),
     )
     this.plane.frustumCulled = false
@@ -268,20 +274,19 @@ export class MyCloth extends Object3D {
   }
 }
 
-let getClothMaterial = ({ sizeX, sizeY, getter }) => {
+let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
   //
   //
   let mat = new MeshPhysicalMaterial({
     color: '#ffffff',
-
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
     metalness: 0.0,
-    roughness: 0.3,
+    roughness: 0.15,
     ior: 2.5,
-    reflectivity: 1.0,
-    thickness: 14,
+    reflectivity: 0.5,
+    thickness: 1,
   })
 
   ///public/bg/flower@1x.png
@@ -294,6 +299,10 @@ let getClothMaterial = ({ sizeX, sizeY, getter }) => {
         return getter()
       },
     }
+
+    onLoop(() => {
+      mat.specularColorMap = getter()
+    })
 
     let atBeginV = `
       uniform sampler2D cloth;
