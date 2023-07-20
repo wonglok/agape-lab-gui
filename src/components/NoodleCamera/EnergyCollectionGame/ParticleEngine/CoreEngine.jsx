@@ -45,7 +45,7 @@ import {
 } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
-import { WebGLRenderer } from 'three'
+import { TextureLoader, WebGLRenderer } from 'three'
 let useHalfFloat = false
 
 let getData = (v) => {
@@ -131,7 +131,7 @@ export function ParticleRelay() {
         </Geometry>
         {/*  */}
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
-        <ParticleRelayCore idx={3} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
+        <ParticleRelayCore idx={0} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
         {/* <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
         <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore> */}
       </mesh>
@@ -262,7 +262,7 @@ function CurveYo() {
 }
 
 function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
-  let papers = useGLTF(`/paper/all-paper-webp.glb`)
+  let papers = useGLTF(`/envMap/leaf.glb`)
   let geos = []
   let mats = []
   papers.scene.traverse((it) => {
@@ -1033,13 +1033,15 @@ export function CoreEngine({
     geo.instanceCount = size.x * size.y
 
     geo.setAttribute('coords', iCoords.iAttr)
-
     let renderMaterial = unitMaterial
     unitMaterial.roughness = 1
-    unitMaterial.metalness = 9
-    unitMaterial.emissive = new Color('#ffffff')
-    unitMaterial.emissiveMap = unitMaterial.map
-
+    unitMaterial.metalness = 0
+    // unitMaterial.emissive = new Color('#ffffff')
+    // unitMaterial.emissiveMap = unitMaterial.map
+    unitMaterial.map = new TextureLoader().load(`/leaf/color-map.jpg`)
+    unitMaterial.alphaMap = new TextureLoader().load(`/leaf/alpha-mask.jpg`)
+    unitMaterial.alphaTest = 0.5
+    geo.scale(0.1, 0.1, 0.1)
     // new MeshPhysicalMaterial({
     //   color: new Color('#ffffff'),
     //   roughness: 0.0,
