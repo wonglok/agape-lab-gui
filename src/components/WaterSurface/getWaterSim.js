@@ -1,4 +1,4 @@
-import { Clock, MeshPhysicalMaterial, TextureLoader, Vector2 } from 'three'
+import { Clock, Color, MeshPhysicalMaterial, TextureLoader, Vector2 } from 'three'
 import { GPUComputationRenderer } from 'three-stdlib'
 
 export function getWaterSim({ renderer, WIDTH }) {
@@ -75,7 +75,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 
   heightmapVariable.material.uniforms['mousePos'] = { value: new Vector2(1000, 1000) }
   heightmapVariable.material.uniforms['dt'] = { value: 1 / 60 }
-  heightmapVariable.material.uniforms['mouseSize'] = { value: 5.0 }
+  heightmapVariable.material.uniforms['mouseSize'] = { value: 15.0 }
   heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.98 }
   heightmapVariable.material.uniforms['heightCompensation'] = { value: 0 }
   heightmapVariable.material.defines.BOUNDS = WIDTH.toFixed(1)
@@ -83,18 +83,18 @@ export function getWaterSim({ renderer, WIDTH }) {
   gpuCompute.setVariableDependencies(heightmapVariable, [heightmapVariable])
 
   let displayMaterial = new MeshPhysicalMaterial({
-    color: 'white',
-    roughness: 0.15,
-    metalness: 0.5,
+    color: new Color('#ffffff'),
+    roughness: 0.0,
+    metalness: 0.0,
     transmission: 1,
-    thickness: 10.0,
-    ior: 2.4,
-    reflectivity: 0.5,
+    thickness: 20.0,
+    ior: 2.5,
+    reflectivity: 1.5,
     transparent: true,
     //
 
-    alphaTest: 0.5,
-    alphaMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),
+    // alphaTest: 0.5,
+    // alphaMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),
   })
 
   let api = {}
@@ -106,9 +106,9 @@ export function getWaterSim({ renderer, WIDTH }) {
     api.updateMaterial = () => {
       let tex = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture
       shader.uniforms.heightmap.value = tex
-      // displayMaterial.needsUpdate = true
-      displayMaterial.roughnessMap = tex
-      displayMaterial.metalnessMap = tex
+      // // displayMaterial.needsUpdate = true
+      // displayMaterial.roughnessMap = tex
+      // displayMaterial.metalnessMap = tex
       tex.needsUpdate = true
     }
 

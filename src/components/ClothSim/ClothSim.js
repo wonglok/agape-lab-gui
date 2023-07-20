@@ -1,4 +1,4 @@
-import { Box, Sphere } from '@react-three/drei'
+import { Box, MeshDiscardMaterial, Sphere } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
 import { Vector3 } from 'three'
@@ -59,7 +59,7 @@ export function ClothSim() {
         }}
         position={[0, 0, 10]}
         args={[200, 200, 0.1]}>
-        <meshBasicMaterial wireframe></meshBasicMaterial>
+        <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
       {/*  */}
       {ready && <Yo key={ready} gl={gl} point={point} ready={ready}></Yo>}

@@ -57,7 +57,7 @@ if (mDist < 10000.0) {
   hand = normalize(mouse - nowPos.xyz) * -5.0;
 }
 
-hand.xyz = vec3(0.0, 0.0, hand.z);
+hand.xyz = vec3(hand.x * 0.2, hand.y, hand.z);
 
 // hand += normalize(mouse - nowPos.xyz) * -1.0;
 

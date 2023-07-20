@@ -2,7 +2,7 @@ import { Box, Circle, Environment, OrbitControls, Plane, Sphere, useTexture } fr
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
-import { MeshPhysicalMaterial, Vector3 } from 'three'
+import { MeshPhysicalMaterial, Vector3, sRGBEncoding } from 'three'
 import { Vector2 } from 'three147'
 
 export function WaterSurface({}) {
@@ -47,30 +47,33 @@ function Content() {
     //
   })
 
-  // let bgMap = useTexture(`/pattern/square-agape.png`)
+  let bgMap = useTexture(`/envMap/ma-galaxy.jpg`)
+  bgMap.encoding = sRGBEncoding
   let viewport = useThree((r) => r.viewport)
   let ww = viewport.width
   return (
     <>
-      {/* <Box args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]} position={[0, 0, -0.2]}>
+      <Box
+        onPointerMove={(ev) => {
+          if (api) {
+            ev.uv.addScalar(-0.5)
+            uvLerp.copy(ev.uv)
+          }
+        }}
+        onPointerLeave={(ev) => {
+          if (api) {
+            api.updateMouse(10000, 10000)
+            uvLerp.set(10000, 10000)
+          }
+        }}
+        args={[ww, ww, 0.1, 1, 1, 1]}
+        position={[0, 0, -0.5]}>
         <meshStandardMaterial map={bgMap}></meshStandardMaterial>
-      </Box> */}
+      </Box>
 
       {api && (
         <Box
           rotation={[0, 0, 0]}
-          onPointerMove={(ev) => {
-            if (api) {
-              ev.uv.addScalar(-0.5)
-              uvLerp.copy(ev.uv)
-            }
-          }}
-          onPointerLeave={(ev) => {
-            if (api) {
-              api.updateMouse(10000, 10000)
-              uvLerp.set(10000, 10000)
-            }
-          }}
           args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]}
           // args={[7 / 2, 32]}
           material={api.displayMaterial}></Box>
