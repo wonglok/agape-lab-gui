@@ -49,6 +49,7 @@ function Content() {
 
   let bgMap = useTexture(`/envMap/ma-galaxy.jpg`)
   bgMap.encoding = sRGBEncoding
+
   let viewport = useThree((r) => r.viewport)
   let ww = viewport.width
   return (
