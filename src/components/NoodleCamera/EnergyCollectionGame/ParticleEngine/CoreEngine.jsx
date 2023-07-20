@@ -759,7 +759,7 @@ export function CoreEngine({
       }
     }
 
-    function initData({ get }) {
+    function initData({ rand, get }) {
       let tex = gpu.createTexture()
       let height = tex.image.height
       let width = tex.image.width
@@ -773,6 +773,9 @@ export function CoreEngine({
         tex.image.data[i * 4 + 2] = v3.z
         tex.image.data[i * 4 + 3] = 0.0
 
+        if (rand) {
+          tex.image.data[i * 4 + 3] = Math.random()
+        }
         i++
       }
 
@@ -799,6 +802,7 @@ export function CoreEngine({
         },
       }),
       position: initData({
+        rand: true,
         get: ({ i, e }) => {
           v3t.x = 0
           v3t.y = 0
