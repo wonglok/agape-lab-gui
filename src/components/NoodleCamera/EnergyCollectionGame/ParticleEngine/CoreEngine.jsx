@@ -103,9 +103,12 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[20.975270282995965, 20.138707946806438, -1]}>
+            <group position={[20.975270282995965, 1.138707946806438, 10]}>
               <Addition>
-                <cylinderGeometry args={[1, 1, 5, 24, 24]}></cylinderGeometry>
+                {/* <boxBufferGeometry args={[10, 0.1, 0.1]}></boxBufferGeometry> */}
+                <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
+
+                {/* <cylinderGeometry args={[1.5, 1, 5, 24, 24]}></cylinderGeometry> */}
               </Addition>
             </group>
           </PivotControls>
@@ -117,9 +120,9 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group position={[-23.178897900275704, 15.078526010830759, -1]}>
+            <group position={[-23.178897900275704, 1.078526010830759, 10]}>
               <Addition>
-                <sphereGeometry args={[1, 24, 24]}></sphereGeometry>
+                <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
               </Addition>
             </group>
           </PivotControls>

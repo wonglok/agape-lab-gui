@@ -86,7 +86,7 @@ export function CameraFinger() {
         )}
       </mesh>
 
-      <group position={[0, 0, -1]}>
+      <group position={[0, 0, 5]}>
         {controls &&
           video &&
           handLandmarkResult &&
@@ -141,8 +141,6 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
       key={`${handIDX}_${fingerIDX}`}
       position={[vp.width * fVec.x - vp.width * 0.5, vp.height * -fVec.y + vp.height * 0.5, fVec.z * 0.0]}
       scale={[1, 1, 1]}>
-      {/*  */}
-
       {/* <Text scale={1} position={[0, 0, 1]} fontSize={0.3} color={'#ff0000'}>
                         {fingerIDX}
                       </Text> */}
