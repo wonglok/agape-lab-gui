@@ -18,11 +18,13 @@ export function NoodleCamera() {
             ev.preventDefault()
           }
         }}>
-        <CameraFinger></CameraFinger>
+        <group scale={[-1, 1, 1]}>
+          <CameraFinger></CameraFinger>
 
-        <FingerDetection></FingerDetection>
+          <FingerDetection></FingerDetection>
 
-        <ParticleRelay />
+          <ParticleRelay />
+        </group>
       </Canvas>
 
       <CameraMenu></CameraMenu>
