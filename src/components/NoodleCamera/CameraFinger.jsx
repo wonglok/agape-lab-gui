@@ -129,8 +129,8 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
 
   dist = 0.3141592 - dist
 
-  v1.lerp(hand[8], 0.05)
-  v2.lerp(hand[4], 0.05)
+  v1.lerp(hand[8], 1)
+  v2.lerp(hand[4], 1)
 
   spin.current = MathUtils.lerp(spin.current, dist, 0.05)
 
@@ -163,18 +163,38 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
       </group>
 
       <group scale={1}>
-        <Sphere args={[0.3, 32, 32]}>
-          <meshStandardMaterial roughness={1} transparent metalness={0} color={'lime'}></meshStandardMaterial>
+        <Sphere args={[0.3, 32, 32]} scale={[3, 3, 1]}>
+          <meshStandardMaterial
+            roughness={1}
+            transparent
+            metalness={0}
+            color={handIDX % 2 == 1.0 ? 'red' : 'lime'}></meshStandardMaterial>
         </Sphere>
       </group>
 
-      <group
-        userData={{
-          forceSize: dist * 10,
-          forceTwist: 5,
-          forceType: 'vortexZ',
-          type: 'ForceField',
-        }}></group>
+      {handIDX % 2 == 0.0 && (
+        <>
+          <group
+            userData={{
+              forceSize: dist * 15,
+              forceTwist: 5,
+              forceType: 'vortexZ',
+              type: 'ForceField',
+            }}></group>
+        </>
+      )}
+
+      {handIDX % 2 == 1.0 && (
+        <>
+          <group
+            userData={{
+              forceSize: dist * -10,
+              forceTwist: 5,
+              forceType: 'attract',
+              type: 'ForceField',
+            }}></group>
+        </>
+      )}
     </group>
   )
 }
@@ -194,7 +214,7 @@ export function FingerDetection({}) {
           delegate: 'GPU',
         },
         runningMode: 'IMAGE',
-        numHands: 1,
+        numHands: 2,
         // /**
         //  * The minimum confidence score for the hand detection to be considered
         //  * successful. Defaults to 0.5.

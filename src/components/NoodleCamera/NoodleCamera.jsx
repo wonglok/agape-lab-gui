@@ -18,8 +18,6 @@ export function NoodleCamera() {
             ev.preventDefault()
           }
         }}>
-        {/*  */}
-
         <CameraFinger></CameraFinger>
 
         <FingerDetection></FingerDetection>
