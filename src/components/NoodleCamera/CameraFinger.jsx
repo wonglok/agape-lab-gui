@@ -176,7 +176,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         <>
           <group
             userData={{
-              forceSize: dist * 15,
+              forceSize: 5,
               forceTwist: 5,
               forceType: 'vortexZ',
               type: 'ForceField',
@@ -188,7 +188,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         <>
           <group
             userData={{
-              forceSize: dist * -10,
+              forceSize: -2.5,
               forceTwist: 5,
               forceType: 'attract',
               type: 'ForceField',
