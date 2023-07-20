@@ -40,7 +40,6 @@ export function ClothSim() {
         //
         ref={wall}
         onPointerMove={(ev) => {
-          //
           if (ev.object) {
             // console.log(ev.point.x, ev.point.y, ev.point.z)
             // ev.face.normal.multiplyScalar(3.0)
@@ -48,7 +47,6 @@ export function ClothSim() {
           }
         }}
         onPointerDown={(ev) => {
-          //
           // console.log(ev.point.x, ev.point.y, ev.point.z)
 
           if (ev.object) {
