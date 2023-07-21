@@ -1,6 +1,6 @@
-// import { createRoot } from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import React, { useState, useEffect, Fragment } from 'react'
-import { Hands, ARButton, XR } from '@react-three/xr'
+import { Hands, VRButton, XR } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
 import { Box, OrbitControls, Plane, Sphere, Sky, useMatcapTexture } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere } from '@react-three/cannon'
@@ -71,7 +71,7 @@ function Scene() {
   }))
   return (
     <>
-      {/* <Sky /> */}
+      <Sky />
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
         <meshStandardMaterial attach='material' color='#fff' />
       </Plane>
@@ -91,7 +91,7 @@ function Scene() {
 
 export const HandXR = () => (
   <>
-    <ARButton />
+    <VRButton />
     <Canvas shadowMap>
       <XR>
         <Physics
