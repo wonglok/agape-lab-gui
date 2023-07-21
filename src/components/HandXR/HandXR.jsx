@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client'
+// import { createRoot } from 'react-dom/client'
 import React, { useState, useEffect, Fragment } from 'react'
 import { Hands, ARButton, XR } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
