@@ -1,3 +1,3 @@
-import { HandXR } from '@/components/HandXR/HandXR'
+import { HandXR } from '@/comfponents/HandXR/HandXR'
 
 export default HandXR
