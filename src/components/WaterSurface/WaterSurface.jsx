@@ -11,8 +11,7 @@ import {
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
-import { MeshPhysicalMaterial, Vector3, sRGBEncoding } from 'three'
-import { Vector2 } from 'three147'
+import { Vector3, sRGBEncoding } from 'three'
 
 export function WaterSurface({}) {
   return (
