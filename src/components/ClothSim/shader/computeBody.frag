@@ -55,6 +55,8 @@ float mDist = length(mouse - nowPos.xyz);
 
 hand = normalize(mouse - nowPos.xyz) * 5.0;
 
+hand.xy *= 0.1;
+
 // hand += normalize(mouse - nowPos.xyz) * -1.0;
 
 hand /= mass;
