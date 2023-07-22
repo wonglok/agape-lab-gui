@@ -76,7 +76,7 @@ export function getWaterSim({ renderer, WIDTH }) {
   heightmapVariable.material.uniforms['mousePos'] = { value: new Vector2(1000, 1000) }
   heightmapVariable.material.uniforms['dt'] = { value: 1 / 60 }
   heightmapVariable.material.uniforms['mouseSize'] = { value: 15.0 }
-  heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.98 }
+  heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.96 }
   heightmapVariable.material.uniforms['heightCompensation'] = { value: 0 }
   heightmapVariable.material.defines.BOUNDS = WIDTH.toFixed(1)
 
@@ -123,7 +123,7 @@ export function getWaterSim({ renderer, WIDTH }) {
       `#include <begin_vertex>`,
       `
         float heightValue = texture2D( heightmap, uv ).x;
-        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.5 );
+        vec3 transformed = vec3( position.x, position.y, position.z + heightValue * 0.25 );
 
       `,
     )

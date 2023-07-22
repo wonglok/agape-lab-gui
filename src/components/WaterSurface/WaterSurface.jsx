@@ -1,4 +1,13 @@
-import { Box, Circle, Environment, OrbitControls, Plane, Sphere, useTexture } from '@react-three/drei'
+import {
+  Box,
+  Circle,
+  Environment,
+  MeshDiscardMaterial,
+  OrbitControls,
+  Plane,
+  Sphere,
+  useTexture,
+} from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
@@ -51,7 +60,7 @@ function Content() {
   bgMap.encoding = sRGBEncoding
 
   let viewport = useThree((r) => r.viewport)
-  let ww = viewport.width
+  let ww = Math.min(viewport.width, viewport.height)
   return (
     <>
       <Box
@@ -68,19 +77,19 @@ function Content() {
           }
         }}
         args={[ww, ww, 0.1, 1, 1, 1]}
-        position={[0, 0, -0.5]}>
-        <meshStandardMaterial map={bgMap}></meshStandardMaterial>
+        position={[0, 0, 0]}>
+        <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
 
       {api && (
         <Box
           rotation={[0, 0, 0]}
-          args={[ww, ww, 0.1, WIDTH - 1, WIDTH - 1, 1]}
+          args={[ww, ww, 0.1, WIDTH, WIDTH, 1]}
           // args={[7 / 2, 32]}
           material={api.displayMaterial}></Box>
       )}
 
-      <OrbitControls position={[0, 0, 10]}></OrbitControls>
+      {/* <OrbitControls object-position={[0, 0, 15]}></OrbitControls> */}
       <Environment background files={`/lok/street.hdr`}></Environment>
     </>
   )
