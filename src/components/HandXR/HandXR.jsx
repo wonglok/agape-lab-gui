@@ -1,18 +1,18 @@
-import { createRoot } from 'react-dom/client'
 import React, { useState, useEffect, Fragment } from 'react'
 import { Hands, VRButton, XR } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
-import { Box, OrbitControls, Plane, Sphere, Sky, useMatcapTexture } from '@react-three/drei'
+import { Box, OrbitControls, Plane, Sphere, Sky } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere } from '@react-three/cannon'
 import { joints } from './joints'
 
 function Cube({ position, args = [0.06, 0.06, 0.06] }) {
   const [boxRef] = useBox(() => ({ position, mass: 1, args }))
-  const [tex] = useMatcapTexture('C7C0AC_2E181B_543B30_6B6270')
+  // const [tex] = useMatcapTexture('C7C0AC_2E181B_543B30_6B6270')
 
   return (
     <Box ref={boxRef} args={args} castShadow>
-      <meshMatcapMaterial attach='material' matcap={tex} />
+      <meshStandardMaterial attach='material' color='#ffff00' />
+      {/* <meshMatcapMaterial attach='material' matcap={tex} /> */}
     </Box>
   )
 }
