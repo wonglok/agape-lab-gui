@@ -28,22 +28,25 @@ export function ClothSim() {
   })
   return (
     <group>
+      {/*  */}
+      {/*  */}
+
       <Sphere ref={ball} args={[10, 32, 32]}>
         <meshStandardMaterial
           //
           roughness={0}
+          //
           metalness={1}
+          //
           transparent={false}></meshStandardMaterial>
       </Sphere>
-      {/*  */}
-      {/*  */}
       <Box
         //
+        rotation={[0, 0, 0]}
         ref={wall}
         onPointerMove={(ev) => {
           if (ev.object) {
             // console.log(ev.point.x, ev.point.y, ev.point.z)
-            // ev.face.normal.multiplyScalar(3.0)
             point.copy(ev.point).add(ev.face.normal)
           }
         }}
@@ -51,7 +54,6 @@ export function ClothSim() {
           // console.log(ev.point.x, ev.point.y, ev.point.z)
 
           if (ev.object) {
-            // ev.face.normal.multiplyScalar(3.0)
             point.copy(ev.point).add(ev.face.normal)
           }
           // point.copy(ev.point)
@@ -62,8 +64,10 @@ export function ClothSim() {
       </Box>
 
       {/*  */}
-      {ready && <YoYo key={ready} gl={gl} point={point} ready={ready}></YoYo>}
-      {/*  */}
+      <group rotation={[0, 0, 0]}>
+        {ready && <YoYo key={ready} gl={gl} point={point} ready={ready}></YoYo>}
+        {/*  */}
+      </group>
     </group>
   )
 }

@@ -4,6 +4,7 @@ import {
   BufferAttribute,
   BufferGeometry,
   Clock,
+  Color,
   Mesh,
   MeshPhysicalMaterial,
   // Mesh,
@@ -11,6 +12,8 @@ import {
   // SphereBufferGeometry,
   Object3D,
   ShaderMaterial,
+  TextureLoader,
+  sRGBEncoding,
 } from 'three'
 import { CustomGPU } from './CustomGPU'
 import fragmentShaderVel from './shader/fragmentShaderVel.frag'
@@ -22,6 +25,7 @@ import displayFragment from './shader/display.frag'
 import displayVertex from './shader/display.vert'
 import { DoubleSide } from 'three'
 import { PlaneGeometry } from 'three'
+import { Texture } from 'three147'
 // import { useEffect, useMemo } from 'react'
 // import { create } from 'zustand'
 
@@ -262,6 +266,13 @@ export class MyCloth extends Object3D {
     //   })
     // }
 
+    let agape = new TextureLoader().load(`/bg/flower@1x.png`)
+    agape.encoding = sRGBEncoding
+
+    this.plane.material.specularColorMap = agape
+    this.plane.material.map = agape
+    this.plane.material.transmissionMap = agape
+    // this.plane.material.emissive = new Color('#ffffff')
     this.load = () => {
       // load({ mat: this.plane.material })
     }
@@ -283,10 +294,11 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     transparent: true,
     transmission: 1.0,
     metalness: 0.0,
-    roughness: 0.15,
+    roughness: 0.0,
     ior: 2.5,
     reflectivity: 0.5,
     thickness: 1,
+    envMapIntensity: 1.5,
   })
 
   ///public/bg/flower@1x.png
@@ -301,7 +313,7 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     }
 
     onLoop(() => {
-      mat.specularColorMap = getter()
+      // mat.specularColorMap = getter()
     })
 
     let atBeginV = `

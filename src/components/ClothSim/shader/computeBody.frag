@@ -9,8 +9,7 @@ vec4 nowPos = texture2D( texturePosition, uv );
 vec4 offsets = texture2D( textureOffset, uv );
 vec4 velocity = texture2D( textureVelocity, uv );
 
-float anchorHeight = 100.0;
-float yAnchor = anchorHeight;
+float yAnchor = 100.0;
 vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y, offsets.z );
 
 // Newton's law: F = M * A
@@ -25,7 +24,7 @@ acceleration += gravity;
 // 2. apply the spring force
 float restLength = yAnchor - offsets.y;
 // float springConstant = 15.0;
-float springConstant = 1.0;
+float springConstant = 15.0;
 
 // Vector pointing from anchor to point position
 vec3 springForce = vec3(nowPos.x - anchor.x, nowPos.y - anchor.y, nowPos.z - anchor.z);
@@ -34,6 +33,8 @@ vec3 springForce = vec3(nowPos.x - anchor.x, nowPos.y - anchor.y, nowPos.z - anc
 float distanceV = length( springForce );
 // stretch is the difference between the current distanceV and restLength
 float stretch =  distanceV - restLength;
+
+stretch *= 0.1;
 
 // Calculate springForce according to Hooke's Law
 springForce = normalize(springForce);
@@ -51,13 +52,8 @@ acceleration += (wind);
 //
 vec3 hand;
 float mDist = length(mouse - nowPos.xyz);
-if (mDist < 10000.0) {
-  hand = normalize(mouse - nowPos.xyz) * 5.0;
-} else {
-  hand = normalize(mouse - nowPos.xyz) * -5.0;
-}
 
-hand.xyz = vec3(hand.x * 0.2, hand.y, hand.z);
+hand = normalize(mouse - nowPos.xyz) * 5.0;
 
 // hand += normalize(mouse - nowPos.xyz) * -1.0;
 
