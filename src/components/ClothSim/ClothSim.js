@@ -35,10 +35,9 @@ export function ClothSim() {
         <meshStandardMaterial
           //
           roughness={0}
-          //
           metalness={1}
           //
-          transparent={false}></meshStandardMaterial>
+          transparent={true}></meshStandardMaterial>
       </Sphere>
       <Box
         //

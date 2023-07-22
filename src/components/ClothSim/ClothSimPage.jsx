@@ -1,5 +1,5 @@
-import { Box, Environment, OrbitControls, PerspectiveCamera, Plane, Sphere } from '@react-three/drei'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Environment, PerspectiveCamera } from '@react-three/drei'
+import { Canvas, useThree } from '@react-three/fiber'
 import { ClothSim } from './ClothSim'
 
 export function ClothSimPage({}) {
@@ -9,7 +9,6 @@ export function ClothSimPage({}) {
         {/* <OrbitControls object-position={[0, 0, 200]}></OrbitControls> */}
         <Content></Content>
       </Canvas>
-      {/*  */}
 
       {/*  */}
     </>
