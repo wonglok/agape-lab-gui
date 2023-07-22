@@ -18,6 +18,9 @@ export function ClothSimPage({}) {
 
 function Content() {
   //
+  let scene = useThree((state) => state.scene)
+  scene.backgroundBlurriness = 0
+  scene.backgroundIntensity = 2.5
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
