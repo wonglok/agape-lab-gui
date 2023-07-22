@@ -36,6 +36,7 @@ export function ClothSim() {
           transparent={false}></meshStandardMaterial>
       </Sphere>
       {/*  */}
+      {/*  */}
       <Box
         //
         ref={wall}
@@ -59,14 +60,15 @@ export function ClothSim() {
         args={[200, 200, 0.1]}>
         <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
+
       {/*  */}
-      {ready && <Yo key={ready} gl={gl} point={point} ready={ready}></Yo>}
+      {ready && <YoYo key={ready} gl={gl} point={point} ready={ready}></YoYo>}
       {/*  */}
     </group>
   )
 }
 
-function Yo({ gl, point, ready }) {
+function YoYo({ gl, point, ready }) {
   let ref = useRef()
   useEffect(() => {}, [])
   /*
