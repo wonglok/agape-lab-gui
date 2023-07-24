@@ -17,7 +17,7 @@ import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@reac
 import { joints } from './joints'
 import { AnimationMixer } from 'three'
 import { Geometry, Face3 } from './Geo'
-import { WaterSurfaceContent } from '../WaterSurface/WaterSurface'
+// import { WaterSurfaceContent } from '../WaterSurface/WaterSurface'
 /**
  * Returns legacy geometry vertices, faces for ConvP
  * @param {THREE.BufferGeometry} bufferGeometry

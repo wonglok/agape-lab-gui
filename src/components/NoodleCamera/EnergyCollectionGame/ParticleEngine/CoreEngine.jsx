@@ -42,6 +42,7 @@ import {
   CatmullRomLine,
   Line,
   useGLTF,
+  MeshDiscardMaterial,
 } from '@react-three/drei'
 import { Addition, Base, Geometry } from '@react-three/csg'
 import { create } from 'zustand'
@@ -93,22 +94,20 @@ export function ParticleRelay() {
         {/*  */}
         <Geometry ref={csgRef}>
           <Base>
-            <boxBufferGeometry args={[0.00001, 0.00001, 0.00001]}></boxBufferGeometry>
+            <circleGeometry args={[15 / 2, 30]}></circleGeometry>
           </Base>
 
-          <PivotControls
+          {/* <PivotControls
             lineWidth={3}
             scale={2}
             onDrag={() => {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group scale={[1, 1, 2]} position={[20.975270282995965, 1.138707946806438, 10]}>
+            <group scale={[1, 1, 1]} position={[20.975270282995965, 1.138707946806438, 10]}>
               <Addition>
-                {/* <boxBufferGeometry args={[10, 0.1, 0.1]}></boxBufferGeometry> */}
                 <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
 
-                {/* <cylinderGeometry args={[1.5, 1, 5, 24, 24]}></cylinderGeometry> */}
               </Addition>
             </group>
           </PivotControls>
@@ -120,15 +119,16 @@ export function ParticleRelay() {
               applyEmissionGeometryChange()
             }}
             anchor={[0, 0, 0]}>
-            <group scale={[1, 1, 2]} position={[-23.178897900275704, 1.078526010830759, 10]}>
+            <group scale={[1, 1, 1]} position={[-23.178897900275704, 1.078526010830759, 10]}>
               <Addition>
                 <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
               </Addition>
             </group>
-          </PivotControls>
+          </PivotControls> */}
 
           {/*  */}
         </Geometry>
+        <MeshDiscardMaterial></MeshDiscardMaterial>
         {/*  */}
         {/* <meshPhysicalMaterial transmission={1} thickness={1.5} roughness={0} ior={1.5}></meshPhysicalMaterial> */}
         <ParticleRelayCore idx={0} surfaceMesh={surfaceMesh} rand={3}></ParticleRelayCore>
@@ -145,12 +145,12 @@ function Score({ cursorA, cursorB }) {
   return (
     <>
       <primitive object={cursorA}>
-        <Text scale={[-1, 1, 1]} position={[0, 0, 4]}>
+        <Text scale={[-1, 1, 1]} position={[0, 0, 2]}>
           {scoreA}
         </Text>
       </primitive>
       <primitive object={cursorB}>
-        <Text scale={[-1, 1, 1]} position={[0, 0, 4]}>
+        <Text scale={[-1, 1, 1]} position={[0, 0, 2]}>
           {scoreB}
         </Text>
       </primitive>
@@ -285,7 +285,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'low',
+    performanceProfile = 'medium',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
@@ -297,18 +297,18 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(2, 32, 32),
-      new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
+      new MeshPhysicalMaterial({ roughness: 1, color: new Color('#ff0000') }),
     )
-    o3.position.x = -3
+    o3.position.x = -25
     return o3
   }, [])
 
   let cursorB = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(2, 32, 32),
-      new MeshPhysicalMaterial({ transmission: 1, thickness: 1, roughness: 0, ior: 1.5 }),
+      new MeshPhysicalMaterial({ roughness: 1, color: new Color('#00ff00') }),
     )
-    o3.position.x = 3
+    o3.position.x = 25
     return o3
   }, [])
 
@@ -485,7 +485,7 @@ export function CoreEngine({
         size.y = 128
       }
     }
-    if (performanceProfile === 'middle') {
+    if (performanceProfile === 'medium') {
       size.x = 128
       size.y = 128
 
@@ -988,6 +988,7 @@ export function CoreEngine({
 
       cursorA.inRange = 0
       cursorB.inRange = 0
+
       for (let i = 0; i < total; i++) {
         let vx = getDataFrom(buffAttr.getX(i))
         let vy = getDataFrom(buffAttr.getY(i))
@@ -999,11 +1000,11 @@ export function CoreEngine({
 
         let distA = cursorA.position.distanceTo(items[i].position)
         let distB = cursorB.position.distanceTo(items[i].position)
-        if (distA <= 3) {
+        if (distA <= 20) {
           cursorA.inRange++
         }
 
-        if (distB <= 3) {
+        if (distB <= 20) {
           cursorB.inRange++
         }
       }
@@ -1019,8 +1020,8 @@ export function CoreEngine({
         }
       })
 
-      cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 10.0, 0.5)
-      cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 10.0, 0.5)
+      // cursorA.material.color.setHSL(0.23, (cursorA.inRange / gpuSamplerSize) * 10.0, 0.5)
+      // cursorB.material.color.setHSL(0.87, (cursorB.inRange / gpuSamplerSize) * 10.0, 0.5)
     })
 
     let geo = new InstancedBufferGeometry()
@@ -1398,7 +1399,7 @@ function simPos({ attractorSize, curveSize }) {
       data_sim_position.rgb += data_sim_velocity.rgb * 0.05;
 
 
-      data_sim_position.w -= 0.01 * 0.1;
+      data_sim_position.w -= 0.01 * 0.1 * (rand(uv + time));
 
       // reset
       // if (data_sim_position.y <= -10.0 || data_sim_position.w == 0.0 || rand(data_sim_position.xy + time) >= 0.99) {

@@ -172,11 +172,18 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
 
       {handIDX % 2 == 0.0 && (
         <>
-          <group
+          {/* <group
             userData={{
               forceSize: 5,
               forceTwist: 5,
               forceType: 'vortexZ',
+              type: 'ForceField',
+            }}></group> */}
+          <group
+            userData={{
+              forceSize: -3.5,
+              forceTwist: 5,
+              forceType: 'attract',
               type: 'ForceField',
             }}></group>
         </>
