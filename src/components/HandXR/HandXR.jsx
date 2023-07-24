@@ -23,7 +23,7 @@ function WoodMaterial() {
     map: '/bricks/Wood048_1K-JPG/Wood048_1K_Color.jpg',
     normalMap: '/bricks/Wood048_1K-JPG/Wood048_1K_NormalGL.jpg',
     roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
-    metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
+    // metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
   })
   return <meshStandardMaterial {...myTexture}></meshStandardMaterial>
 }
@@ -125,7 +125,9 @@ function JointCollider({ index, hand }) {
   const { gl } = useThree()
   const handObj = gl.xr.getHand(hand)
   const joint = handObj.joints[joints[index]]
-  const size = joint.jointRadius ?? 0.0001
+  let size = joint.jointRadius ?? 0.0001
+
+  size *= 1.333
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
   useFrame(() => {
     if (joint === undefined) return
