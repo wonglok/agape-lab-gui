@@ -1,11 +1,23 @@
 import React, { useState, useEffect, Fragment, useMemo } from 'react'
 import { Hands, VRButton, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
-import { Box, OrbitControls, Plane, Sphere, Sky, useGLTF, useFBX, Environment, useTexture } from '@react-three/drei'
+import {
+  Box,
+  OrbitControls,
+  Plane,
+  Sphere,
+  Sky,
+  useGLTF,
+  useFBX,
+  Environment,
+  useTexture,
+  MeshDiscardMaterial,
+} from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
 import { AnimationMixer } from 'three'
 import { Geometry, Face3 } from './Geo'
+import { WaterSurfaceContent } from '../WaterSurface/WaterSurface'
 /**
  * Returns legacy geometry vertices, faces for ConvP
  * @param {THREE.BufferGeometry} bufferGeometry
@@ -184,6 +196,10 @@ function Scene() {
         <Avatar></Avatar>
       </group>
 
+      {/* <group rotation={[Math.PI * -0.5, 0, 0]}>
+        <WaterSurfaceContent></WaterSurfaceContent>
+      </group> */}
+
       {[...Array(5)].map((_, i) => (
         <Arch key={'arch' + i} position={[0.3, 1.1 + 0.1 * i, -0.5]}></Arch>
       ))}
@@ -198,6 +214,7 @@ function Scene() {
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
+        <MeshDiscardMaterial></MeshDiscardMaterial>
         <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
       </Plane>
       <Hands />

@@ -17,7 +17,8 @@ export function WaterSurface({}) {
   return (
     <>
       <Canvas>
-        <Content></Content>
+        <WaterSurfaceContent></WaterSurfaceContent>
+        <Environment background files={`/lok/street.hdr`}></Environment>
       </Canvas>
       {/*  */}
 
@@ -26,7 +27,7 @@ export function WaterSurface({}) {
   )
 }
 
-function Content() {
+export function WaterSurfaceContent() {
   let WIDTH = 256
   let gl = useThree((it) => it.gl)
   let [api, setAPI] = useState(null)
@@ -89,7 +90,6 @@ function Content() {
       )}
 
       {/* <OrbitControls object-position={[0, 0, 15]}></OrbitControls> */}
-      <Environment background files={`/lok/street.hdr`}></Environment>
     </>
   )
 }
