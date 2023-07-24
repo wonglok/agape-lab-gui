@@ -276,7 +276,8 @@ export class MyCloth extends Object3D {
     agape.encoding = sRGBEncoding
 
     this.plane.material.map = agape
-    this.plane.material.normalMap = agape
+    this.plane.material.metalnessMap = agape
+    this.plane.material.roughnessMap = agape
     this.plane.material.emissive = new Color('#ffffff')
     this.plane.material.emissiveMap = agape
     this.plane.material.emissiveIntensity = 0.5
