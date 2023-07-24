@@ -310,7 +310,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'ultra',
+    performanceProfile = 'high',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
@@ -1430,7 +1430,7 @@ function simPos({ attractorSize, curveSize }) {
 
       // reset
       // if (data_sim_position.y <= -10.0 || data_sim_position.w == 0.0 || rand(data_sim_position.xy + time) >= 0.99) {
-      if (data_sim_position.w < 0.0 || length(data_sim_position.rgb - rebornPositionData.rgb) >= 500.0) {
+      if (data_sim_position.w < 0.0 || length(data_sim_position.rgb - rebornPositionData.rgb) >= 50.0) {
         //data_sim_position.w == 0.0 || rand(data_sim_position.xy + time) >= 0.99 ||
 
         // vec3 resetPosition = vec3(
