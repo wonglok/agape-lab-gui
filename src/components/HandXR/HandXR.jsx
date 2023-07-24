@@ -42,7 +42,8 @@ function WoodMaterial() {
 
 function Arch({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Arch.glb')
-  const selectGeo = nodes.Arch.geometry
+  const selectGeo = nodes.Arch.geometry.clone()
+  selectGeo.scale(0.75, 0.75, 0.75)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
@@ -61,7 +62,8 @@ function Arch({ position = [0, 1.2, 0], ...props }) {
 
 function Rectangle({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Rectangle.glb')
-  const selectGeo = nodes.Rectangle.geometry
+  const selectGeo = nodes.Rectangle.geometry.clone()
+  selectGeo.scale(0.75, 0.75, 0.75)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
@@ -81,7 +83,8 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function Triangle({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Triangle.glb')
-  const selectGeo = nodes.Triangle.geometry
+  const selectGeo = nodes.Triangle.geometry.clone()
+  selectGeo.scale(0.75, 0.75, 0.75)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
@@ -101,7 +104,8 @@ function Triangle({ position = [0, 1.2, 0], ...props }) {
 
 function Cube2({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Cube.glb')
-  const selectGeo = nodes.Cube.geometry
+  const selectGeo = nodes.Cube.geometry.clone()
+  selectGeo.scale(0.75, 0.75, 0.75)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
@@ -119,7 +123,7 @@ function Cube2({ position = [0, 1.2, 0], ...props }) {
   )
 }
 
-function Cube({ position, args = [0.065, 0.065, 0.065] }) {
+function Cube({ position, args = [0.065 / 2, 0.065 / 2, 0.065 / 2] }) {
   const [boxRef] = useBox(() => ({ position, mass: 1, args }))
   // const [tex] = useMatcapTexture('C7C0AC_2E181B_543B30_6B6270')
 
@@ -137,9 +141,12 @@ function JointCollider({ index, hand }) {
   const { gl } = useThree()
   const handObj = gl.xr.getHand(hand)
   const joint = handObj.joints[joints[index]]
-  let size = joint.jointRadius ?? 0.0001
+  let size = 0
+  if (joint) {
+    size = joint.jointRadius ?? 0.0001
+    size *= 1.333
+  }
 
-  size *= 1.333
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
   useFrame(() => {
     if (joint === undefined) return
