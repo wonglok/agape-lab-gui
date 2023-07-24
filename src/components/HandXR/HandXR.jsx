@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useMemo } from 'react'
 import { Hands, VRButton, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
-import { Box, OrbitControls, Plane, Sphere, Sky, useGLTF, useFBX, Environment } from '@react-three/drei'
+import { Box, OrbitControls, Plane, Sphere, Sky, useGLTF, useFBX, Environment, useTexture } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
 import { AnimationMixer } from 'three'
@@ -18,6 +18,16 @@ function toConvexProps(bufferGeometry) {
   return [geo.vertices.map((v) => [v.x, v.y, v.z]), geo.faces.map((f) => [f.a, f.b, f.c]), []]
 }
 
+function WoodMaterial() {
+  let myTexture = useTexture({
+    map: '/bricks/Wood048_1K-JPG/Wood048_1K_Color.jpg',
+    normalMap: '/bricks/Wood048_1K-JPG/Wood048_1K_NormalGL.jpg',
+    roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
+    metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
+  })
+  return <meshStandardMaterial {...myTexture}></meshStandardMaterial>
+}
+
 function Arch({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Arch.glb')
   const selectGeo = nodes.Arch.geometry
@@ -31,7 +41,8 @@ function Arch({ position = [0, 1.2, 0], ...props }) {
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
-      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+      <WoodMaterial></WoodMaterial>
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
 }
@@ -49,7 +60,9 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
-      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+      <WoodMaterial></WoodMaterial>
+
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
 }
@@ -67,7 +80,9 @@ function Triangle({ position = [0, 1.2, 0], ...props }) {
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
-      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+      <WoodMaterial></WoodMaterial>
+
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
 }
@@ -85,7 +100,9 @@ function Cube2({ position = [0, 1.2, 0], ...props }) {
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
-      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+      <WoodMaterial></WoodMaterial>
+
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
 }
@@ -96,7 +113,9 @@ function Cube({ position, args = [0.065, 0.065, 0.065] }) {
 
   return (
     <Box ref={boxRef} args={args} castShadow>
-      <meshStandardMaterial attach='material' color='#ffff00' roughness={0} metalness={0.5} />
+      <WoodMaterial></WoodMaterial>
+
+      {/* <meshStandardMaterial attach='material' color='#ffff00' roughness={0} metalness={0.5} /> */}
       {/* <meshMatcapMaterial attach='material' matcap={tex} /> */}
     </Box>
   )
