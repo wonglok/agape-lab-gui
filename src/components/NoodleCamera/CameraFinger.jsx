@@ -218,8 +218,9 @@ export function FingerDetection({}) {
           modelAssetPath: `/finger/hand_landmarker.task`,
           delegate: 'GPU',
         },
+        // runningMode: 'IMAGE',
         runningMode: 'IMAGE',
-        numHands: 4,
+        numHands: 6,
         // /**
         //  * The minimum confidence score for the hand detection to be considered
         //  * successful. Defaults to 0.5.

@@ -33,13 +33,13 @@ import { CustomGPU } from './CustomGPU'
 import { useCore } from './useCore'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.js'
 import {
-  TransformControls,
-  PivotControls,
+  // TransformControls,
+  // PivotControls,
   Box,
-  Sphere,
+  // Sphere,
   Text,
   Stats,
-  CatmullRomLine,
+  // CatmullRomLine,
   Line,
   useGLTF,
   MeshDiscardMaterial,
@@ -94,8 +94,13 @@ export function ParticleRelay() {
         {/*  */}
         <Geometry ref={csgRef}>
           <Base>
-            <circleGeometry args={[15 / 2, 30]}></circleGeometry>
+            <circleGeometry args={[8, 30]}></circleGeometry>
           </Base>
+
+          {/* <group scale={[1, 1, 1]} position={[0, 10, 0]}>
+            <Addition>
+            </Addition>
+          </group> */}
 
           {/* <PivotControls
             lineWidth={3}
@@ -278,7 +283,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'medium',
+    performanceProfile = 'ultra',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
@@ -292,7 +297,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
       new SphereGeometry(2, 32, 32),
       new MeshPhysicalMaterial({ roughness: 1, color: new Color('#ff0000') }),
     )
-    o3.position.x = -25
+    o3.position.x = -20
     return o3
   }, [])
 
@@ -301,7 +306,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
       new SphereGeometry(2, 32, 32),
       new MeshPhysicalMaterial({ roughness: 1, color: new Color('#00ff00') }),
     )
-    o3.position.x = 25
+    o3.position.x = 20
     return o3
   }, [])
 
@@ -1383,13 +1388,14 @@ function simPos({ attractorSize, curveSize }) {
 
       //
       //
-      //
       vec4 rebornNormalData = texture2D(rebornNormal, uv);
       vec4 rebornPositionData = texture2D(rebornPosition, uv);
 
       data_sim_velocity.xyz += normalize(rebornNormalData.rgb) * surfaceEmissionForce;
 
       data_sim_position.rgb += data_sim_velocity.rgb * 0.05;
+
+      data_sim_position.y -= rand(uv + time) * 0.4;
 
 
       data_sim_position.w -= 0.01 * 0.1 * (rand(uv + time));
