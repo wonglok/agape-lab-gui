@@ -21,6 +21,12 @@ const pages = [
   //src/pages/
   {
     key: md5(v4()),
+    url: `/blog/2023/07/24/ClothSimAvatar`,
+    name: `ClothSimAvatar`,
+    date: '2023-07-24',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/07/21/XRHand`,
     name: `XRHand`,
     date: '2023-07-21',

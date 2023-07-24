@@ -14,8 +14,8 @@ import {
 } from '@react-three/drei'
 // import { AvatarChaser } from '../AvatarChaser/AvatarChaser'
 import { AvatarGuide } from './AvatarGuide'
-import { useMemo } from 'react'
-import { Object3D } from 'three'
+import { useEffect, useMemo } from 'react'
+import { Object3D, Vector3 } from 'three'
 import { Mouse3D } from './noodles/Noodle/Mouse3D'
 // import { Noodle } from '@/content-vfx/Noodle/Noodle'
 import { AvaZoom } from './AvaZoom'
@@ -31,9 +31,9 @@ import { DirectionalLight } from 'three'
 import { PointLight } from 'three'
 // import { MeshReflectorMaterial } from '@react-three/drei'
 
-export function WorldBirdy() {
-  // let gl = useThree((s) => s.gl)
-  // let camera = useThree((s) => s.camera)
+export function WorldBirdy({ point = new Vector3() }) {
+  let gl = useThree((s) => s.gl)
+  let camera = useThree((s) => s.camera)
 
   let destObj = useMemo(() => {
     let dd = new Object3D()
@@ -44,9 +44,9 @@ export function WorldBirdy() {
   let clothes = [
     //
     `/2022/03/18/floor/xr/skycity/lok-dune.glb`,
-    `/2022/03/18/floor/xr/skycity/lok-jacket.glb`,
-    `/2022/03/18/floor/xr/skycity/lok-groom.glb`,
-    `/2022/03/18/floor/xr/skycity/lok-dark-armor.glb`,
+    // `/2022/03/18/floor/xr/skycity/lok-jacket.glb`,
+    // `/2022/03/18/floor/xr/skycity/lok-groom.glb`,
+    // `/2022/03/18/floor/xr/skycity/lok-dark-armor.glb`,
   ]
 
   let makeFollower = (collider, level = 3, aCore) => {
@@ -176,13 +176,13 @@ export function WorldBirdy() {
 
       {/*  */}
 
-      {/* <OrbitControls
+      <OrbitControls
         args={[camera, gl.domElement]}
         makeDefault
         enableRotate={false}
         enablePan={false}
         object-position={[0, 20, 40]}
-        target={[0, 0, 0]}></OrbitControls> */}
+        target={[0, 0, 0]}></OrbitControls>
 
       {/* <gridHelper
         rotation-y={Math.PI * 0.25}
@@ -203,6 +203,8 @@ export function WorldBirdy() {
                 {/* <primitive object={showGLB}></primitive> */}
               </group>
 
+              {/* <div></div> */}
+
               <AvatarGuide
                 offset={[0, 2, 2]}
                 chaseDist={1}
@@ -211,11 +213,15 @@ export function WorldBirdy() {
                 collider={collider}
                 avatarUrl={`/2022/03/18/floor/xr/skycity/lok-dune.glb`}
                 onACore={(aCore) => {
+                  aCore.core.onLoop(() => {
+                    point.lerp(aCore.player.position, 0.1)
+                  })
+
                   return (
                     <group>
-                      {/* <BirdCamSync player={aCore.player}></BirdCamSync> */}
+                      <BirdCamSync player={aCore.player}></BirdCamSync>
 
-                      {makeFollower(collider, 5, aCore)}
+                      {/* {makeFollower(collider, 5, aCore)} */}
                     </group>
                   )
                 }}></AvatarGuide>
