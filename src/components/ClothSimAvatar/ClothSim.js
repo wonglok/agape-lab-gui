@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Vector3 } from 'three'
 import { MyCloth } from './MyCloth'
 import { WorldBirdy } from '../worldbirdy/WorldBirdy'
+import { WaterSurfaceAvatarContent } from '../WaterSurfaceAvatar/WaterSurfaceAvatar'
 
 export function ClothSim() {
   //
@@ -40,7 +41,7 @@ export function ClothSim() {
           transparent={true}></meshStandardMaterial>
       </Sphere> */}
 
-      <group position={[0, 5, 0]}>
+      <group position={[0, 14, 0]}>
         {/* <Box
           //
           rotation={[0, 0, 0]}
@@ -71,8 +72,13 @@ export function ClothSim() {
         </group>
       </group>
 
-      <gridHelper args={[50, 5, 0xff0000, 0xffff00]}></gridHelper>
+      {/* <gridHelper args={[50, 5, 0xff0000, 0xffff00]}></gridHelper> */}
       {/* <Box></Box> */}
+      <group position={[0, -0.5, 0]}>
+        <group rotation={[Math.PI * -0.5, 0, 0]}>
+          <WaterSurfaceAvatarContent point={point}></WaterSurfaceAvatarContent>
+        </group>
+      </group>
 
       <WorldBirdy point={point}></WorldBirdy>
     </group>
