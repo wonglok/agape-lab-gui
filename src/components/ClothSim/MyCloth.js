@@ -269,9 +269,9 @@ export class MyCloth extends Object3D {
     let agape = new TextureLoader().load(`/bg/flower@1x.png`)
     agape.encoding = sRGBEncoding
 
-    this.plane.material.specularColorMap = agape
-    this.plane.material.map = agape
-    this.plane.material.transmissionMap = agape
+    // this.plane.material.map = agape
+    this.plane.material.normalMap = agape
+    // this.plane.material.transmissionMap = agape
     // this.plane.material.emissive = new Color('#ffffff')
     this.load = () => {
       // load({ mat: this.plane.material })
