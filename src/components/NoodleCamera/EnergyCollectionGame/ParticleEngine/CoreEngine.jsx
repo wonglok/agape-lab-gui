@@ -116,7 +116,6 @@ export function ParticleRelay() {
             <group scale={[1, 1, 1]} position={[20.975270282995965, 1.138707946806438, 10]}>
               <Addition>
                 <sphereGeometry args={[1.5, 24, 24]}></sphereGeometry>
-
               </Addition>
             </group>
           </PivotControls>
