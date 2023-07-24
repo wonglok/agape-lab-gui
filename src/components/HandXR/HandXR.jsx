@@ -93,7 +93,7 @@ export const HandXR = () => (
   <>
     <XRButton
       /* The type of `XRSession` to create */
-      mode={'VR'}
+      mode={'AR'}
       /**
        * `XRSession` configuration options
        * @see https://immersive-web.github.io/webxr/#feature-dependencies
@@ -110,7 +110,7 @@ export const HandXR = () => (
       /** This callback gets fired if XR initialization fails. */
       onError={(error) => {}}>
       {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
-      {(status) => `WebXR ${status}`}
+      {(status) => `${status}`}
     </XRButton>
     <Canvas>
       <XR>
