@@ -71,7 +71,7 @@ export function ClothSim() {
         </group>
       </group>
 
-      <gridHelper args={[100, 5, 0xff0000, 0xffff00]}></gridHelper>
+      <gridHelper args={[50, 5, 0xff0000, 0xffff00]}></gridHelper>
       {/* <Box></Box> */}
 
       <WorldBirdy point={point}></WorldBirdy>
