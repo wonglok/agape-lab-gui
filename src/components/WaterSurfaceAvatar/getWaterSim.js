@@ -9,6 +9,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 			#include <common>
 
 			uniform vec3 mousePos;
+			uniform float time;
 			uniform float dt;
 			uniform float mouseSize;
 			uniform float viscosityConstant;
@@ -37,7 +38,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 
 				// Mouse influence
 				float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) * vec2(BOUNDS, -BOUNDS) ) * PI / mouseSize, 0.0, PI );
-				newHeight += ( cos( mousePhase ) + 1.0 ) * dt * 1.5;
+				newHeight += ( sin( mousePhase ) + 1.0 ) * dt * 1.5;
 
 				heightmapValue.y = heightmapValue.x;
 				heightmapValue.x = newHeight;
@@ -74,8 +75,9 @@ export function getWaterSim({ renderer, WIDTH }) {
   let heightmapVariable = gpuCompute.addVariable('heightmap', heightMapCode, heightmap0)
 
   heightmapVariable.material.uniforms['mousePos'] = { value: new Vector2(1000, 1000) }
+  heightmapVariable.material.uniforms['time'] = { value: 1 / 60 }
   heightmapVariable.material.uniforms['dt'] = { value: 1 / 60 }
-  heightmapVariable.material.uniforms['mouseSize'] = { value: 8.0 }
+  heightmapVariable.material.uniforms['mouseSize'] = { value: 5.0 }
   heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.96 }
   heightmapVariable.material.uniforms['heightCompensation'] = { value: 0 }
   heightmapVariable.material.defines.BOUNDS = WIDTH.toFixed(1)
@@ -152,11 +154,13 @@ export function getWaterSim({ renderer, WIDTH }) {
   api.compute = () => {
     gpuCompute.compute()
     let dt = clock.getDelta()
+    let et = clock.getElapsedTime()
 
     if (dt >= 1 / 30) {
       dt = 1 / 30
     }
     heightmapVariable.material.uniforms['dt'].value = dt
+    heightmapVariable.material.uniforms['time'].value = et
   }
 
   api.updateMouse = (x, y, z) => {

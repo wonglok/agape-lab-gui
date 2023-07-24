@@ -57,8 +57,8 @@ export function WaterSurfaceAvatarContent({ point }) {
     //
   })
 
-  let bgMap = useTexture(`/envMap/ma-galaxy.jpg`)
-  bgMap.encoding = sRGBEncoding
+  // let bgMap = useTexture(`/envMap/ma-galaxy.jpg`)
+  // bgMap.encoding = sRGBEncoding
 
   // let viewport = useThree((r) => r.viewport)
   let ww = 50
