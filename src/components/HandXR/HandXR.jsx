@@ -66,14 +66,14 @@ function Scene() {
   const [floorRef] = usePlane(() => ({
     args: [10, 10],
     rotation: [-Math.PI / 2, 0, 0],
-    position: [0, 1, 0],
+    position: [0, 0.8, 0],
     type: 'Static',
   }))
   return (
     <>
-      <Sky />
-      <Plane ref={floorRef} args={[10, 10]} receiveShadow>
-        <meshStandardMaterial attach='material' color='#fff' />
+      {/* <Sky /> */}
+      <Plane ref={floorRef} args={[5, 5]} receiveShadow>
+        <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
       </Plane>
       <Hands />
       <HandsReady>
@@ -91,27 +91,31 @@ function Scene() {
 
 export const HandXR = () => (
   <>
-    <XRButton
-      /* The type of `XRSession` to create */
-      mode={'AR'}
-      /**
-       * `XRSession` configuration options
-       * @see https://immersive-web.github.io/webxr/#feature-dependencies
-       * ///, 'layers'
-       */
-      sessionInit={{
-        // requiredFeatures: [],
-        requiredFeatures: ['hand-tracking'], // 'bounded-floor', 'plane-detection',
-      }}
-      /** Whether this button should only enter an `XRSession`. Default is `false` */
-      enterOnly={false}
-      /** Whether this button should only exit an `XRSession`. Default is `false` */
-      exitOnly={false}
-      /** This callback gets fired if XR initialization fails. */
-      onError={(error) => {}}>
-      {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
-      {(status) => `${status}`}
-    </XRButton>
+    <div className='absolute bottom-0 left-0 flex items-center justify-center w-full'>
+      <div className='bg-lime-500'>
+        <XRButton
+          /* The type of `XRSession` to create */
+          mode={'AR'}
+          /**
+           * `XRSession` configuration options
+           * @see https://immersive-web.github.io/webxr/#feature-dependencies
+           * ///, 'layers'
+           */
+          sessionInit={{
+            // requiredFeatures: [],
+            requiredFeatures: ['hand-tracking'], // 'bounded-floor', 'plane-detection',
+          }}
+          /** Whether this button should only enter an `XRSession`. Default is `false` */
+          enterOnly={false}
+          /** Whether this button should only exit an `XRSession`. Default is `false` */
+          exitOnly={false}
+          /** This callback gets fired if XR initialization fails. */
+          onError={(error) => {}}>
+          {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
+          {(status) => `${status === 'exited' ? 'Enter AR' : `Exit AR`}`}
+        </XRButton>
+      </div>
+    </div>
     <Canvas>
       <XR>
         <Physics
