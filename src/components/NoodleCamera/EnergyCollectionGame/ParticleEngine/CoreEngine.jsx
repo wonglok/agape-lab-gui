@@ -97,12 +97,12 @@ export function ParticleRelay() {
         {/*  */}
         <Geometry ref={csgRef}>
           <Base>
-            <boxGeometry args={[1, 1, 1]}></boxGeometry>
+            <boxGeometry args={[2, 0.1, 2]}></boxGeometry>
           </Base>
 
-          <group position={[0, 10, 5]}>
+          <group position={[0, 10, 0]}>
             <Addition>
-              <boxGeometry args={[10, 10, 10]}></boxGeometry>
+              <boxGeometry args={[10, 10, 1]}></boxGeometry>
             </Addition>
           </group>
 
