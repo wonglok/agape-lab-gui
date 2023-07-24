@@ -152,6 +152,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
             roughness={0}
             transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
         </Cone>
+
         <Cone args={[1, 1, 3, 1]} scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * 0.5]} position={[0, -2, 0]}>
           <meshPhysicalMaterial
             thickness={5}
@@ -181,7 +182,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
             }}></group> */}
           <group
             userData={{
-              forceSize: -3.5,
+              forceSize: -3.5 * 1.5,
               forceTwist: 5,
               forceType: 'attract',
               type: 'ForceField',
@@ -193,7 +194,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         <>
           <group
             userData={{
-              forceSize: -3.5,
+              forceSize: -3.5 * 1.5,
               forceTwist: 5,
               forceType: 'attract',
               type: 'ForceField',

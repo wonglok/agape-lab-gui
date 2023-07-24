@@ -80,12 +80,15 @@ export function ParticleRelay() {
     clearTimeout(tt.current)
     tt.current = setTimeout(() => {
       csgRef.current.update()
+
       setSurfaceMesh(new Mesh(csgRef.current.geometry))
     }, 50)
   }, [csgRef])
 
   useEffect(() => {
-    applyEmissionGeometryChange()
+    setTimeout(() => {
+      applyEmissionGeometryChange()
+    })
   }, [applyEmissionGeometryChange])
 
   return (
@@ -94,13 +97,14 @@ export function ParticleRelay() {
         {/*  */}
         <Geometry ref={csgRef}>
           <Base>
-            <circleGeometry args={[8, 30]}></circleGeometry>
+            <boxGeometry args={[1, 1, 1]}></boxGeometry>
           </Base>
 
-          {/* <group scale={[1, 1, 1]} position={[0, 10, 0]}>
+          <group position={[0, 10, 5]}>
             <Addition>
+              <boxGeometry args={[10, 10, 10]}></boxGeometry>
             </Addition>
-          </group> */}
+          </group>
 
           {/* <PivotControls
             lineWidth={3}
@@ -140,6 +144,7 @@ export function ParticleRelay() {
         {/* <ParticleRelayCore idx={1} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore>
         <ParticleRelayCore idx={7} surfaceMesh={surfaceMesh} rand={Math.random()}></ParticleRelayCore> */}
       </mesh>
+      {/* <CurveYo></CurveYo> */}
     </>
   )
 }
@@ -161,31 +166,47 @@ function Score({ cursorA, cursorB }) {
       </primitive>
 
       <Stats></Stats>
-
-      {/* <CurveYo></CurveYo> */}
     </>
   )
 }
 
 function CurveYo() {
   let [pts, setPts] = useState(() => {
-    return [
-      [23.41127405467791, -7.744187346331116, 0.000001],
-      [14.594814614239414, -11.497139675706963, -1.0000000000000036],
-      [12.867265129288619, -6.254920548959746, -0.9999999999999964],
-      [4.974151103220374, -14.356531926659988, 0.000001],
-      [2.2339001960570517, -7.267621971172275, -1],
-      [-1.3105547816868024, -9.739804854808748, -0.9999999999999964],
-      [-4.855009759430661, -6.612344580328878, 0.000001],
-      [-15.369233348872523, -10.72272094107385, -1],
-      [-14.892667973713683, 1.7144020103836874, 0.000001],
-      [-5.063507111062653, 1.8125230012707045, -1],
-    ].map((r) => {
+    return [].map((r) => {
       r[2] += 4
       return {
         position: r,
       }
     })
+  }, [])
+
+  useEffect(() => {
+    //
+    setPts(
+      [
+        [
+          [-10.408716810493472, 14.527565762794005, 5],
+          [-5.255551128107286, 12.862351125809253, 5],
+          [4.562951657055882, 8.882216962700788, 5],
+          [9.43250918878159, 5.717046980004237, 5],
+          [9.19012226702297, 2.754649258335788, 5],
+          [3.550513635342041, 1.0903128073544615, 5],
+          [0.5456299555541696, -0.4526384633074583, 5],
+          [-3.559836841276851, -3.3781749623830004, 5],
+          [-6.899297228191208, -5.251445451636438, 5],
+          [-11.261647391757045, -9.16273717796448, -3.000000000000007],
+          [-4.504533110669326, -11.922070328357815, 5],
+          [2.4932062244561006, -12.490750725472669, -3.000000000000007],
+          [10.020256665295, -14.084715852835426, 5],
+        ],
+      ]
+        .reverse()
+        .map((r) => {
+          return {
+            position: r,
+          }
+        }),
+    )
   }, [])
 
   let ref = useRef()
@@ -200,6 +221,12 @@ function CurveYo() {
   }, [])
 
   let sync = () => {
+    if (pts.length === 0) {
+      pts.push({ position: [0, 0, 0] })
+      pts.push({ position: [0, 0, 0] })
+      pts.push({ position: [0, 0, 0] })
+      pts.push({ position: [0, 0, 0] })
+    }
     let curve = new CatmullRomCurve3(
       pts.map((r) => new Vector3(...r.position)),
       false,
@@ -222,6 +249,7 @@ function CurveYo() {
   return (
     <>
       <group>
+        {/*  */}
         {pts.map((pt, i) => {
           return (
             <group
@@ -294,19 +322,22 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
-      new SphereGeometry(2, 32, 32),
+      new SphereGeometry(1.9, 32, 32),
       new MeshPhysicalMaterial({ roughness: 1, color: new Color('#ff0000') }),
     )
     o3.position.x = -20
+    o3.position.z = 2.5
     return o3
   }, [])
 
   let cursorB = useMemo(() => {
     let o3 = new Mesh(
-      new SphereGeometry(2, 32, 32),
+      new SphereGeometry(1.9, 32, 32),
       new MeshPhysicalMaterial({ roughness: 1, color: new Color('#00ff00') }),
     )
     o3.position.x = 20
+    o3.position.z = 2.5
+
     return o3
   }, [])
 
@@ -714,8 +745,6 @@ export function CoreEngine({
       sceneDataTextureBeta.needsUpdate = true
     })
 
-    //
-    //
     let gpu = new CustomGPU(size.x, size.y, gl)
 
     if (useHalfFloat) {
@@ -998,11 +1027,11 @@ export function CoreEngine({
 
         let distA = cursorA.position.distanceTo(items[i].position)
         let distB = cursorB.position.distanceTo(items[i].position)
-        if (distA <= 20) {
+        if (distA <= 10) {
           cursorA.inRange++
         }
 
-        if (distB <= 20) {
+        if (distB <= 10) {
           cursorB.inRange++
         }
       }
