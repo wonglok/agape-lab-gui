@@ -41,7 +41,7 @@ export function ClothSim() {
           transparent={true}></meshStandardMaterial>
       </Sphere> */}
 
-      <group position={[0, 14, 0]}>
+      <group position={[0, 0, 0]}>
         {/* <Box
           //
           rotation={[0, 0, 0]}
