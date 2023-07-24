@@ -2,9 +2,93 @@ import React, { useState, useEffect, Fragment, useMemo } from 'react'
 import { Hands, VRButton, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
 import { Box, OrbitControls, Plane, Sphere, Sky, useGLTF, useFBX, Environment } from '@react-three/drei'
-import { usePlane, useBox, Physics, useSphere } from '@react-three/cannon'
+import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
 import { AnimationMixer } from 'three'
+import { Geometry, Face3 } from './Geo'
+/**
+ * Returns legacy geometry vertices, faces for ConvP
+ * @param {THREE.BufferGeometry} bufferGeometry
+ */
+function toConvexProps(bufferGeometry) {
+  const geo = new Geometry().fromBufferGeometry(bufferGeometry)
+  // Merge duplicate vertices resulting from glTF export.
+  // Cannon assumes contiguous, closed meshes to work
+  geo.mergeVertices()
+  return [geo.vertices.map((v) => [v.x, v.y, v.z]), geo.faces.map((f) => [f.a, f.b, f.c]), []]
+}
+
+function Arch({ position = [0, 1.2, 0], ...props }) {
+  const { nodes } = useGLTF('/bricks/Arch.glb')
+  const selectGeo = nodes.Arch.geometry
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
+      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+    </mesh>
+  )
+}
+
+function Rectangle({ position = [0, 1.2, 0], ...props }) {
+  const { nodes } = useGLTF('/bricks/Rectangle.glb')
+  const selectGeo = nodes.Rectangle.geometry
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
+      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+    </mesh>
+  )
+}
+
+function Triangle({ position = [0, 1.2, 0], ...props }) {
+  const { nodes } = useGLTF('/bricks/Triangle.glb')
+  const selectGeo = nodes.Triangle.geometry
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
+      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+    </mesh>
+  )
+}
+
+function Cube2({ position = [0, 1.2, 0], ...props }) {
+  const { nodes } = useGLTF('/bricks/Cube.glb')
+  const selectGeo = nodes.Cube.geometry
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
+      <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} />
+    </mesh>
+  )
+}
 
 function Cube({ position, args = [0.065, 0.065, 0.065] }) {
   const [boxRef] = useBox(() => ({ position, mass: 1, args }))
@@ -78,6 +162,20 @@ function Scene() {
       <group scale={1} position={[0, -0.05, -2]}>
         <Avatar></Avatar>
       </group>
+
+      {[...Array(5)].map((_, i) => (
+        <Arch key={'arch' + i} position={[0.3, 1.1 + 0.1 * i, -0.5]}></Arch>
+      ))}
+      {[...Array(5)].map((_, i) => (
+        <Cube2 key={'cube' + i} position={[0.6, 1.1 + 0.1 * i, -0.5]}></Cube2>
+      ))}
+      {[...Array(5)].map((_, i) => (
+        <Triangle key={'Triangle' + i} position={[0.9, 1.1 + 0.1 * i, -0.5]}></Triangle>
+      ))}
+      {[...Array(5)].map((_, i) => (
+        <Rectangle key={'Rectangle' + i} position={[1.2, 1.1 + 0.1 * i, -0.5]}></Rectangle>
+      ))}
+
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
         <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
       </Plane>
