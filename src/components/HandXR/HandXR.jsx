@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { Hands, VRButton, XR } from '@react-three/xr'
+import { Hands, VRButton, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
 import { Box, OrbitControls, Plane, Sphere, Sky } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere } from '@react-three/cannon'
@@ -91,8 +91,28 @@ function Scene() {
 
 export const HandXR = () => (
   <>
-    <VRButton />
-    <Canvas shadowMap>
+    <XRButton
+      /* The type of `XRSession` to create */
+      mode={'VR'}
+      /**
+       * `XRSession` configuration options
+       * @see https://immersive-web.github.io/webxr/#feature-dependencies
+       * ///, 'layers'
+       */
+      sessionInit={{
+        // requiredFeatures: [],
+        requiredFeatures: ['hand-tracking'], // 'bounded-floor', 'plane-detection',
+      }}
+      /** Whether this button should only enter an `XRSession`. Default is `false` */
+      enterOnly={false}
+      /** Whether this button should only exit an `XRSession`. Default is `false` */
+      exitOnly={false}
+      /** This callback gets fired if XR initialization fails. */
+      onError={(error) => {}}>
+      {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
+      {(status) => `WebXR ${status}`}
+    </XRButton>
+    <Canvas>
       <XR>
         <Physics
           gravity={[0, -2, 0]}
