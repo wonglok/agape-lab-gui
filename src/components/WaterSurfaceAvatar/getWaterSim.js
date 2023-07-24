@@ -37,7 +37,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 
 				// Mouse influence
 				float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) * vec2(BOUNDS, -BOUNDS) ) * PI / mouseSize, 0.0, PI );
-				newHeight += ( cos( mousePhase ) + 1.0 ) * dt * 2.5;
+				newHeight += ( cos( mousePhase ) + 1.0 ) * dt * 1.5;
 
 				heightmapValue.y = heightmapValue.x;
 				heightmapValue.x = newHeight;
@@ -75,7 +75,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 
   heightmapVariable.material.uniforms['mousePos'] = { value: new Vector2(1000, 1000) }
   heightmapVariable.material.uniforms['dt'] = { value: 1 / 60 }
-  heightmapVariable.material.uniforms['mouseSize'] = { value: 15.0 }
+  heightmapVariable.material.uniforms['mouseSize'] = { value: 8.0 }
   heightmapVariable.material.uniforms['viscosityConstant'] = { value: 0.96 }
   heightmapVariable.material.uniforms['heightCompensation'] = { value: 0 }
   heightmapVariable.material.defines.BOUNDS = WIDTH.toFixed(1)
