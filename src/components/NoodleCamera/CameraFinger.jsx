@@ -63,7 +63,7 @@ export function CameraFinger() {
   }, [])
   return (
     <>
-      <OrbitControls object-position={[0, 10, 30]} enablePan={true} makeDefault></OrbitControls>
+      <OrbitControls object-position={[0, 0, 30]} enablePan={true} makeDefault></OrbitControls>
 
       <mesh
         onClick={(ev) => {
