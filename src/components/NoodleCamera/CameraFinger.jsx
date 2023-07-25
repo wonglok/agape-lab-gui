@@ -10,8 +10,18 @@ import {
 } from 'three'
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Text, Sphere, useEnvironment, MeshTransmissionMaterial, Cone, OrbitControls } from '@react-three/drei'
+import {
+  Text,
+  Sphere,
+  useEnvironment,
+  MeshTransmissionMaterial,
+  Cone,
+  OrbitControls,
+  useGLTF,
+  PerspectiveCamera,
+} from '@react-three/drei'
 import { use, useEffect, useMemo, useRef } from 'react'
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 
 //useGLTF, Box, OrthographicCamera
 // import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolver'
@@ -61,6 +71,11 @@ export function CameraFinger() {
   let arr = useMemo(() => {
     return []
   }, [])
+
+  useFrame(({ camera }) => {
+    camera.fov = 56
+    camera.updateProjectionMatrix()
+  })
   return (
     <>
       <OrbitControls object-position={[0, 0, 30]} enablePan={true} makeDefault></OrbitControls>
@@ -145,7 +160,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
                         {fingerIDX}
                       </Text> */}
 
-      <group scale={(0.1 * Math.PI - spin.current) * 5.0} rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
+      {/* <group scale={(0.1 * Math.PI - spin.current) * 5.0} rotation={[0, 0, spin.current * Math.PI * 2.0 * -7.0]}>
         <Cone args={[1, 1, 3, 1]} scale={[0.5, 2, 0.5]} rotation={[0, 0, Math.PI * -0.5]} position={[0, 2, 0]}>
           <meshPhysicalMaterial
             thickness={5}
@@ -159,16 +174,18 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
             roughness={0}
             transmission={(0.1 * Math.PI - spin.current) * 5.0}></meshPhysicalMaterial>
         </Cone>
-      </group>
+      </group> */}
 
       <group scale={1}>
-        <Sphere args={[0.3, 32, 32]} scale={[3, 3, 1]}>
+        <Blower itemName={handIDX + 'hand'}></Blower>
+
+        {/* <Sphere args={[0.3, 32, 32]} scale={[3, 3, 1]}>
           <meshStandardMaterial
             roughness={1}
             transparent
             metalness={0}
             color={handIDX % 2 == 1.0 ? 'red' : 'lime'}></meshStandardMaterial>
-        </Sphere>
+        </Sphere> */}
       </group>
 
       {handIDX % 2 == 0.0 && (
@@ -202,6 +219,36 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         </>
       )}
     </group>
+  )
+}
+
+let cache = new Map()
+
+let get = (itemName, glb) => {
+  if (cache.has(itemName)) {
+    return cache.get(itemName)
+  } else {
+    cache.set(itemName, clone(glb.scene))
+
+    return cache.get(itemName)
+  }
+}
+function Blower({ itemName }) {
+  let glb = useGLTF(`/expcenter/LeafBlower-rescale-v2.glb`)
+
+  let thisObject = get(itemName, glb)
+  let p3 = new Object3D()
+  useFrame(() => {
+    if (thisObject) {
+      thisObject.getWorldPosition(p3.position)
+      thisObject.lookAt(p3.position.x * 0.0, 7.675202693361357 - 50.0, 0.0)
+    }
+  })
+
+  return (
+    <>
+      <primitive object={thisObject}></primitive>
+    </>
   )
 }
 
