@@ -128,31 +128,31 @@ export function WorldBirdy({ point = new Vector3() }) {
           ></MeshTransmissionMaterial>*/
   // let tex = useEnvironment({ preset: 'apartment' })
 
-  let light = useMemo(() => {
-    // Create a PointLight and turn on shadows for the light
-    const light = new PointLight(0xffffff, 1, 100, 0.1)
-    light.castShadow = true // default false
+  // let light = useMemo(() => {
+  //   // Create a PointLight and turn on shadows for the light
+  //   const light = new PointLight(0xffffff, 1, 100, 0.1)
+  //   light.castShadow = true // default false
 
-    //Set up shadow properties for the light
-    light.shadow.mapSize.width = 1024 // default
-    light.shadow.mapSize.height = 1024 // default
-    light.shadow.camera.near = 0.2 // default
-    light.shadow.camera.far = 1000 // default
-    light.shadow.radius = 0.5
+  //   //Set up shadow properties for the light
+  //   light.shadow.mapSize.width = 1024 // default
+  //   light.shadow.mapSize.height = 1024 // default
+  //   light.shadow.camera.near = 0.2 // default
+  //   light.shadow.camera.far = 1000 // default
+  //   light.shadow.radius = 0.5
 
-    return light
-  }, [])
+  //   return light
+  // }, [])
 
-  useFrame(() => {
-    light.shadow.camera.lookAt(destObj.position)
-  })
+  // useFrame(() => {
+  //   light.shadow.camera.lookAt(destObj.position)
+  // })
 
   return (
     <group>
       {
-        <group position={[0, 15, -15]}>
-          <primitive object={light}></primitive>
-        </group>
+        // <group position={[0, 15, -15]}>
+        //   <primitive object={light}></primitive>
+        // </group>
       }
 
       {/* <primitive object={cloneQuerlo}></primitive> */}

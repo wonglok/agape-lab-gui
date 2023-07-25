@@ -141,7 +141,7 @@ export function Noodle({ mouse3d = false, nameToChase = `myself-player` }) {
 
       {createPortal(
         <Sphere args={[0.45, 35, 35]}>
-          <pointLight ref={ptl} position={[0, 0.0, 0]} intensity={0}></pointLight>
+          <pointLight ref={ptl} position={[0, 0.5, 0]} intensity={1}></pointLight>
           <meshPhysicalMaterial
             metalness={0.0}
             roughness={0}
