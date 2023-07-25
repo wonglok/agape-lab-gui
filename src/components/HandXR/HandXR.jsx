@@ -275,7 +275,7 @@ export const HandXR = () => (
       <Environment files={`/lok/shanghai.hdr`}></Environment>
     </Canvas>
     <div className='absolute bottom-0 left-0 flex items-center justify-center w-full'>
-      <div className='p-6 mb-5 bg-lime-500'>
+      <div className='mb-5 text-2xl bg-lime-500'>
         <XRButton
           /* The type of `XRSession` to create */
           mode={'AR'}
