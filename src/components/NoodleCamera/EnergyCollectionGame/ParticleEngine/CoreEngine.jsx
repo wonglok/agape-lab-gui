@@ -310,7 +310,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'high',
+    performanceProfile = 'medium',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,

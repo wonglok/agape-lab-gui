@@ -11,22 +11,23 @@ import {
 import { useFinger } from './useFinger'
 import { useFrame, useThree } from '@react-three/fiber'
 import {
-  Text,
-  Sphere,
+  // Text,
+  // Sphere,
   useEnvironment,
-  MeshTransmissionMaterial,
-  Cone,
+  // MeshTransmissionMaterial,
+  // Cone,
   OrbitControls,
   useGLTF,
-  PerspectiveCamera,
+  // PerspectiveCamera,
 } from '@react-three/drei'
-import { use, useEffect, useMemo, useRef } from 'react'
+import { Suspense, use, useEffect, useMemo, useRef } from 'react'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 
 //useGLTF, Box, OrthographicCamera
 // import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolver'
 
 export function CameraFinger() {
+  //
   let videoTexture = useFinger((r) => r.videoTexture)
   let video = useFinger((r) => r.video)
   let size = useThree((r) => r.size)
@@ -36,6 +37,8 @@ export function CameraFinger() {
     videoTexture.encoding = sRGBEncoding
     // scene.background = videoTexture
   }
+  useGLTF.preload(`/expcenter/LeafBlower-rescale-v2.glb`)
+
   env.mapping = EquirectangularReflectionMapping
   scene.environment = env
   scene.background = env
@@ -49,6 +52,7 @@ export function CameraFinger() {
   if (video) {
     aspect = video?.videoWidth / video?.videoHeight
   }
+
   let vp = { width: 60, height: 60 / aspect }
   let maxVP = Math.max(vp.width, vp.height)
   let minVP = Math.min(vp.width, vp.height)
@@ -56,8 +60,6 @@ export function CameraFinger() {
   let maxSS = 1 // maxVP // Math.max(sizeHeight, sizeWidth)
   let minSS = 1 //minVP // Math.min(sizeHeight, sizeWidth)
 
-  let controls = useThree((r) => r.controls)
-  let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
   useEffect(() => {
     useFinger.setState({
       maxVP,
@@ -67,40 +69,64 @@ export function CameraFinger() {
       maxSS,
       minSS,
     })
-  })
+  }, [maxSS, maxVP, minSS, minVP, sizeHeight, sizeWidth])
+
   let arr = useMemo(() => {
     return []
   }, [])
+  let mesh = useRef()
+
+  useFrame(() => {
+    if (videoTexture) {
+      videoTexture.needsUpdate = true
+
+      if (mesh?.current?.material) {
+        mesh.current.material.map = videoTexture
+        mesh.current.material.needsUpdate = true
+      }
+    }
+  })
 
   useFrame(({ camera }) => {
-    camera.fov = 56
+    camera.fov = 45
     camera.updateProjectionMatrix()
   })
+
   return (
     <>
-      <OrbitControls object-position={[0, 0, 30]} enablePan={true} makeDefault></OrbitControls>
+      <OrbitControls object-position={[0, 0, 50]} enablePan={true} makeDefault></OrbitControls>
 
       <mesh
-        onClick={(ev) => {
-          arr.push(ev.point.toArray())
-          console.log(arr)
-        }}
-        visible={true}
+        // onClick={(ev) => {
+        //   arr.push(ev.point.toArray())
+        //   console.log(arr)
+        // }}
+        // visible={true}
         position={[0, 0, -3]}
-        scale={[1, 1, 1]}>
+        scale={[1, 1, 1]}
+        ref={mesh}>
         <planeGeometry args={[vp.width, vp.height]}></planeGeometry>
-        {handLandmarkResult ? (
-          <meshBasicMaterial
-            depthWrite={true}
-            opacity={1}
-            depthTest={true}
-            map={videoTexture}
-            transparent={false}></meshBasicMaterial>
+
+        {videoTexture ? (
+          <meshBasicMaterial map={videoTexture}></meshBasicMaterial>
         ) : (
-          <meshBasicMaterial color={'#bababa'}></meshBasicMaterial>
+          <meshBasicMaterial color={'#ffffff'}></meshBasicMaterial>
         )}
       </mesh>
 
+      <Hands vp={vp}></Hands>
+
+      {/*  */}
+    </>
+  )
+}
+
+function Hands({ vp }) {
+  let controls = useThree((r) => r.controls)
+  let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
+  let video = useFinger((r) => r.video)
+  return (
+    <>
       <group position={[0, 0, 0]}>
         {controls &&
           video &&
@@ -110,17 +136,18 @@ export function CameraFinger() {
               hand
                 // .filter((f, fi) => fi === 4)
                 .map((finger, fingerIDX) => {
-                  if (!(fingerIDX === 8 || fingerIDX === 4)) {
+                  // if (!(fingerIDX === 8 || fingerIDX === 4)) {
+                  //   return null
+                  // }
+                  if (fingerIDX === 1) {
+                    return <Hand key={fingerIDX} handIDX={handIDX} fingerIDX={fingerIDX} vp={vp} hand={hand}></Hand>
+                  } else {
                     return null
                   }
-
-                  return <Hand key={fingerIDX} handIDX={handIDX} fingerIDX={fingerIDX} vp={vp} hand={hand}></Hand>
                 })
             )
           })}
       </group>
-
-      {/*  */}
     </>
   )
 }
@@ -176,8 +203,10 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         </Cone>
       </group> */}
 
-      <group scale={1}>
-        <Blower itemName={handIDX + 'hand'}></Blower>
+      <group>
+        <Suspense fallback={null}>
+          <Blower itemName={handIDX + 'hand'}></Blower>
+        </Suspense>
 
         {/* <Sphere args={[0.3, 32, 32]} scale={[3, 3, 1]}>
           <meshStandardMaterial
@@ -188,26 +217,37 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
         </Sphere> */}
       </group>
 
+      <group
+        userData={{
+          forceSize: -3.5 * 1.5,
+          forceTwist: 5,
+          forceType: 'attract',
+          type: 'ForceField',
+        }}></group>
+
+      {/*
       {handIDX % 2 == 0.0 && (
         <>
-          {/* <group
+
+          <group
+            userData={{
+              forceSize: -3.5 * 1.5,
+              forceTwist: 5,
+              forceType: 'attract',
+              type: 'ForceField',
+            }}></group>
+        </>
+      )} */}
+
+      {/* <group
             userData={{
               forceSize: 5,
               forceTwist: 5,
               forceType: 'vortexZ',
               type: 'ForceField',
             }}></group> */}
-          <group
-            userData={{
-              forceSize: -3.5 * 1.5,
-              forceTwist: 5,
-              forceType: 'attract',
-              type: 'ForceField',
-            }}></group>
-        </>
-      )}
 
-      {handIDX % 2 == 1.0 && (
+      {/* {handIDX % 2 == 1.0 && (
         <>
           <group
             userData={{
@@ -217,7 +257,7 @@ function Hand({ hand, vp, handIDX, fingerIDX }) {
               type: 'ForceField',
             }}></group>
         </>
-      )}
+      )} */}
     </group>
   )
 }
@@ -233,6 +273,7 @@ let get = (itemName, glb) => {
     return cache.get(itemName)
   }
 }
+
 function Blower({ itemName }) {
   let glb = useGLTF(`/expcenter/LeafBlower-rescale-v2.glb`)
 
@@ -240,6 +281,7 @@ function Blower({ itemName }) {
   let p3 = new Object3D()
   useFrame(() => {
     if (thisObject) {
+      thisObject.scale.set(2, 1, 1)
       thisObject.getWorldPosition(p3.position)
       thisObject.lookAt(p3.position.x * 0.0, 7.675202693361357 - 50.0, 0.0)
     }
@@ -268,7 +310,7 @@ export function FingerDetection({}) {
         },
         // runningMode: 'IMAGE',
         runningMode: 'IMAGE',
-        numHands: 6,
+        numHands: 8,
         // /**
         //  * The minimum confidence score for the hand detection to be considered
         //  * successful. Defaults to 0.5.
@@ -343,8 +385,8 @@ export function CameraMenu() {
                 //
                 .getUserMedia({
                   video: {
-                    height: { ideal: 720 },
-                    width: { ideal: 1280 },
+                    height: 720,
+                    width: 1280,
                   },
                   audio: false,
                 })
@@ -357,11 +399,12 @@ export function CameraMenu() {
                     videoTexture.encoding = sRGBEncoding
                     videoTexture.needsUpdate = true
                     setTimeout(() => {
+                      videoTexture.needsUpdate = true
                       useFinger.setState({ noMenu: true, menuText: '', video, videoTexture })
                       setTimeout(() => {
                         window.dispatchEvent(new Event('resize'))
                       })
-                    })
+                    }, 100)
                   }
                   video.srcObject = stream
                 })
