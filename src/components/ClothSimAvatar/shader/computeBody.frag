@@ -12,7 +12,7 @@ vec4 offsets = texture2D( textureOffset, uv );
 vec4 velocity = texture2D( textureVelocity, uv );
 
 float yAnchor = viewSizeXY.y;
-float zipFlow = pow((1.0 - uv.y), 2.0) * sin(offsets.x * 2.0) * 0.3;
+float zipFlow = 0.0;// pow((1.0 - uv.y), 10.0) * sin(offsets.x * 2.0) * 1.3;
 vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + tallerY, offsets.z + zipFlow );
 
 // Newton's law: F = M * A
@@ -37,7 +37,7 @@ float distanceV = length( springForce );
 // stretch is the difference between the current distanceV and restLength
 float stretch =  distanceV - restLength;
 
-// stretch *= 0.2;
+// stretch *= 0.12;
 
 // Calculate springForce according to Hooke's Law
 springForce = normalize(springForce);
@@ -64,7 +64,7 @@ hand = normalize(mouse2 - nowPos.xyz) * 5.0;
 
 // hand = normalize(hand);
 
-// hand.xy *= 0.25;
+hand.x *= 0.4;
 
 
 // hand += normalize(mouse2 - nowPos.xyz) * -1.0;
