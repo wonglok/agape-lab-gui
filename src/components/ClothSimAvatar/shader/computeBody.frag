@@ -5,12 +5,14 @@
 // float damping = 0.985;
 float damping = 0.95;
 
+float tallerY = 13.5;
+
 vec4 nowPos = texture2D( texturePosition, uv );
 vec4 offsets = texture2D( textureOffset, uv );
 vec4 velocity = texture2D( textureVelocity, uv );
 
 float yAnchor = viewSizeXY.y;
-vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + 13.5, offsets.z );
+vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + tallerY, offsets.z );
 
 // Newton's law: F = M * A
 float mass = 24.0;
@@ -34,7 +36,7 @@ float distanceV = length( springForce );
 // stretch is the difference between the current distanceV and restLength
 float stretch =  distanceV - restLength;
 
-stretch *= 0.2;
+// stretch *= 0.2;
 
 // Calculate springForce according to Hooke's Law
 springForce = normalize(springForce);
@@ -44,22 +46,26 @@ springForce /= mass;
 
 acceleration += springForce;
 
+vec3 mouse2 = mouse;
+mouse2.y -= tallerY;
+
 //
-vec3 wind = vec3(normalize(vec3(mouse)) * hash(time * 0.5) * -2.25);
+vec3 wind = vec3(normalize(mouse2) * hash(time * 0.5) * -2.25);
 wind /= mass;
 acceleration += (wind);
 
+
 //
 vec3 hand;
-float mDist = length(mouse - nowPos.xyz);
+float mDist = length(mouse2 - nowPos.xyz);
 
-hand = normalize(mouse - nowPos.xyz) * 15.0;
+hand = normalize(mouse2 - nowPos.xyz) * 15.0;
 
-hand.xy *= 0.25;
+// hand.xy *= 0.25;
 
 hand = normalize(hand) * 5.0;
 
-// hand += normalize(mouse - nowPos.xyz) * -1.0;
+// hand += normalize(mouse2 - nowPos.xyz) * -1.0;
 
 hand /= mass;
 acceleration += hand;

@@ -108,6 +108,7 @@ export function getWaterSim({ renderer, WIDTH }) {
     api.updateMaterial = () => {
       let tex = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture
       shader.uniforms.heightmap.value = tex
+      // displayMaterial.transmissionMap = tex
       // // displayMaterial.needsUpdate = true
       // displayMaterial.roughnessMap = tex
       // displayMaterial.metalnessMap = tex
