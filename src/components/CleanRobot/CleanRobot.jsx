@@ -16,7 +16,7 @@ import {
   useTexture,
 } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { getWaterSim } from './getWaterSim'
 import { Object3D, Vector3, sRGBEncoding } from 'three'
 
@@ -39,6 +39,9 @@ export function CleanRobot() {
           <CameraFinger></CameraFinger>
           <FingerDetection></FingerDetection>
 
+          <Suspense fallback={null}>
+            <Wall></Wall>
+          </Suspense>
           {/* <ParticleRelay /> */}
 
           <WaterSurfaceContent></WaterSurfaceContent>
@@ -56,7 +59,11 @@ export function CleanRobot() {
     </>
   )
 }
+function Wall() {
+  let glb = useGLTF(`/winframe/framewin.glb`)
 
+  return <primitive object={glb.scene}></primitive>
+}
 export function WaterSurfaceContent() {
   let WIDTH = 128
   let gl = useThree((it) => it.gl)
