@@ -1,5 +1,6 @@
 import { Clock, Color, MeshPhysicalMaterial, TextureLoader, Vector2 } from 'three'
 import { GPUComputationRenderer } from 'three-stdlib'
+import { Vector3 } from 'three147'
 
 export function getWaterSim({ renderer, WIDTH }) {
   // let WIDTH = 128
@@ -160,8 +161,10 @@ export function getWaterSim({ renderer, WIDTH }) {
     heightmapVariable.material.uniforms['dt'].value = dt
   }
 
-  api.updateMouse = (x, y, z) => {
-    heightmapVariable.material.uniforms['mousePos'].value.set(x, y, z)
+  let v3 = new Vector3()
+  api.updateMouse = (x = 0, y = 0, z = 0) => {
+    v3.set(x, y, z)
+    heightmapVariable.material.uniforms['mousePos'].value.lerp(v3, 0.56)
   }
 
   api.getHeightMap = () => {
