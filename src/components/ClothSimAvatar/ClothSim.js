@@ -65,22 +65,23 @@ export function ClothSim() {
           <MeshDiscardMaterial></MeshDiscardMaterial>
         </Box> */}
 
-        {/*  */}
         <group position={[0, 0, 0]}>
           {ready && <ClothObject key={ready} gl={gl} point={point} ready={ready}></ClothObject>}
-          {/*  */}
         </group>
       </group>
 
       {/* <gridHelper position={[0, 1, 0]} args={[50, 10, 0xff0000, 0xffff00]}></gridHelper> */}
       {/* <Box></Box> */}
+
       <group position={[0, -0.5, 0]}>
         <group rotation={[Math.PI * -0.5, 0, 0]}>
           <WaterSurfaceAvatarContent point={point}></WaterSurfaceAvatarContent>
         </group>
       </group>
 
-      <WorldBirdy point={point}></WorldBirdy>
+      <group scale={[1, 1, 1]}>
+        <WorldBirdy point={point}></WorldBirdy>
+      </group>
     </group>
   )
 }

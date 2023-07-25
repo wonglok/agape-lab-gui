@@ -271,7 +271,7 @@ export class MyCloth extends Object3D {
     //   })
     // }
 
-    let agape = new TextureLoader().load(`/bg/flower@1x.png`)
+    let agape = new TextureLoader().load(`/hkstp/stp-bgtrans-2.png`)
     agape.encoding = sRGBEncoding
 
     this.plane.material.map = agape
