@@ -12,6 +12,7 @@ import {
   OrbitControls,
   Plane,
   Sphere,
+  useGLTF,
   useTexture,
 } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -70,18 +71,11 @@ export function WaterSurfaceContent() {
     setAPI(api)
   }, [gl, WIDTH])
 
-  let uvLerp = useMemo(() => {
-    return new Vector3(10000, 100000, 10000)
-  }, [])
-
   useFrame(() => {
     if (!api) {
       return
     }
 
-    api.compute()
-    api.updateMaterial()
-    api.updateMouse(uvLerp.x, uvLerp.y)
     //
   })
 
@@ -93,57 +87,139 @@ export function WaterSurfaceContent() {
   let ww = 60
   let hh = 60
 
+  // useEffect(() => {
+  //   let faceWall = new Vector3(0, 0, -1).normalize()
+  //   window.addEventListener('hand', ({ detail: { position } }) => {
+  //     // console.log(position)
+
+  //     destination.copy(position)
+  //     destination.x *= -1
+  //     raycaster.set(position, faceWall)
+
+  //     if (raytarget.current) {
+  //       raycaster.intersectObject(raytarget.current).forEach((it) => {
+  //         it.uv.addScalar(-0.5)
+  //         uvLerp.copy(it.uv)
+  //         uvLerp.z = 0
+  //       })
+  //     }
+  //   })
+  // }, [])
+
+  return (
+    <>
+      {api && (
+        <>
+          <CleanBot3D api={api} ww={ww} hh={hh}></CleanBot3D>
+          <Box
+            position={[0, 0, -1]}
+            rotation={[0, 0, 0]}
+            args={[ww, hh, 0.1, WIDTH, WIDTH, 1]}
+            // args={[7 / 2, 32]}
+            material={api.displayMaterial}></Box>
+        </>
+      )}
+
+      {/* <OrbitControls object-position={[0, 0, 15]}></OrbitControls> */}
+    </>
+  )
+}
+
+function CleanBot3D({ api, ww }) {
+  let glb = useGLTF(`/expcenter/WindowWasher-rescale-v1.glb`)
+  //
+
+  let uvLerp = useMemo(() => {
+    return new Vector3(10000, 100000, 10000)
+  }, [])
+  let destination = useMemo(() => {
+    return new Vector3()
+  }, [])
+  let raytarget = useRef()
   let raycaster = useThree((r) => {
     return r.raycaster
   })
-  let raytarget = useRef()
+
+  let groupRef = useRef()
+  let delta = new Vector3()
+
   useEffect(() => {
-    let faceWall = new Vector3(0, 0, -1).normalize()
     window.addEventListener('hand', ({ detail: { position } }) => {
-      console.log(position)
+      // console.log(position)
 
-      raycaster.set(position, faceWall)
-
-      if (raytarget.current) {
-        raycaster.intersectObject(raytarget.current).forEach((it) => {
-          it.uv.addScalar(-0.5)
-          uvLerp.copy(it.uv)
-          uvLerp.z = 0
-        })
-      }
+      destination.copy(position)
+      destination.x *= -1
     })
-  }, [])
+  }, [api, destination, raycaster, uvLerp])
+
+  useFrame(() => {
+    api.compute()
+    api.updateMaterial()
+    api.updateMouse(uvLerp.x, uvLerp.y, uvLerp.z)
+  })
+  let faceWall = new Vector3(0, 0, -1).normalize()
+
+  useFrame((st, dt) => {
+    if (glb) {
+      delta.copy(destination).sub(groupRef.current.position).normalize()
+
+      delta.z = 0
+      if (destination.distanceTo(groupRef.current.position) >= 0.5) {
+        groupRef.current.position.addScaledVector(delta, 10.0 * dt)
+      }
+
+      groupRef.current.position.z = 1
+      groupRef.current.lookAt(-destination.x, destination.y, 1)
+      groupRef.current.rotation.x = Math.PI * 0.5
+      groupRef.current.rotation.z = 0
+
+      if (groupRef?.current?.position) {
+        groupRef.current.position.z = 1
+        raycaster.set(groupRef.current.position, faceWall)
+
+        if (raytarget.current) {
+          raycaster.intersectObject(raytarget.current).forEach((it) => {
+            it.uv.addScalar(-0.5)
+            uvLerp.x = -it.uv.x
+            uvLerp.y = it.uv.y
+            uvLerp.z = 0
+          })
+        }
+      }
+    }
+  })
+  //
   return (
     <>
       <Box
         ref={raytarget}
-        onPointerMove={(ev) => {
-          if (api) {
-            ev.uv.addScalar(-0.5)
-            uvLerp.copy(ev.uv)
-          }
-        }}
-        onPointerLeave={(ev) => {
-          if (api) {
-            api.updateMouse(10000, 10000)
-            uvLerp.set(10000, 10000)
-          }
-        }}
+        // onPointerMove={(ev) => {
+        //   if (api) {
+        //     ev.uv.addScalar(-0.5)
+        //     uvLerp.copy(ev.uv)
+        //   }
+        // }}
+        // onPointerDown={(ev) => {
+        //   if (api) {
+        //     ev.uv.addScalar(-0.5)
+        //     uvLerp.copy(ev.uv)
+        //   }
+        // }}
+        // onPointerLeave={(ev) => {
+        //   if (api) {
+        //     api.updateMouse(10000, 10000)
+        //     uvLerp.set(10000, 10000)
+        //   }
+        // }}
         args={[ww, ww, 0.1, 1, 1, 1]}
-        position={[0, 0, -1]}>
+        position={[0, 0, 0]}>
         <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
-
-      {api && (
-        <Box
-          position={[0, 0, -1]}
-          rotation={[0, 0, 0]}
-          args={[ww, hh, 0.1, WIDTH, WIDTH, 1]}
-          // args={[7 / 2, 32]}
-          material={api.displayMaterial}></Box>
-      )}
-
-      {/* <OrbitControls object-position={[0, 0, 15]}></OrbitControls> */}
+      <group ref={groupRef}>
+        <group scale={3} rotation={[Math.PI * 0.5 * 0.0, 0, 0]}>
+          <primitive object={glb.scene}></primitive>
+        </group>
+      </group>
     </>
   )
 }
