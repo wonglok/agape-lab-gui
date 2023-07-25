@@ -295,7 +295,7 @@ export const HandXR = () => (
           /** This callback gets fired if XR initialization fails. */
           onError={(error) => {}}>
           {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
-          {(status) => (status === 'unsupported' ? `not supported` : `Enter`)}
+          {(status) => (status === 'unsupported' ? `Enter` : `Enter`)}
         </XRButton>
       </div>
     </div>
