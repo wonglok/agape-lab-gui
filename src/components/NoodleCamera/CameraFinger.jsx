@@ -311,21 +311,21 @@ export function FingerDetection({}) {
         // runningMode: 'IMAGE',
         runningMode: 'IMAGE',
         numHands: 8,
-        // /**
-        //  * The minimum confidence score for the hand detection to be considered
-        //  * successful. Defaults to 0.5.
-        //  */
-        // minHandDetectionConfidence: 0.4,
-        // /**
-        //  * The minimum confidence score of hand presence score in the hand landmark
-        //  * detection. Defaults to 0.5.
-        //  */
-        // minHandPresenceConfidence: 0.4,
-        // /**
-        //  * The minimum confidence score for the hand tracking to be considered
-        //  * successful. Defaults to 0.5.
-        //  */
-        // minTrackingConfidence: 0.4,
+        // // /**
+        // //  * The minimum confidence score for the hand detection to be considered
+        // //  * successful. Defaults to 0.5.
+        // //  */
+        // minHandDetectionConfidence: 0.1,
+        // // /**
+        // //  * The minimum confidence score of hand presence score in the hand landmark
+        // //  * detection. Defaults to 0.5.
+        // //  */
+        // minHandPresenceConfidence: 0.1,
+        // // /**
+        // //  * The minimum confidence score for the hand tracking to be considered
+        // //  * successful. Defaults to 0.5.
+        // //  */
+        // minTrackingConfidence: 0.1,
       })
 
       useFinger.setState({ handLandmarker })
@@ -341,7 +341,6 @@ export function FingerDetection({}) {
   useFrame(({}) => {
     if (handLandmarker && video) {
       const result = handLandmarker.detect(video)
-
       useFinger.setState({ handLandmarkResult: result.landmarks })
     }
   })
