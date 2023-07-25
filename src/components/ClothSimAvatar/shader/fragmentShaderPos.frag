@@ -28,7 +28,7 @@ void main (void) {
   if (posData.w == 0.0) {
     posData.x = (uv.x * 2.0 - 1.0) * viewSizeXY.x;
     posData.y = (uv.y * 2.0 - 1.0) * viewSizeXY.y;
-    posData.z = 0.0;
+    posData.z = 0.0;// sin(uv.x * 30.0 * 3.141592) * 20.0;
     posData.w = 1.0;
     gl_FragColor = vec4(posData.x, posData.y, posData.z, 1.0);
 

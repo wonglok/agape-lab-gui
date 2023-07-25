@@ -38,7 +38,7 @@ export function getWaterSim({ renderer, WIDTH }) {
 
 				// Mouse influence
 				float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) * vec2(BOUNDS, -BOUNDS) ) * PI / mouseSize, 0.0, PI );
-				newHeight += ( sin( mousePhase ) + 1.0 ) * dt * 1.5;
+				newHeight += ( sin( mousePhase ) ) * dt * 3.5;
 
 				heightmapValue.y = heightmapValue.x;
 				heightmapValue.x = newHeight;
@@ -94,6 +94,7 @@ export function getWaterSim({ renderer, WIDTH }) {
     reflectivity: 1.5,
     transparent: true,
     //
+    // wireframe: true,
 
     // alphaTest: 0.5,
     // alphaMap: new TextureLoader().load(`/pattern/pattern-agape-stp.png`),

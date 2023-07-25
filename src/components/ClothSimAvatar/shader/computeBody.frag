@@ -5,14 +5,14 @@
 // float damping = 0.985;
 float damping = 0.95;
 
-float tallerY = 13.5;
+float tallerY = 8.5;
 
 vec4 nowPos = texture2D( texturePosition, uv );
 vec4 offsets = texture2D( textureOffset, uv );
 vec4 velocity = texture2D( textureVelocity, uv );
 
 float yAnchor = viewSizeXY.y;
-vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + tallerY, offsets.z );
+vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + tallerY, offsets.z + sin(offsets.x * 2.0) * 1.0 );
 
 // Newton's law: F = M * A
 float mass = 24.0;

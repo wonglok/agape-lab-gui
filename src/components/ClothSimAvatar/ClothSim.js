@@ -67,7 +67,7 @@ export function ClothSim() {
 
         {/*  */}
         <group position={[0, 0, 0]}>
-          {ready && <YoYo key={ready} gl={gl} point={point} ready={ready}></YoYo>}
+          {ready && <ClothObject key={ready} gl={gl} point={point} ready={ready}></ClothObject>}
           {/*  */}
         </group>
       </group>
@@ -85,7 +85,7 @@ export function ClothSim() {
   )
 }
 
-function YoYo({ gl, point, ready }) {
+function ClothObject({ gl, point, ready }) {
   let ref = useRef()
   useEffect(() => {}, [])
   /*

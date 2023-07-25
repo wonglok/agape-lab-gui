@@ -68,9 +68,6 @@ export class MyCloth extends Object3D {
     this.count = this.sizeX * this.sizeY
     this.gpu = new CustomGPU(this.sizeX, this.sizeY, this.gl)
     // Compute!
-    this.core.onLoop(() => {
-      this.gpu.compute()
-    })
 
     // Create initial state float textures
     let meta0 = this.gpu.createTexture()
@@ -106,8 +103,6 @@ export class MyCloth extends Object3D {
       }
     }
     pos0.needsUpdate = true
-
-    //
 
     // and fill in here the texture data...
     // let forceVar = this.gpu.addVariable(
@@ -182,6 +177,10 @@ export class MyCloth extends Object3D {
     if (error !== null) {
       console.error(error)
     }
+
+    this.core.onLoop(() => {
+      this.gpu.compute()
+    })
 
     //
     this.clock = new Clock()
