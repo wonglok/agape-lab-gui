@@ -275,8 +275,8 @@ export class MyCloth extends Object3D {
     agape.encoding = sRGBEncoding
 
     this.plane.material.map = agape
-    this.plane.material.metalnessMap = agape
-    this.plane.material.roughnessMap = agape
+    // this.plane.material.metalnessMap = agape
+    // this.plane.material.roughnessMap = agape
     this.plane.material.emissive = new Color('#ffffff')
     this.plane.material.emissiveMap = agape
     this.plane.material.emissiveIntensity = 0.5
@@ -303,12 +303,12 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
-    metalness: 0.0,
-    roughness: 0.0,
+    metalness: 0.3,
+    roughness: 0.3,
     ior: 2.5,
     reflectivity: 0.5,
     thickness: 1,
-    envMapIntensity: 1.5,
+    envMapIntensity: 0.3,
   })
 
   ///public/bg/flower@1x.png
@@ -322,9 +322,9 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
       },
     }
 
-    onLoop(() => {
-      // mat.specularColorMap = getter()
-    })
+    // onLoop(() => {
+    //   // mat.specularColorMap = getter()
+    // })
 
     let atBeginV = `
       uniform sampler2D cloth;
