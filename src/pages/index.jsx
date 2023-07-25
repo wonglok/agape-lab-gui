@@ -19,6 +19,14 @@ const pages = [
   //src
 
   //src/pages/
+
+  //
+  {
+    key: md5(v4()),
+    url: `/blog/2023/07/24/CleanRobot`,
+    name: `CleanRobot`,
+    date: '2023-07-24',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/07/24/ClothSimAvatar`,

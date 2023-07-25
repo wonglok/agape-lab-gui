@@ -1,3 +1,3 @@
-import { WaterSurface } from '@/components/WaterSurface/WaterSurface'
+import { CleanRobot } from '@/components/CleanRobot/CleanRobot'
 
-export default WaterSurface
+export default CleanRobot
