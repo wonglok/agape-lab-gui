@@ -15,7 +15,7 @@ float yAnchor = viewSizeXY.y;
 vec3 anchor = vec3( offsets.x, yAnchor + 0.0 * offsets.y + tallerY, offsets.z + pow((1.0 - uv.y), 2.0) * sin(offsets.x * 2.0) * 2.0 );
 
 // Newton's law: F = M * A
-float mass = 24.0;
+float mass = 13.0;
 vec3 acceleration = vec3(0.0, 0.0, 0.0);
 
 // 1. apply gravity's force:
@@ -59,11 +59,12 @@ acceleration += (wind);
 vec3 hand;
 float mDist = length(mouse2 - nowPos.xyz);
 
-hand = normalize(mouse2 - nowPos.xyz) * 15.0;
+hand = normalize(mouse2 - nowPos.xyz) * 5.0;
+
+// hand = normalize(hand);
 
 // hand.xy *= 0.25;
 
-hand = normalize(hand) * 5.0;
 
 // hand += normalize(mouse2 - nowPos.xyz) * -1.0;
 
