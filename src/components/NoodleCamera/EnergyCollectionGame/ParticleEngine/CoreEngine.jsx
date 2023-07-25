@@ -322,7 +322,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(1.9, 32, 32),
-      new MeshPhysicalMaterial({ roughness: 1, color: new Color('#ff0000') }),
+      new MeshPhysicalMaterial({ roughness: 1, metalness: 0, color: new Color('#fc7854').offsetHSL(0, 0.0, -0.2) }),
     )
     o3.position.x = -20
     o3.position.z = 2.5
@@ -332,7 +332,11 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
   let cursorB = useMemo(() => {
     let o3 = new Mesh(
       new SphereGeometry(1.9, 32, 32),
-      new MeshPhysicalMaterial({ roughness: 1, color: new Color('#00ff00') }),
+      new MeshPhysicalMaterial({
+        roughness: 1,
+        metalness: 0,
+        color: new Color('#00f0ff'),
+      }),
     )
     o3.position.x = 20
     o3.position.z = 2.5
