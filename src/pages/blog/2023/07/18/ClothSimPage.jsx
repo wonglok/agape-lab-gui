@@ -1,3 +1,3 @@
-import { ClothSimPage } from '@/components/ClothSim/ClothSimPage'
+import { ClothSimPage } from '@/components/ClothSimOne/ClothSimPage'
 
 export default ClothSimPage

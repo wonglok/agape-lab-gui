@@ -61,8 +61,8 @@ export class MyCloth extends Object3D {
     }
 
     this.gl = gl
-    this.sizeX = 128
-    this.sizeY = 128
+    this.sizeX = 256
+    this.sizeY = 256
     this.count = this.sizeX * this.sizeY
     this.gpu = new CustomGPU(this.sizeX, this.sizeY, this.gl)
     // Compute!
@@ -270,7 +270,7 @@ export class MyCloth extends Object3D {
     agape.encoding = sRGBEncoding
 
     // this.plane.material.map = agape
-    // this.plane.material.normalMap = agape
+    this.plane.material.normalMap = agape
     // this.plane.material.transmissionMap = agape
     // this.plane.material.emissive = new Color('#ffffff')
     this.load = () => {
@@ -299,15 +299,6 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     reflectivity: 0.5,
     thickness: 1,
     envMapIntensity: 1.5,
-    map: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-    }),
-    normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-    }),
-    alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`),
-    depthWrite: false,
   })
 
   ///public/bg/flower@1x.png

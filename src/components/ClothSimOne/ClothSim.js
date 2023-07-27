@@ -1,6 +1,6 @@
 import { Box, MeshDiscardMaterial, Sphere } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Vector3 } from 'three'
 import { MyCloth } from './MyCloth'
 
@@ -10,11 +10,7 @@ export function ClothSim() {
   let gl = useThree((s) => s.gl)
   // let mouse = useThree((s) => s.mouse)
   let [ready, setReady] = useState(false)
-  let point = useMemo(() => {
-    let yo = new Vector3(0, -100, 200)
-    window.yo = window.yo || yo
-    return window.yo
-  }, [])
+  let point = new Vector3(0, -100, 200)
   useEffect(() => {
     setReady(Math.random())
   }, [])
@@ -43,7 +39,6 @@ export function ClothSim() {
           //
           transparent={true}></meshStandardMaterial>
       </Sphere>
-
       <Box
         //
         rotation={[0, 0, 0]}
@@ -51,20 +46,19 @@ export function ClothSim() {
         onPointerMove={(ev) => {
           if (ev.object) {
             // console.log(ev.point.x, ev.point.y, ev.point.z)
-            point.copy(ev.point).addScaledVector(ev.face.normal, 5)
+            point.copy(ev.point).add(ev.face.normal)
           }
         }}
         onPointerDown={(ev) => {
           // console.log(ev.point.x, ev.point.y, ev.point.z)
 
           if (ev.object) {
-            point.copy(ev.point).addScaledVector(ev.face.normal, 5)
+            point.copy(ev.point).add(ev.face.normal)
           }
           // point.copy(ev.point)
         }}
         position={[0, 0, 10]}
-        args={[200, 200, 0.1]}
-        scale={2}>
+        args={[200, 200, 0.1]}>
         <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
 

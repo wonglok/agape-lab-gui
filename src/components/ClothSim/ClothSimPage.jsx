@@ -24,7 +24,42 @@ function Content() {
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
       <Environment files={`/lok/street.hdr`} background />
-      <ClothSim></ClothSim>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 1]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 2]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 3]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 4]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 5]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
+
+      <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 6) * 6]}>
+        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.25, 0, 0]}>
+          <ClothSim></ClothSim>
+        </group>
+      </group>
     </>
   )
 }
