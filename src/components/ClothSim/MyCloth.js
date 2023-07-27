@@ -13,6 +13,7 @@ import {
   Object3D,
   ShaderMaterial,
   TextureLoader,
+  Vector2,
   sRGBEncoding,
 } from 'three'
 import { CustomGPU } from './CustomGPU'
@@ -295,10 +296,10 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     transmission: 1.0,
     metalness: 0.0,
     roughness: 0.0,
-    ior: 2.5,
+    ior: 1.5,
     reflectivity: 0.5,
-    thickness: 1,
-    envMapIntensity: 1.5,
+    thickness: 2,
+    envMapIntensity: 1.0,
     map: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
@@ -306,6 +307,7 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
     }),
+    normalScale: new Vector2(0.3, 0.3),
     alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`),
     depthWrite: false,
   })

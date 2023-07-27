@@ -4,17 +4,19 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Vector3 } from 'three'
 import { MyCloth } from './MyCloth'
 
-export function ClothSim() {
+export function ClothSim({ idx, sharedPoint }) {
   //
-
+  let ref = useRef()
   let gl = useThree((s) => s.gl)
   // let mouse = useThree((s) => s.mouse)
   let [ready, setReady] = useState(false)
-  let point = useMemo(() => {
-    let yo = new Vector3(0, -100, 200)
-    window.yo = window.yo || yo
-    return window.yo
-  }, [])
+  // let point = useMemo(() => {
+  //   let yo = sharedPoint || new Vector3(0, -100, 200)
+  //   window.yo = window.yo || yo
+  //   return window.yo
+  // }, [sharedPoint])
+
+  //
   useEffect(() => {
     setReady(Math.random())
   }, [])
@@ -22,20 +24,27 @@ export function ClothSim() {
   let wall = useRef()
   let ball = useRef()
   //
+  let tt = new Vector3()
   useFrame((_) => {
     // if (wall.current) {
     //   // wall.current.lookAt(_.camera.position)
     // }
     if (ball.current) {
-      ball.current.position.copy(point)
+      if (ref.current) {
+        tt.copy(sharedPoint)
+
+        ref.current.worldToLocal(tt)
+
+        ball.current.position.copy(tt)
+      }
     }
   })
   return (
-    <group>
+    <group ref={ref}>
       {/*  */}
       {/*  */}
 
-      <Sphere ref={ball} args={[10, 32, 32]}>
+      <Sphere ref={ball} visible={true} args={[10, 32, 32]}>
         <meshStandardMaterial
           //
           roughness={0}
@@ -48,20 +57,21 @@ export function ClothSim() {
         //
         rotation={[0, 0, 0]}
         ref={wall}
-        onPointerMove={(ev) => {
-          if (ev.object) {
-            // console.log(ev.point.x, ev.point.y, ev.point.z)
-            point.copy(ev.point).addScaledVector(ev.face.normal, 5)
-          }
-        }}
-        onPointerDown={(ev) => {
-          // console.log(ev.point.x, ev.point.y, ev.point.z)
+        visible={idx === 0}
+        // onPointerMove={(ev) => {
+        //   if (ev.object) {
+        //     // console.log(ev.point.x, ev.point.y, ev.point.z)
+        //     point.copy(ev.point).addScaledVector(ev.face.normal, 5)
+        //   }
+        // }}
+        // onPointerDown={(ev) => {
+        //   // console.log(ev.point.x, ev.point.y, ev.point.z)
 
-          if (ev.object) {
-            point.copy(ev.point).addScaledVector(ev.face.normal, 5)
-          }
-          // point.copy(ev.point)
-        }}
+        //   if (ev.object) {
+        //     point.copy(ev.point).addScaledVector(ev.face.normal, 5)
+        //   }
+        //   // point.copy(ev.point)
+        // }}
         position={[0, 0, 10]}
         args={[200, 200, 0.1]}
         scale={2}>
@@ -70,7 +80,7 @@ export function ClothSim() {
 
       {/*  */}
       <group rotation={[0, 0, 0]}>
-        {ready && <YoYo key={ready} gl={gl} point={point} ready={ready}></YoYo>}
+        {ready && <YoYo key={ready} gl={gl} point={tt} ready={ready}></YoYo>}
         {/*  */}
       </group>
     </group>
