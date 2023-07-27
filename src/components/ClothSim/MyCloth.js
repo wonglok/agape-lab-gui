@@ -230,6 +230,8 @@ export class MyCloth extends Object3D {
 
     // let clothMat =
 
+    let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
+
     this.planeGp = new Group()
     let max = 20
     for (let i = 0; i < max; i++) {
@@ -242,7 +244,7 @@ export class MyCloth extends Object3D {
       gp2.rotation.fromArray([0.13 * 2 * Math.PI, 0, -0.4])
 
       let planeN = new Mesh(
-        new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY),
+        plGeo,
         getClothMaterial({
           each: i / max,
           sizeX: this.sizeX,
