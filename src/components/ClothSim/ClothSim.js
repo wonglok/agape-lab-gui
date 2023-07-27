@@ -57,7 +57,7 @@ export function ClothSim({ idx, sharedPoint }) {
         //
         rotation={[0, 0, 0]}
         ref={wall}
-        visible={idx === 0}
+        visible={true}
         // onPointerMove={(ev) => {
         //   if (ev.object) {
         //     // console.log(ev.point.x, ev.point.y, ev.point.z)

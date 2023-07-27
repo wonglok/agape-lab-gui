@@ -5,6 +5,7 @@ import {
   BufferGeometry,
   Clock,
   Color,
+  Group,
   Mesh,
   MeshPhysicalMaterial,
   // Mesh,
@@ -227,27 +228,42 @@ export class MyCloth extends Object3D {
     // this.pts.frustumCulled = false
     // this.add(this.pts)
 
-    this.plane = new Mesh(
-      new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY),
-      getClothMaterial({
-        sizeX: this.sizeX,
-        sizeY: this.sizeY,
-        getter: () => {
-          return this.getTexAPos()
-        },
-        onLoop: (func) => {
-          this.core.onLoop(() => {
-            //
+    let clothMat = getClothMaterial({
+      sizeX: this.sizeX,
+      sizeY: this.sizeY,
+      getter: () => {
+        return this.getTexAPos()
+      },
+      onLoop: (func) => {
+        this.core.onLoop(() => {
+          //
 
-            func()
+          func()
 
-            //
-          })
-        },
-      }),
-    )
-    this.plane.frustumCulled = false
-    this.add(this.plane)
+          //
+        })
+      },
+    })
+
+    this.planeGp = new Group()
+    let max = 12
+    for (let i = 0; i < max; i++) {
+      let gp1 = new Group()
+      gp1.rotation.fromArray([0, 0, ((Math.PI * 2.0) / max) * i])
+
+      let gp2 = new Group()
+      gp1.add(gp2)
+      gp2.position.fromArray([130, 0, 0])
+      gp2.rotation.fromArray([-0.65, 0, -0.5])
+
+      let planeN = new Mesh(new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY), clothMat)
+      planeN.frustumCulled = false
+
+      gp2.add(planeN)
+      this.planeGp.add(gp1)
+    }
+
+    this.add(this.planeGp)
 
     // let arr = [`/bg/flower@1x.png`, `/bg/john-16-33.png`, `/bg/red@1x.png`, `/bg/anthem@1x.png`]
     // let cursor = 0
@@ -267,8 +283,8 @@ export class MyCloth extends Object3D {
     //   })
     // }
 
-    let agape = new TextureLoader().load(`/bg/flower@1x.png`)
-    agape.encoding = sRGBEncoding
+    // let agape = new TextureLoader().load(`/bg/flower@1x.png`)
+    // agape.encoding = sRGBEncoding
 
     // this.plane.material.map = agape
     // this.plane.material.normalMap = agape
@@ -281,7 +297,7 @@ export class MyCloth extends Object3D {
     //
     this.core.onClean(() => {
       this.clear()
-      this.plane.removeFromParent()
+      this.planeGp.removeFromParent()
     })
   }
 }
@@ -307,9 +323,10 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
     }),
-    normalScale: new Vector2(0.3, 0.3),
+    normalScale: new Vector2(1, 1),
     alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`),
-    depthWrite: false,
+    alphaTest: 0.5,
+    depthWrite: true,
   })
 
   ///public/bg/flower@1x.png

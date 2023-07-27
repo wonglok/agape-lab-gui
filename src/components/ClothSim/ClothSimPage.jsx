@@ -28,11 +28,11 @@ function Content() {
 
   let array = []
 
-  let max = 10
+  let max = 1
   for (let i = 0; i < max; i++) {
     array.push(
-      <group key={i + 'ball'} scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / max) * i]}>
-        <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.65, 0, -0.5]}>
+      <group key={i + 'ball'}>
+        <group scale={0.5}>
           <ClothSim idx={i} sharedPoint={sharedPoint}></ClothSim>
         </group>
       </group>,
