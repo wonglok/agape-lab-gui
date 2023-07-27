@@ -53,9 +53,9 @@ acceleration += (wind);
 vec3 hand;
 float mDist = length(mouse - nowPos.xyz);
 
-hand = normalize(mouse - nowPos.xyz) * 5.0;
+hand = normalize(mouse - nowPos.xyz) * 3.5;
 
-hand.z *= 0.2;
+// hand.yz *= 0.2;
 
 
 hand /= mass;
