@@ -231,9 +231,10 @@ export class MyCloth extends Object3D {
     // let clothMat =
 
     let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
+    plGeo.rotateZ(Math.PI * 0.5)
 
     this.planeGp = new Group()
-    let max = 20
+    let max = 24
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
@@ -241,7 +242,7 @@ export class MyCloth extends Object3D {
       let gp2 = new Group()
       gp1.add(gp2)
       gp2.position.fromArray([130, 0, 0])
-      gp2.rotation.fromArray([0.13 * 2 * Math.PI, 0, -0.4])
+      gp2.rotation.fromArray([0.13 * 2 * Math.PI, 0, -0.4 + 0.0 * Math.PI])
 
       let planeN = new Mesh(
         plGeo,
@@ -328,24 +329,29 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
     map: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
+      tex.needsUpdate = true
     }),
     emissiveIntensity: 0.3,
     emissiveMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
+      tex.needsUpdate = true
     }),
     metalnessMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
+      tex.needsUpdate = true
     }),
     normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
+      tex.needsUpdate = true
     }),
     normalScale: new Vector2(1, 1),
     alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
+      tex.needsUpdate = true
     }),
     alphaTest: 0.5,
     depthWrite: true,
@@ -368,19 +374,33 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
 
     let atBeginV = `
       uniform sampler2D cloth;
+
+      mat4 rotationMatrix(vec3 axis, float angle)
+      {
+          axis = normalize(axis);
+          float s = sin(angle);
+          float c = cos(angle);
+          float oc = 1.0 - c;
+
+          return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                      oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                      oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                      0.0,                                0.0,                                0.0,                                1.0);
+      }
     `
 
     let transformV3Normal = `
-        vec4 nPos = texture2D(cloth, uv);
+        vec2 correctUV = uv;
+        vec4 nPos = texture2D(cloth, vec2(correctUV.x, correctUV.y));
 
         float segX = 1.0 / ${sizeX.toFixed(1)};
         float segY = 1.0 / ${sizeY.toFixed(1)};
 
-        vec4 nPosU = texture2D(cloth, vec2(uv.x, uv.y + segY));
-        vec4 nPosD = texture2D(cloth, vec2(uv.x, uv.y - segY));
+        vec4 nPosU = texture2D(cloth, vec2(correctUV.x, correctUV.y + segY));
+        vec4 nPosD = texture2D(cloth, vec2(correctUV.x, correctUV.y - segY));
 
-        vec4 nPosL = texture2D(cloth, vec2(uv.x + segX, uv.y));
-        vec4 nPosR = texture2D(cloth, vec2(uv.x - segX, uv.y));
+        vec4 nPosL = texture2D(cloth, vec2(correctUV.x + segX, correctUV.y));
+        vec4 nPosR = texture2D(cloth, vec2(correctUV.x - segX, correctUV.y));
 
         vec3 objectNormal = normalize((
           normalize(nPosU.rgb - nPos.rgb) +
@@ -392,6 +412,8 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
 
     let transformV3 = `
       vec3 transformed = vec3( nPos );
+
+      // transformed.xyz = vec3(rotationMatrix(vec3(0.0,0.0,1.0), 3.141592) * vec4(nPos));
     `
 
     shader.vertexShader = shader.vertexShader.replace(`void main() {`, `${atBeginV.trim()} void main() {`)
