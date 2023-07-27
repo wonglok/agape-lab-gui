@@ -28,12 +28,12 @@ function Content() {
 
   let array = []
 
-  let max = 9
+  let max = 10
   for (let i = 0; i < max; i++) {
     array.push(
       <group key={i + 'ball'} scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / max) * i]}>
         <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.65, 0, -0.5]}>
-          <ClothSim idx={0} sharedPoint={sharedPoint}></ClothSim>
+          <ClothSim idx={i} sharedPoint={sharedPoint}></ClothSim>
         </group>
       </group>,
     )
@@ -44,6 +44,7 @@ function Content() {
       spin.current.rotation.z += dt * 0.3
     }
   })
+
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
