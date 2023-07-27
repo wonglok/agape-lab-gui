@@ -228,35 +228,41 @@ export class MyCloth extends Object3D {
     // this.pts.frustumCulled = false
     // this.add(this.pts)
 
-    let clothMat = getClothMaterial({
-      sizeX: this.sizeX,
-      sizeY: this.sizeY,
-      getter: () => {
-        return this.getTexAPos()
-      },
-      onLoop: (func) => {
-        this.core.onLoop(() => {
-          //
-
-          func()
-
-          //
-        })
-      },
-    })
+    // let clothMat =
 
     this.planeGp = new Group()
-    let max = 12
+    let max = 20
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
-      gp1.rotation.fromArray([0, 0, ((Math.PI * 2.0) / max) * i])
+      gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
 
       let gp2 = new Group()
       gp1.add(gp2)
       gp2.position.fromArray([130, 0, 0])
-      gp2.rotation.fromArray([-0.65, 0, -0.5])
+      gp2.rotation.fromArray([0.13 * 2 * Math.PI, 0, -0.4])
 
-      let planeN = new Mesh(new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY), clothMat)
+      let planeN = new Mesh(
+        new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY),
+        getClothMaterial({
+          each: i / max,
+          sizeX: this.sizeX,
+          sizeY: this.sizeY,
+          getter: () => {
+            return this.getTexAPos()
+          },
+          onLoop: (func) => {
+            this.core.onLoop(() => {
+              //
+
+              func()
+
+              //
+            })
+          },
+        }),
+      )
+
+      planeN.rotation.x = Math.PI
       planeN.frustumCulled = false
 
       gp2.add(planeN)
@@ -302,29 +308,43 @@ export class MyCloth extends Object3D {
   }
 }
 
-let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
+let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
   //
   //
   let mat = new MeshPhysicalMaterial({
-    color: '#ffffff',
+    color: new Color('#00ff00').offsetHSL(each, 0, 0),
+    emissive: new Color('#00ff00').offsetHSL(each, 0, 0),
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
-    metalness: 0.0,
-    roughness: 0.0,
+    metalness: 0.5,
+    roughness: 0.5,
     ior: 1.5,
     reflectivity: 0.5,
     thickness: 2,
     envMapIntensity: 1.0,
-    map: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
+    map: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
+      tex.encoding = sRGBEncoding
+      tex.repeat.y *= 2.0
+    }),
+    emissiveIntensity: 0.3,
+    emissiveMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
+      tex.encoding = sRGBEncoding
+      tex.repeat.y *= 2.0
+    }),
+    metalnessMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
       tex.repeat.y *= 2.0
     }),
     normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
       tex.encoding = sRGBEncoding
+      tex.repeat.y *= 2.0
     }),
     normalScale: new Vector2(1, 1),
-    alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`),
+    alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`, (tex) => {
+      tex.encoding = sRGBEncoding
+      tex.repeat.y *= 2.0
+    }),
     alphaTest: 0.5,
     depthWrite: true,
   })
@@ -385,17 +405,15 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
   return mat
 }
 
-MyCloth.key = md5(Math.random() + fragmentShaderVel + fragmentShaderPos + displayFragment + displayVertex + computeBody)
+//
+
+//
+
+//
+
+//
+
+//
+
+//
 extend({ MyCloth })
-
-//
-
-//
-
-//
-
-//
-
-//
-
-//
