@@ -237,15 +237,15 @@ export class MyCloth extends Object3D {
 
     let plArray = []
     this.planeGp = new Group()
-    let max = 14 * 2
+    let max = 7 * 4
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
 
       let gp2 = new Group()
       gp1.add(gp2)
-      gp2.position.fromArray([150, 0, 0])
-      gp2.rotation.fromArray([0.15 * 2 * Math.PI, 0, 0.3])
+      gp2.position.fromArray([120, 0, 0])
+      gp2.rotation.fromArray([0.1 * 2 * Math.PI, 0, 0.5])
 
       //plGeo, plMat
       let planeN = new Object3D()
