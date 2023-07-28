@@ -13,6 +13,7 @@ void main (void) {
   vec4 metaData = texture2D(meta0, uv);
   vec4 velData = texture2D(textureVelocity, uv);
   vec4 offsetPosData = texture2D(textureOffset, uv);
+  vec4 posData = texture2D(texturePosition, uv);
 
   if (offsetPosData.w == 0.0) {
     offsetPosData.x = (uv.x * 2.0 - 1.0) * 100.0;

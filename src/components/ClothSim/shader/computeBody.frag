@@ -34,7 +34,7 @@ float distanceV = length( springForce );
 // stretch is the difference between the current distanceV and restLength
 float stretch =  distanceV - restLength;
 
-stretch *= 0.1;
+// stretch *= 0.1;
 
 // Calculate springForce according to Hooke's Law
 springForce = normalize(springForce);
@@ -44,19 +44,19 @@ springForce /= mass;
 
 acceleration += springForce;
 
+vec3 mouser = vec3(mouse.x, mouse.y, mouse.z);
 //
-vec3 wind = vec3(normalize(vec3(mouse)) * hash(time * 1.5) * -1.25);
+vec3 wind = vec3(normalize(vec3(mouser)) * hash(time * 1.5) * -1.25);
 wind /= mass;
 acceleration += (wind);
 
 //
 vec3 hand;
-float mDist = length(mouse - nowPos.xyz);
+float mDist = length(mouser - nowPos.xyz);
 
-hand = normalize(mouse - nowPos.xyz) * -5.0;
+hand = normalize(mouser - nowPos.xyz) * -5.0;
 
 // hand.yz *= 0.2;
-
 
 hand /= mass;
 acceleration += hand;

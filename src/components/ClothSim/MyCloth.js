@@ -246,6 +246,7 @@ export class MyCloth extends Object3D {
       gp1.add(gp2)
       gp2.position.fromArray([120, 0, 0])
       gp2.rotation.fromArray([0.05 * 2 * Math.PI, 0, 0.5])
+      gp2.scale.setScalar(1.5)
 
       //plGeo, plMat
       let planeN = new Object3D()
