@@ -79,6 +79,10 @@ export function ClothSim({ idx, sharedPoint }) {
       </Box>
 
       {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      {/*  */}
       <group rotation={[0, 0, 0]}>
         {ready && <YoYo key={ready} gl={gl} point={tt} ready={ready}></YoYo>}
         {/*  */}

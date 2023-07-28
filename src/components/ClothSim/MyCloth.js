@@ -353,7 +353,7 @@ let getTex = (url) => {
   }
   return new TextureLoader().load(url, (tex) => {
     tex.encoding = sRGBEncoding
-    tex.repeat.y *= 2.0
+    tex.repeat.y *= 3.0
     tex.needsUpdate = true
     map.set(url, tex)
   })
