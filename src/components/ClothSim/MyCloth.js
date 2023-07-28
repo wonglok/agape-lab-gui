@@ -237,7 +237,7 @@ export class MyCloth extends Object3D {
 
     // let plMat =
     this.planeGp = new Group()
-    let max = 14
+    let max = 14 * 2
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
@@ -245,10 +245,9 @@ export class MyCloth extends Object3D {
       let gp2 = new Group()
       gp1.add(gp2)
       gp2.position.fromArray([150, 0, 0])
-      gp2.rotation.fromArray([0.05 * 2 * Math.PI, 0, 0.3])
+      gp2.rotation.fromArray([0.15 * 2 * Math.PI, 0, 0.3])
 
       let plMat = getClothMaterial({
-        textures: {},
         each: i / max,
         sizeX: this.sizeX,
         sizeY: this.sizeY,
@@ -330,8 +329,8 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
   //
   //
   let mat = new MeshPhysicalMaterial({
-    color: new Color('#00ff00').setHSL(each, 1, 0.5),
-    emissive: new Color('#00ff00').setHSL(each, 1, 0.5),
+    color: new Color('#ffffff'),
+    emissive: new Color('#ffffff'),
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
@@ -341,9 +340,9 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
     reflectivity: 0,
     thickness: 10,
     envMapIntensity: 1.0,
-    map: getTex(`/leaf/bw.jpg`),
+    map: getTex(`/leaf/color-map.jpg`),
     emissiveIntensity: 0.3,
-    emissiveMap: getTex(`/leaf/bw.jpg`),
+    emissiveMap: getTex(`/leaf/color-map.jpg`),
     metalnessMap: getTex(`/leaf/bw.jpg`),
     thicknessMap: getTex(`/leaf/bw.jpg`),
     normalMap: getTex(`/leaf/color-map.jpg`),
