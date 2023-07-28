@@ -380,7 +380,7 @@ let getInstnacedClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => 
     metalnessMap: getTex(`/leaf/bw.jpg`),
     thicknessMap: getTex(`/leaf/bw.jpg`),
     normalMap: getTex(`/leaf/color-map.jpg`),
-    normalScale: new Vector2(1, 1),
+    normalScale: new Vector2(0.5, 0.5),
     alphaMap: getTex(`/leaf/alpha-mask.jpg`),
     alphaTest: 0.5,
     depthWrite: true,
