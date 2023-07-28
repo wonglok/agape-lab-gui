@@ -1,4 +1,4 @@
-import { Box, Environment, MeshDiscardMaterial, PerspectiveCamera } from '@react-three/drei'
+import { Box, Environment, MeshDiscardMaterial, PerspectiveCamera, Stats } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { ClothSim } from './ClothSim'
 import { Vector3 } from 'three'
@@ -95,6 +95,7 @@ function Content() {
       </group>
 
       <Controls sharedPoint={sharedPoint}></Controls>
+      <Stats></Stats>
     </>
   )
 }
