@@ -237,7 +237,7 @@ export class MyCloth extends Object3D {
 
     // let plMat =
     this.planeGp = new Group()
-    let max = 24
+    let max = 14
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
@@ -330,21 +330,22 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
   //
   //
   let mat = new MeshPhysicalMaterial({
-    color: new Color('#00ff00').offsetHSL(each, 0, 0),
-    emissive: new Color('#00ff00').offsetHSL(each, 0, 0),
+    color: new Color('#00ff00').setHSL(each, 1, 0.5),
+    emissive: new Color('#00ff00').setHSL(each, 1, 0.5),
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
-    metalness: 0.5,
-    roughness: 0.5,
+    metalness: 0.0,
+    roughness: 0.0,
     ior: 1.5,
-    reflectivity: 0.5,
-    thickness: 2,
+    reflectivity: 0,
+    thickness: 10,
     envMapIntensity: 1.0,
     map: getTex(`/leaf/bw.jpg`),
     emissiveIntensity: 0.3,
     emissiveMap: getTex(`/leaf/bw.jpg`),
     metalnessMap: getTex(`/leaf/bw.jpg`),
+    thicknessMap: getTex(`/leaf/bw.jpg`),
     normalMap: getTex(`/leaf/color-map.jpg`),
     normalScale: new Vector2(1, 1),
     alphaMap: getTex(`/leaf/alpha-mask.jpg`),
