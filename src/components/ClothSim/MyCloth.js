@@ -237,7 +237,7 @@ export class MyCloth extends Object3D {
 
     let plArray = []
     this.planeGp = new Group()
-    let max = 10
+    let max = 9
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
