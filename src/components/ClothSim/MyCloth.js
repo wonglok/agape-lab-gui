@@ -6,6 +6,7 @@ import {
   Clock,
   Color,
   Group,
+  LoadingManager,
   Mesh,
   MeshPhysicalMaterial,
   // Mesh,
@@ -16,18 +17,19 @@ import {
   TextureLoader,
   Vector2,
   sRGBEncoding,
+  Cache as THREECache,
 } from 'three'
 import { CustomGPU } from './CustomGPU'
 import fragmentShaderVel from './shader/fragmentShaderVel.frag'
 import fragmentShaderPos from './shader/fragmentShaderPos.frag'
 import fragmentShaderOffset from './shader/fragmentShaderOffset.frag'
 import computeBody from './shader/computeBody.frag'
-import md5 from 'md5'
+// import md5 from 'md5'
 import displayFragment from './shader/display.frag'
 import displayVertex from './shader/display.vert'
 import { DoubleSide } from 'three'
 import { PlaneGeometry } from 'three'
-import { Texture } from 'three147'
+// import { Texture } from 'three147'
 // import { useEffect, useMemo } from 'react'
 // import { create } from 'zustand'
 
@@ -233,6 +235,7 @@ export class MyCloth extends Object3D {
     let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
     plGeo.rotateZ(Math.PI * 0.5)
 
+    // let plMat =
     this.planeGp = new Group()
     let max = 24
     for (let i = 0; i < max; i++) {
@@ -241,29 +244,28 @@ export class MyCloth extends Object3D {
 
       let gp2 = new Group()
       gp1.add(gp2)
-      gp2.position.fromArray([130, 0, 0])
-      gp2.rotation.fromArray([0.13 * 2 * Math.PI, 0, -0.4 + 0.0 * Math.PI])
+      gp2.position.fromArray([150, 0, 0])
+      gp2.rotation.fromArray([0.05 * 2 * Math.PI, 0, 0.3])
 
-      let planeN = new Mesh(
-        plGeo,
-        getClothMaterial({
-          each: i / max,
-          sizeX: this.sizeX,
-          sizeY: this.sizeY,
-          getter: () => {
-            return this.getTexAPos()
-          },
-          onLoop: (func) => {
-            this.core.onLoop(() => {
-              //
+      let plMat = getClothMaterial({
+        textures: {},
+        each: i / max,
+        sizeX: this.sizeX,
+        sizeY: this.sizeY,
+        getter: () => {
+          return this.getTexAPos()
+        },
+        onLoop: (func) => {
+          this.core.onLoop(() => {
+            //
 
-              func()
+            func()
 
-              //
-            })
-          },
-        }),
-      )
+            //
+          })
+        },
+      })
+      let planeN = new Mesh(plGeo, plMat)
 
       planeN.rotation.x = Math.PI
       planeN.frustumCulled = false
@@ -311,6 +313,19 @@ export class MyCloth extends Object3D {
   }
 }
 
+THREECache.enabled = true
+let map = new Map()
+let getTex = (url) => {
+  if (map.has(url)) {
+    return map.get(url)
+  }
+  return new TextureLoader().load(url, (tex) => {
+    tex.encoding = sRGBEncoding
+    tex.repeat.y *= 2.0
+    tex.needsUpdate = true
+    map.set(url, tex)
+  })
+}
 let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
   //
   //
@@ -326,33 +341,13 @@ let getClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
     reflectivity: 0.5,
     thickness: 2,
     envMapIntensity: 1.0,
-    map: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-      tex.needsUpdate = true
-    }),
+    map: getTex(`/leaf/bw.jpg`),
     emissiveIntensity: 0.3,
-    emissiveMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-      tex.needsUpdate = true
-    }),
-    metalnessMap: new TextureLoader().load(`/leaf/bw.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-      tex.needsUpdate = true
-    }),
-    normalMap: new TextureLoader().load(`/leaf/color-map.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-      tex.needsUpdate = true
-    }),
+    emissiveMap: getTex(`/leaf/bw.jpg`),
+    metalnessMap: getTex(`/leaf/bw.jpg`),
+    normalMap: getTex(`/leaf/color-map.jpg`),
     normalScale: new Vector2(1, 1),
-    alphaMap: new TextureLoader().load(`/leaf/alpha-mask.jpg`, (tex) => {
-      tex.encoding = sRGBEncoding
-      tex.repeat.y *= 2.0
-      tex.needsUpdate = true
-    }),
+    alphaMap: getTex(`/leaf/alpha-mask.jpg`),
     alphaTest: 0.5,
     depthWrite: true,
   })
