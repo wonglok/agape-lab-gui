@@ -32,7 +32,7 @@ function Content() {
   for (let i = 0; i < max; i++) {
     array.push(
       <group key={i + 'ball'}>
-        <group scale={0.5}>
+        <group scale={1}>
           <ClothSim idx={i} sharedPoint={sharedPoint}></ClothSim>
         </group>
       </group>,
@@ -121,8 +121,8 @@ function Controls({ sharedPoint }) {
           // point.copy(ev.point)
         }}
         position={[0, 0, 5]}
-        args={[200, 200]}
-        scale={2}>
+        args={[400, 400]}
+        scale={1}>
         <MeshDiscardMaterial></MeshDiscardMaterial>
       </Box>
     </>

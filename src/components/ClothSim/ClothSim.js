@@ -96,7 +96,7 @@ function YoYo({ gl, point, ready }) {
       }}
   */
   return (
-    <group>
+    <group scale={0.75}>
       <myCloth
         ref={ref}
         args={[{ gl, mouse: point }]}

@@ -235,11 +235,7 @@ export class MyCloth extends Object3D {
 
     // let clothMat =
 
-    let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
-    plGeo.rotateZ(Math.PI * 0.5)
-
     let plArray = []
-    // let plMat =
     this.planeGp = new Group()
     let max = 14 * 2
     for (let i = 0; i < max; i++) {
@@ -251,27 +247,8 @@ export class MyCloth extends Object3D {
       gp2.position.fromArray([150, 0, 0])
       gp2.rotation.fromArray([0.15 * 2 * Math.PI, 0, 0.3])
 
-      // let plMat = getClothMaterial({
-      //   each: i / max,
-      //   sizeX: this.sizeX,
-      //   sizeY: this.sizeY,
-      //   getter: () => {
-      //     return this.getTexAPos()
-      //   },
-      //   onLoop: (func) => {
-      //     this.core.onLoop(() => {
-      //       //
-
-      //       func()
-
-      //       //
-      //     })
-      //   },
-      // })
-
       //plGeo, plMat
       let planeN = new Object3D()
-
       planeN.rotation.x = Math.PI
       planeN.frustumCulled = false
 
@@ -301,6 +278,7 @@ export class MyCloth extends Object3D {
         },
       })
 
+      let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
       let plGeoLinear = plGeo.toNonIndexed()
       let buffGeo = new InstancedBufferGeometry()
       buffGeo.setAttribute('position', new BufferAttribute(plGeoLinear.attributes.position.array, 3))
@@ -395,6 +373,7 @@ let getInstnacedClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => 
     reflectivity: 0,
     thickness: 10,
     envMapIntensity: 1.0,
+    specularColorMap: getTex(`/leaf/color-map.jpg`),
     map: getTex(`/leaf/color-map.jpg`),
     emissiveIntensity: 0.3,
     emissiveMap: getTex(`/leaf/color-map.jpg`),
