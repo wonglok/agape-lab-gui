@@ -237,7 +237,7 @@ export class MyCloth extends Object3D {
 
     let plArray = []
     this.planeGp = new Group()
-    let max = 14
+    let max = 18
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
@@ -278,7 +278,7 @@ export class MyCloth extends Object3D {
         },
       })
 
-      let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY)
+      let plGeo = new PlaneGeometry(100.0, 100.0, this.sizeX - 1, this.sizeY - 1)
       let plGeoLinear = plGeo.toNonIndexed()
       let buffGeo = new InstancedBufferGeometry()
       buffGeo.setAttribute('position', new BufferAttribute(plGeoLinear.attributes.position.array, 3))
