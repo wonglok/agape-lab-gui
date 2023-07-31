@@ -29,7 +29,6 @@ import { Color } from 'three'
 import { Noodle } from './noodles/Noodle/Noodle'
 // import { DirectionalLight } from 'three'
 // import { PointLight } from 'three'
-// import { MyClothAva } from '../ClothSimAvatar/MyCloth'
 // import { ClothSim } from '../ClothSim/ClothSim'
 // import { MeshReflectorMaterial } from '@react-three/drei'
 

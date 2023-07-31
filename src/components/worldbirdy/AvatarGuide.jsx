@@ -24,13 +24,13 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { extend } from '@react-three/fiber'
-import { MyCloth } from '../ClothSimAvatar/MyCloth'
+import { MyClothAva } from '../ClothSimAvatar/MyCloth'
 import { Box } from '@react-three/drei'
 export const gameKey = Math.random()
 
 const FBXCache = new Map()
 const GLBCache = new Map()
-extend({ MyCloth })
+extend({ MyClothAva })
 export function AvatarGuide({
   children,
   cape = new Object3D(),
