@@ -65,8 +65,8 @@ export function ClothSim({ max, idx, canRun, sharedPoint }) {
             position={[0, 0, -400]}
             args={[400, 400, 0.1]}
             scale={1}>
-            <meshStandardMaterial metalness={1} roughness={0.0}></meshStandardMaterial>
-            {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
+            {/* <meshStandardMaterial metalness={1} roughness={0.0}></meshStandardMaterial> */}
+            <MeshDiscardMaterial></MeshDiscardMaterial>
           </Box>
         </group>
       </group>
