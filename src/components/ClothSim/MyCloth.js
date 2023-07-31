@@ -37,7 +37,7 @@ import { Matrix4, MeshStandardMaterial } from 'three147'
 // import { create } from 'zustand'
 
 export class MyCloth extends Object3D {
-  constructor({ gl, mouse }) {
+  constructor({ gl, mouse, max = 9 }) {
     super()
     // In each frame...
 
@@ -237,20 +237,19 @@ export class MyCloth extends Object3D {
 
     let plArray = []
     this.planeGp = new Group()
-    let max = 9
+    // let max = 9
     for (let i = 0; i < max; i++) {
       let gp1 = new Group()
       gp1.rotation.fromArray([0, 0, Math.PI * 2.0 * 1 * (i / max)])
 
       let gp2 = new Group()
       gp1.add(gp2)
-      gp2.position.fromArray([120, 0, 0])
-      gp2.rotation.fromArray([0.01 * 2 * Math.PI, 0, 0.5])
+      gp2.position.fromArray([45, 0, 0])
+      gp2.rotation.fromArray([0, -0.15 * Math.PI, 0.0])
       gp2.scale.setScalar(0.8)
 
       //plGeo, plMat
       let planeN = new Object3D()
-      planeN.rotation.x = Math.PI
       planeN.frustumCulled = false
 
       planeN.visible = false

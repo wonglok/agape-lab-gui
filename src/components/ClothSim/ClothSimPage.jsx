@@ -28,12 +28,12 @@ function Content() {
 
   let array = []
 
-  let max = 7
+  let max = 9
   for (let i = 0; i < max; i++) {
     array.push(
       <group key={i + 'ball'}>
         <group scale={1}>
-          <ClothSim idx={i} canRun={i === 0} sharedPoint={sharedPoint}></ClothSim>
+          <ClothSim max={max} idx={i} canRun={i === 0} sharedPoint={sharedPoint}></ClothSim>
         </group>
       </group>,
     )

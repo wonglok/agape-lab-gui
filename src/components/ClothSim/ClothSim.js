@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Vector3 } from 'three'
 import { MyCloth } from './MyCloth'
 
-export function ClothSim({ idx, canRun, sharedPoint }) {
+export function ClothSim({ max, idx, canRun, sharedPoint }) {
   //
   let ref = useRef()
   let gl = useThree((s) => s.gl)
@@ -15,6 +15,7 @@ export function ClothSim({ idx, canRun, sharedPoint }) {
   //   window.yo = window.yo || yo
   //   return window.yo
   // }, [sharedPoint])
+  //
 
   //
   useEffect(() => {
@@ -24,7 +25,6 @@ export function ClothSim({ idx, canRun, sharedPoint }) {
   }, [canRun])
 
   let wall = useRef()
-
   return (
     <group ref={ref}>
       {/*  */}
@@ -63,7 +63,7 @@ export function ClothSim({ idx, canRun, sharedPoint }) {
               // point.copy(ev.point)
             }}
             position={[0, 0, -400]}
-            args={[300, 400, 0.1]}
+            args={[400, 400, 0.1]}
             scale={1}>
             <meshStandardMaterial metalness={1} roughness={0.0}></meshStandardMaterial>
             {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
@@ -77,14 +77,14 @@ export function ClothSim({ idx, canRun, sharedPoint }) {
       {/*  */}
       {/*  */}
       <group rotation={[0, 0, 0]}>
-        {ready && canRun && <YoYo key={ready} gl={gl} point={sharedPoint} ready={ready}></YoYo>}
+        {ready && canRun && <YoYo max={max} key={ready} gl={gl} point={sharedPoint} ready={ready}></YoYo>}
         {/*  */}
       </group>
     </group>
   )
 }
 
-function YoYo({ gl, point, ready }) {
+function YoYo({ gl, point, ready, max }) {
   let ref = useRef()
   useEffect(() => {}, [])
   /*
@@ -96,7 +96,7 @@ function YoYo({ gl, point, ready }) {
     <group scale={1}>
       <myCloth
         ref={ref}
-        args={[{ gl, mouse: point }]}
+        args={[{ gl, mouse: point, max }]}
         dispose={function () {
           this.dispose()
         }}
