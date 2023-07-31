@@ -245,8 +245,8 @@ export class MyCloth extends Object3D {
       let gp2 = new Group()
       gp1.add(gp2)
       gp2.position.fromArray([120, 0, 0])
-      gp2.rotation.fromArray([0.05 * 2 * Math.PI, 0, 0.5])
-      gp2.scale.setScalar(1.5)
+      gp2.rotation.fromArray([0.01 * 2 * Math.PI, 0, 0.5])
+      gp2.scale.setScalar(0.8)
 
       //plGeo, plMat
       let planeN = new Object3D()
@@ -307,6 +307,12 @@ export class MyCloth extends Object3D {
 
       let manyMesh = new Mesh(buffGeo, buffMat)
       this.add(manyMesh)
+
+      let clock = new Clock()
+      this.core.onLoop(() => {
+        let dt = clock.getDelta()
+        manyMesh.rotation.z += dt * -0.1
+      })
     })
     // let arr = [`/bg/flower@1x.png`, `/bg/john-16-33.png`, `/bg/red@1x.png`, `/bg/anthem@1x.png`]
     // let cursor = 0
@@ -359,8 +365,7 @@ let getTex = (url) => {
   })
 }
 
-let getInstnacedClothMaterial = ({ each = 0, sizeX, sizeY, getter, onLoop }) => {
-  //
+let getInstnacedClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
   //
   let mat = new MeshPhysicalMaterial({
     color: new Color('#ffffff'),

@@ -22,13 +22,18 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 // import { BirdCamSync } from './BirdCamSync'
 // import { AvaZoom } from './AvaZoom'
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
-import { useFrame } from '@react-three/fiber'
-
+import { createPortal, useFrame, useThree } from '@react-three/fiber'
+import { extend } from '@react-three/fiber'
+import { MyCloth } from '../ClothSimAvatar/MyCloth'
+import { Box } from '@react-three/drei'
 export const gameKey = Math.random()
 
 const FBXCache = new Map()
 const GLBCache = new Map()
+extend({ MyCloth })
 export function AvatarGuide({
+  children,
+  cape = new Object3D(),
   offset = [0, 2, 2],
   speed = 1,
   collider = new Mesh(),
@@ -59,6 +64,7 @@ export function AvatarGuide({
     }
 
     let aCore = new AvatarChaserCore({
+      cape,
       offset,
       chaseDist,
       speed: speed,
@@ -83,7 +89,8 @@ export function AvatarGuide({
     aCore.core.work()
   })
   //
-
+  let gl = useThree((r) => r.gl)
+  let point = useMemo(() => new Vector3(), [])
   return (
     <group>
       {/*  */}
@@ -92,6 +99,7 @@ export function AvatarGuide({
 
       {aCore && onACore(aCore)}
 
+      {aCore && createPortal(<group>{children}</group>, aCore.player)}
       {/*  */}
     </group>
   )
@@ -99,6 +107,7 @@ export function AvatarGuide({
 
 class AvatarChaserCore extends Object3D {
   constructor({
+    cape,
     offset = [0, 2, 2],
     speed = 1,
     destination = new Object3D(),
@@ -204,6 +213,10 @@ class AvatarChaserCore extends Object3D {
         }
       })
       this.avatarContainer.add(glbScene)
+
+      let Neck = glbScene.getObjectByName('Neck')
+      Neck.add(cape)
+      cape.scale.setScalar(10)
       glbScene.position.y = -1.52
 
       this.makeAction('standing', `/rpm/rpm-actions-locomotion/standing.fbx`).then(() => {

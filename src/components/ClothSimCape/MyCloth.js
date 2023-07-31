@@ -25,11 +25,11 @@ import displayFragment from './shader/display.frag'
 import displayVertex from './shader/display.vert'
 import { DoubleSide } from 'three'
 import { PlaneGeometry } from 'three'
-import { Texture, Vector2 } from 'three147'
+import { Texture } from 'three147'
 // import { useEffect, useMemo } from 'react'
 // import { create } from 'zustand'
 
-export class MyClothAva extends Object3D {
+export class MyCloth extends Object3D {
   constructor({ gl, mouse }) {
     super()
     // In each frame...
@@ -61,13 +61,14 @@ export class MyClothAva extends Object3D {
     }
 
     this.gl = gl
-    this.viewSizeX = 10
-    this.viewSizeY = 10
     this.sizeX = 256
     this.sizeY = 256
     this.count = this.sizeX * this.sizeY
     this.gpu = new CustomGPU(this.sizeX, this.sizeY, this.gl)
     // Compute!
+    this.core.onLoop(() => {
+      this.gpu.compute()
+    })
 
     // Create initial state float textures
     let meta0 = this.gpu.createTexture()
@@ -103,6 +104,8 @@ export class MyClothAva extends Object3D {
       }
     }
     pos0.needsUpdate = true
+
+    //
 
     // and fill in here the texture data...
     // let forceVar = this.gpu.addVariable(
@@ -141,10 +144,6 @@ export class MyClothAva extends Object3D {
     posVar.material.uniforms.mouse = { value: mouse }
     offsetVar.material.uniforms.mouse = { value: mouse }
 
-    velVar.material.uniforms.viewSizeXY = { value: new Vector2(this.viewSizeX, this.viewSizeY) }
-    posVar.material.uniforms.viewSizeXY = { value: new Vector2(this.viewSizeX, this.viewSizeY) }
-    offsetVar.material.uniforms.viewSizeXY = { value: new Vector2(this.viewSizeX, this.viewSizeY) }
-
     //
     // Add variable dependencies
     this.gpu.setVariableDependencies(offsetVar, [
@@ -178,10 +177,6 @@ export class MyClothAva extends Object3D {
       console.error(error)
     }
 
-    this.core.onLoop(() => {
-      this.gpu.compute()
-    })
-
     //
     this.clock = new Clock()
 
@@ -214,6 +209,8 @@ export class MyClothAva extends Object3D {
         dt = 1 / 60
       }
 
+      offsetVar.material.uniforms.time.value = et
+      offsetVar.material.uniforms.delta.value = dt
       //
       velVar.material.uniforms.time.value = et
       posVar.material.uniforms.time.value = et
@@ -232,7 +229,7 @@ export class MyClothAva extends Object3D {
     // this.add(this.pts)
 
     this.plane = new Mesh(
-      new PlaneGeometry(this.viewSizeX, this.viewSizeY, this.sizeX, this.sizeY),
+      new PlaneGeometry(100.0, 100.0, this.sizeX, this.sizeY),
       getClothMaterial({
         sizeX: this.sizeX,
         sizeY: this.sizeY,
@@ -271,16 +268,11 @@ export class MyClothAva extends Object3D {
     //   })
     // }
 
-    let agape = new TextureLoader().load(`/hkstp/stp-bgtrans-2.png`)
+    let agape = new TextureLoader().load(`/bg/flower@1x.png`)
     agape.encoding = sRGBEncoding
 
-    this.plane.material.map = agape
-    // this.plane.material.metalnessMap = agape
-    // this.plane.material.roughnessMap = agape
-    this.plane.material.emissive = new Color('#ffffff')
-    this.plane.material.emissiveMap = agape
-    this.plane.material.emissiveIntensity = 0.5
-    // this.plane.material.normalMap = agape
+    // this.plane.material.map = agape
+    this.plane.material.normalMap = agape
     // this.plane.material.transmissionMap = agape
     // this.plane.material.emissive = new Color('#ffffff')
     this.load = () => {
@@ -303,12 +295,12 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
     side: DoubleSide,
     transparent: true,
     transmission: 1.0,
-    metalness: 0.3,
-    roughness: 0.3,
+    metalness: 0.0,
+    roughness: 0.0,
     ior: 2.5,
     reflectivity: 0.5,
     thickness: 1,
-    envMapIntensity: 0.3,
+    envMapIntensity: 1.5,
   })
 
   ///public/bg/flower@1x.png
@@ -322,9 +314,9 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
       },
     }
 
-    // onLoop(() => {
-    //   // mat.specularColorMap = getter()
-    // })
+    onLoop(() => {
+      // mat.specularColorMap = getter()
+    })
 
     let atBeginV = `
       uniform sampler2D cloth;
@@ -367,10 +359,8 @@ let getClothMaterial = ({ sizeX, sizeY, getter, onLoop }) => {
   return mat
 }
 
-MyClothAva.key = md5(
-  Math.random() + fragmentShaderVel + fragmentShaderPos + displayFragment + displayVertex + computeBody,
-)
-extend({ MyClothAva })
+MyCloth.key = md5(Math.random() + fragmentShaderVel + fragmentShaderPos + displayFragment + displayVertex + computeBody)
+extend({ MyCloth })
 
 //
 

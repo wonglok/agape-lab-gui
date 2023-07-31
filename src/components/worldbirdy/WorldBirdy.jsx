@@ -27,11 +27,13 @@ import { Mesh } from 'three'
 import { MeshBasicMaterial } from 'three'
 import { Color } from 'three'
 import { Noodle } from './noodles/Noodle/Noodle'
-import { DirectionalLight } from 'three'
-import { PointLight } from 'three'
+// import { DirectionalLight } from 'three'
+// import { PointLight } from 'three'
+// import { MyClothAva } from '../ClothSimAvatar/MyCloth'
+// import { ClothSim } from '../ClothSim/ClothSim'
 // import { MeshReflectorMaterial } from '@react-three/drei'
 
-export function WorldBirdy({ point = new Vector3() }) {
+export function WorldBirdy({ cape = new Object3D(), point = new Vector3() }) {
   let gl = useThree((s) => s.gl)
   let camera = useThree((s) => s.camera)
 
@@ -58,6 +60,7 @@ export function WorldBirdy({ point = new Vector3() }) {
 
     return (
       <AvatarGuide
+        cape={cape}
         offset={[0.01, 1, 0]}
         chaseDist={1.2}
         speed={aCore.playerSpeed * 0.98}
@@ -147,6 +150,8 @@ export function WorldBirdy({ point = new Vector3() }) {
   //   light.shadow.camera.lookAt(destObj.position)
   // })
 
+  let mouse = useThree((r) => r.mouse)
+
   return (
     <group>
       {
@@ -224,7 +229,10 @@ export function WorldBirdy({ point = new Vector3() }) {
                       {/* {makeFollower(collider, 5, aCore)} */}
                     </group>
                   )
-                }}></AvatarGuide>
+                }}>
+                {/* {gl && <myClothAva gl={gl}></myClothAva>} */}
+                {/*  */}
+              </AvatarGuide>
 
               {/*  */}
               <Mouse3D collider={collider} mouse3d={destObj}></Mouse3D>

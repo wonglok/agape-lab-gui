@@ -28,12 +28,12 @@ function Content() {
 
   let array = []
 
-  let max = 1
+  let max = 7
   for (let i = 0; i < max; i++) {
     array.push(
       <group key={i + 'ball'}>
         <group scale={1}>
-          <ClothSim idx={i} sharedPoint={sharedPoint}></ClothSim>
+          <ClothSim idx={i} canRun={i === 0} sharedPoint={sharedPoint}></ClothSim>
         </group>
       </group>,
     )
@@ -41,7 +41,7 @@ function Content() {
   let spin = useRef()
   useFrame((st, dt) => {
     if (spin.current) {
-      spin.current.rotation.z += dt * 0.3
+      // spin.current.rotation.z += dt * 0.3
     }
   })
 
@@ -94,7 +94,7 @@ function Content() {
         {array}
       </group>
 
-      <Controls sharedPoint={sharedPoint}></Controls>
+      {/* <Controls sharedPoint={sharedPoint}></Controls> */}
       <Stats></Stats>
     </>
   )
