@@ -158,16 +158,16 @@ async function init({ container }) {
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
-              // rotationMin: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.1415 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.1415 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.1415 * 0.5,
-              // },
-              // rotationMax: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.1415 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.1415 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.1415 * 0.5,
-              // },
+              rotationMin: {
+                x: Clones[`${side}Shoulder`].rotation.clone().x - 3.1415 * 1.0,
+                y: Clones[`${side}Shoulder`].rotation.clone().y - 3.1415 * 1.0,
+                z: Clones[`${side}Shoulder`].rotation.clone().z - 3.1415 * 1.0,
+              },
+              rotationMax: {
+                x: Clones[`${side}Shoulder`].rotation.clone().x + 3.1415 * 1.0,
+                y: Clones[`${side}Shoulder`].rotation.clone().y + 3.1415 * 1.0,
+                z: Clones[`${side}Shoulder`].rotation.clone().z + 3.1415 * 1.0,
+              },
             },
             {
               index: bones.findIndex((r) => r.name === 'Spine2'), // ""
@@ -271,6 +271,8 @@ async function init({ container }) {
     const vision = await FilesetResolver.forVisionTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.4/wasm',
     )
+    let cvs = document.createElement('canvas')
+
     let poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task`,
@@ -278,19 +280,23 @@ async function init({ container }) {
       },
       runningMode: 'IMAGE',
       numPoses: 1,
+      canvas: cvs,
     })
 
-    return poseLandmarker
+    cvs.width = 256
+    cvs.height = 256
+
+    return { poseLandmarker, cvs }
   }
 
-  let poseLandmarker = await createPose()
+  let { poseLandmarker, cvs } = await createPose()
 
   let video = document.createElement('video')
 
   let stream = await navigator.mediaDevices.getUserMedia({
     video: {
-      width: 512,
-      height: 512,
+      width: 256,
+      height: 256,
     },
   })
   video.srcObject = stream
