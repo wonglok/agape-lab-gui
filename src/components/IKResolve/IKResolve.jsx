@@ -346,7 +346,7 @@ async function init({ container }) {
               let fromVal = r.morphTargetInfluences[r.morphTargetDictionary[kn]]
               let toVal = foundTarget.score
 
-              r.morphTargetInfluences[r.morphTargetDictionary[kn]] = THREE.MathUtils.lerp(fromVal, toVal, 0.9)
+              r.morphTargetInfluences[r.morphTargetDictionary[kn]] = THREE.MathUtils.lerp(fromVal, toVal, 0.3)
             }
           }
 
