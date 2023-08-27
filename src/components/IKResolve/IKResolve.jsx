@@ -328,11 +328,6 @@ async function init({ container }) {
       m4.fromArray(fristMatrix.data)
       m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
 
-      // setData({
-      //   morphTargets: firstFace.categories,
-      //   o3d: o3d,
-      // })
-
       let morphTargets = firstFace.categories
 
       gltf.scene.traverse((r) => {
@@ -348,13 +343,6 @@ async function init({ container }) {
               let toVal = foundTarget.score
 
               r.morphTargetInfluences[r.morphTargetDictionary[kn]] = THREE.MathUtils.lerp(fromVal, toVal, 0.9)
-
-              // MathUtils.damp(
-              //   fromVal,
-              //   toVal,
-              //   1 * 150,
-              //   dt,
-              // )
             }
           }
 
