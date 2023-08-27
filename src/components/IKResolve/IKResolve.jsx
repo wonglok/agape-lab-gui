@@ -280,7 +280,6 @@ async function init({ container }) {
       },
       runningMode: 'IMAGE',
       numPoses: 1,
-      canvas: cvs,
     })
 
     cvs.width = 256
