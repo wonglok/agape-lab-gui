@@ -93,10 +93,7 @@ async function init({ container }) {
   transformControls.addEventListener('mouseDown', () => (orbitControls.enabled = false))
   transformControls.addEventListener('mouseUp', () => (orbitControls.enabled = true))
 
-  let mesh = new THREE.SkinnedMesh(
-    gltf.scene.getObjectByName('Wolf3D_Outfit_Top').geometry,
-    gltf.scene.getObjectByName('Wolf3D_Outfit_Top').material,
-  )
+  let proxyMesh = new THREE.SkinnedMesh()
 
   let targetBone = new THREE.Bone()
   targetBone.name = 'target_bone'
@@ -119,8 +116,8 @@ async function init({ container }) {
 
   let skeleton = new THREE.Skeleton(bones)
 
-  mesh.add(targetBone)
-  mesh.bind(skeleton)
+  proxyMesh.add(targetBone)
+  proxyMesh.bind(skeleton)
 
   const iks = [
     {
@@ -173,8 +170,8 @@ async function init({ container }) {
     },
   ]
 
-  IKSolver = new CCDIKSolver(mesh, iks)
-  const ccdikhelper = new CCDIKHelper(mesh, iks, 0.02)
+  IKSolver = new CCDIKSolver(proxyMesh, iks)
+  const ccdikhelper = new CCDIKHelper(proxyMesh, iks, 0.02)
   scene.add(ccdikhelper)
 
   gui = new GUI()
