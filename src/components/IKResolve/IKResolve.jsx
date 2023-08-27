@@ -129,32 +129,32 @@ async function init({ container }) {
               // rotationMin: new THREE.Vector3(0, -1.8, 0),
               // rotationMax: new THREE.Vector3(0, 1.8, 0),
 
-              // rotationMin: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 0.5,
-              // },
-              // rotationMax: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 0.5,
-              // },
+              rotationMin: {
+                x: Clones[`${side}ForeArm`].rotation.clone().x - 3.14 * 1.0,
+                y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 1.0,
+                z: Clones[`${side}ForeArm`].rotation.clone().z - 3.14 * 1.0,
+              },
+              rotationMax: {
+                x: Clones[`${side}ForeArm`].rotation.clone().x + 3.14 * 1.0,
+                y: Clones[`${side}ForeArm`].rotation.clone().y + 3.14 * 1.0,
+                z: Clones[`${side}ForeArm`].rotation.clone().z + 3.14 * 1.0,
+              },
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Arm`), // ""
               // rotationMin: new THREE.Vector3(0, -1.8, 0),
               // rotationMax: new THREE.Vector3(0, 1.8, 0),
 
-              // rotationMin: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 0.5,
-              // },
-              // rotationMax: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 0.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 0.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 0.5,
-              // },
+              rotationMin: {
+                x: Clones[`${side}Arm`].rotation.clone().x - 3.14 * 0.5,
+                y: Clones[`${side}Arm`].rotation.clone().y - 3.14 * 0.5,
+                z: Clones[`${side}Arm`].rotation.clone().z - 3.14 * 0.5,
+              },
+              rotationMax: {
+                x: Clones[`${side}Arm`].rotation.clone().x + 3.14 * 0.5,
+                y: Clones[`${side}Arm`].rotation.clone().y + 3.14 * 0.5,
+                z: Clones[`${side}Arm`].rotation.clone().z + 3.14 * 0.5,
+              },
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
@@ -316,22 +316,22 @@ async function init({ container }) {
   // NAMES.Head.lookAt(center)
 
   let anim = async () => {
+    video.requestVideoFrameCallback(anim)
     let pose = await poseLandmarker.detect(video)
 
     if (pose.worldLandmarks[0]) {
       leftHandTP.copy({
         x: -pose.worldLandmarks[0][16].x * 1.0 + 0.0 * initLeftWP.x,
         y: -pose.worldLandmarks[0][16].y * 1.0 + 1.0 * initLeftWP.y,
-        z: -pose.worldLandmarks[0][16].z * 1.0 + 0.3 * initLeftWP.z,
+        z: -pose.worldLandmarks[0][16].z * 1.0 + 1.0 * initLeftWP.z,
       })
 
       rightHandTP.copy({
         x: -pose.worldLandmarks[0][15].x * 1.0 + 0.0 * initRightWP.x,
         y: -pose.worldLandmarks[0][15].y * 1.0 + 1.0 * initRightWP.y,
-        z: -pose.worldLandmarks[0][15].z * 1.0 + 0.3 * initRightWP.z,
+        z: -pose.worldLandmarks[0][15].z * 1.0 + 1.0 * initRightWP.z,
       })
     }
-    video.requestVideoFrameCallback(anim)
   }
   video.onloadeddata = async () => {
     video.requestVideoFrameCallback(anim)
