@@ -132,14 +132,14 @@ async function init({ container }) {
               // rotationMax: new THREE.Vector3(0, 1.8, 0),
 
               rotationMin: {
-                x: Clones[`${side}ForeArm`].rotation.clone().x - 3.14 * 1.0,
-                y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 1.0,
-                z: Clones[`${side}ForeArm`].rotation.clone().z - 3.14 * 1.0,
+                x: Clones[`${side}ForeArm`].rotation.clone().x - 3.14 * 0.333,
+                y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 0.333,
+                z: Clones[`${side}ForeArm`].rotation.clone().z - 3.14 * 0.333,
               },
               rotationMax: {
-                x: Clones[`${side}ForeArm`].rotation.clone().x + 3.14 * 1.0,
-                y: Clones[`${side}ForeArm`].rotation.clone().y + 3.14 * 1.0,
-                z: Clones[`${side}ForeArm`].rotation.clone().z + 3.14 * 1.0,
+                x: Clones[`${side}ForeArm`].rotation.clone().x + 3.14 * 0.333,
+                y: Clones[`${side}ForeArm`].rotation.clone().y + 3.14 * 0.333,
+                z: Clones[`${side}ForeArm`].rotation.clone().z + 3.14 * 0.333,
               },
             },
             {
@@ -148,28 +148,28 @@ async function init({ container }) {
               // rotationMax: new THREE.Vector3(0, 1.8, 0),
 
               rotationMin: {
-                x: Clones[`${side}Arm`].rotation.clone().x - 3.14 * 0.5,
-                y: Clones[`${side}Arm`].rotation.clone().y - 3.14 * 0.5,
-                z: Clones[`${side}Arm`].rotation.clone().z - 3.14 * 0.5,
+                x: Clones[`${side}Arm`].rotation.clone().x - 3.14 * 0.333,
+                y: Clones[`${side}Arm`].rotation.clone().y - 3.14 * 0.333,
+                z: Clones[`${side}Arm`].rotation.clone().z - 3.14 * 0.333,
               },
               rotationMax: {
-                x: Clones[`${side}Arm`].rotation.clone().x + 3.14 * 0.5,
-                y: Clones[`${side}Arm`].rotation.clone().y + 3.14 * 0.5,
-                z: Clones[`${side}Arm`].rotation.clone().z + 3.14 * 0.5,
+                x: Clones[`${side}Arm`].rotation.clone().x + 3.14 * 0.333,
+                y: Clones[`${side}Arm`].rotation.clone().y + 3.14 * 0.333,
+                z: Clones[`${side}Arm`].rotation.clone().z + 3.14 * 0.333,
               },
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
-              // rotationMin: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 0.1,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 0.1,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 0.1,
-              // },
-              // rotationMax: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 0.1,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 0.1,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 0.1,
-              // },
+              rotationMin: {
+                x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 0.333,
+                y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 0.333,
+                z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 0.333,
+              },
+              rotationMax: {
+                x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 0.333,
+                y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 0.333,
+                z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 0.333,
+              },
             },
             {
               index: bones.findIndex((r) => r.name === 'Spine2'), // ""
