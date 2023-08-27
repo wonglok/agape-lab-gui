@@ -253,7 +253,7 @@ async function init({ container }) {
         modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task`,
         delegate: 'GPU',
       },
-      runningMode: 'IMAGE',
+      runningMode: 'VIDEO',
       numPoses: 1,
     })
 
@@ -304,7 +304,9 @@ async function init({ container }) {
     smoothCenter.lerp(center, 0.1)
     NAMES.Head.lookAt(smoothCenter)
 
-    let pose = await poseLandmarker.detect(video)
+    let ts = performance.now()
+
+    let pose = await poseLandmarker.detectForVideo(video, ts)
 
     if (pose.worldLandmarks[0]) {
       leftHand.worldTargetHand.copy({
