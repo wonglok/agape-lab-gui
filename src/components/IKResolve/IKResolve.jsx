@@ -8,7 +8,7 @@ import { CCDIKSolver, CCDIKHelper } from 'three/examples/jsm/animation/CCDIKSolv
 import Stats from 'three/examples/jsm/libs/stats.module.js'
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 import { useEffect, useRef } from 'react'
-import { Object3D } from 'three147'
+// import { Object3D } from 'three147'
 
 let scene, camera, renderer, orbitControls, transformControls
 let mirrorSphereCamera
@@ -182,6 +182,70 @@ async function init({ container }) {
   gui.open()
 
   window.addEventListener('resize', onWindowResize, false)
+
+  let createPose = async () => {
+    let { PoseLandmarker, FilesetResolver } = await import('@mediapipe/tasks-vision')
+
+    const vision = await FilesetResolver.forVisionTasks(
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.4/wasm',
+    )
+    let poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task`,
+        delegate: 'GPU',
+      },
+      runningMode: 'IMAGE',
+      numPoses: 1,
+    })
+
+    return poseLandmarker
+  }
+
+  let poseLandmarker = await createPose()
+
+  let video = document.createElement('video')
+
+  let stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      width: 512,
+      height: 512,
+    },
+  })
+  video.srcObject = stream
+
+  let wp = new THREE.Vector3()
+  gltf.scene.getObjectByName('LeftHand').getWorldPosition(wp)
+  let tp = new THREE.Vector3()
+  tp.copy(wp)
+  let rAF = () => {
+    targetBone.position.lerp(tp, 0.1)
+    requestAnimationFrame(rAF)
+  }
+  requestAnimationFrame(rAF)
+  let anim = async () => {
+    let pose = await poseLandmarker.detect(video)
+
+    if (pose.worldLandmarks[0]) {
+      // console.log(pose.worldLandmarks[0][15])
+
+      tp.copy({
+        x: -pose.worldLandmarks[0][16].x + wp.x,
+        y: -pose.worldLandmarks[0][16].y + wp.y,
+        z: -pose.worldLandmarks[0][16].z + wp.z,
+      })
+    }
+    video.requestVideoFrameCallback(anim)
+  }
+  video.onplaying = async () => {
+    video.requestVideoFrameCallback(anim)
+  }
+  video.autoplay = true
+  video.style.position = 'absolute'
+  video.style.left = '0px'
+  video.style.top = '0px'
+  video.style.width = '128px'
+  video.playsInline = true
+  container.appendChild(video)
 }
 
 function animate() {
