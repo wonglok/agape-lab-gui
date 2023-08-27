@@ -178,34 +178,34 @@ async function init({ container }) {
               },
               rotationMax: {
                 x: Clones.Spine2.rotation.clone().x + 0.1,
-                y: Clones.Spine2.rotation.clone().y + 0.1,
+                y: Clones.Spine2.rotation.clone().y + 0.5,
                 z: Clones.Spine2.rotation.clone().z + 0.1,
               },
             },
             {
               index: bones.findIndex((r) => r.name === 'Spine1'), // ""
               rotationMin: {
-                x: Clones.Spine1.rotation.clone().x - 0.05,
-                y: Clones.Spine1.rotation.clone().y - 0.05,
-                z: Clones.Spine1.rotation.clone().z - 0.05,
+                x: Clones.Spine1.rotation.clone().x - 0.075,
+                y: Clones.Spine1.rotation.clone().y - 0.075,
+                z: Clones.Spine1.rotation.clone().z - 0.075,
               },
               rotationMax: {
-                x: Clones.Spine1.rotation.clone().x + 0.05,
-                y: Clones.Spine1.rotation.clone().y + 0.05,
-                z: Clones.Spine1.rotation.clone().z + 0.05,
+                x: Clones.Spine1.rotation.clone().x + 0.075,
+                y: Clones.Spine1.rotation.clone().y + 0.075,
+                z: Clones.Spine1.rotation.clone().z + 0.075,
               },
             },
             {
               index: bones.findIndex((r) => r.name === 'Spine'), // ""
               rotationMin: {
-                x: Clones.Spine.rotation.clone().x - 0.05,
-                y: Clones.Spine.rotation.clone().y - 0.05,
-                z: Clones.Spine.rotation.clone().z - 0.05,
+                x: Clones.Spine.rotation.clone().x - 0.075,
+                y: Clones.Spine.rotation.clone().y - 0.075,
+                z: Clones.Spine.rotation.clone().z - 0.075,
               },
               rotationMax: {
-                x: Clones.Spine.rotation.clone().x + 0.05,
-                y: Clones.Spine.rotation.clone().y + 0.05,
-                z: Clones.Spine.rotation.clone().z + 0.05,
+                x: Clones.Spine.rotation.clone().x + 0.075,
+                y: Clones.Spine.rotation.clone().y + 0.075,
+                z: Clones.Spine.rotation.clone().z + 0.075,
               },
             },
           ],
@@ -325,6 +325,8 @@ async function init({ container }) {
     let fristMatrix = faceMatrix[0]
     let firstFace = faceBlendshapes[0]
     if (firstFace && fristMatrix) {
+      //
+
       m4.fromArray(fristMatrix.data)
       m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
 
