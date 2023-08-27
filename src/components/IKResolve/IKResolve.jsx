@@ -284,7 +284,9 @@ async function init({ container }) {
       width: 256,
       height: 256,
     },
+    audio: false,
   })
+
   video.srcObject = stream
 
   let initLeftWP = new THREE.Vector3()
