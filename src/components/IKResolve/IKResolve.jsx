@@ -93,7 +93,7 @@ async function init({ container }) {
       let proxyMesh = new THREE.SkinnedMesh()
 
       let targetBone = new THREE.Bone()
-      targetBone.name = 'target_bone'
+      targetBone.name = `${side}HandTarget`
       // if (transformControls) {
       //   transformControls.attach(targetBone)
       // }
@@ -121,7 +121,7 @@ async function init({ container }) {
 
       const iks = [
         {
-          target: bones.findIndex((r) => r.name === 'target_bone'), // ""
+          target: bones.findIndex((r) => r.name === `${side}HandTarget`), // ""
           effector: bones.findIndex((r) => r.name === `${side}Hand`), // ""
           links: [
             {
@@ -130,14 +130,14 @@ async function init({ container }) {
               // rotationMax: new THREE.Vector3(0, 1.8, 0),
 
               // rotationMin: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 1.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 1.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 1.5,
+              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 0.5,
+              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 0.5,
+              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 0.5,
               // },
               // rotationMax: {
-              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 1.5,
-              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 1.5,
-              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 1.5,
+              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 0.5,
+              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 0.5,
+              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 0.5,
               // },
             },
             {
@@ -158,16 +158,16 @@ async function init({ container }) {
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
-              rotationMin: {
-                x: Clones[`${side}Shoulder`].rotation.clone().x - 3.1415 * 0.5,
-                y: Clones[`${side}Shoulder`].rotation.clone().y - 3.1415 * 0.5,
-                z: Clones[`${side}Shoulder`].rotation.clone().z - 3.1415 * 0.5,
-              },
-              rotationMax: {
-                x: Clones[`${side}Shoulder`].rotation.clone().x + 3.1415 * 0.5,
-                y: Clones[`${side}Shoulder`].rotation.clone().y + 3.1415 * 0.5,
-                z: Clones[`${side}Shoulder`].rotation.clone().z + 3.1415 * 0.5,
-              },
+              // rotationMin: {
+              //   x: Clones[`${side}Shoulder`].rotation.clone().x - 3.1415 * 0.5,
+              //   y: Clones[`${side}Shoulder`].rotation.clone().y - 3.1415 * 0.5,
+              //   z: Clones[`${side}Shoulder`].rotation.clone().z - 3.1415 * 0.5,
+              // },
+              // rotationMax: {
+              //   x: Clones[`${side}Shoulder`].rotation.clone().x + 3.1415 * 0.5,
+              //   y: Clones[`${side}Shoulder`].rotation.clone().y + 3.1415 * 0.5,
+              //   z: Clones[`${side}Shoulder`].rotation.clone().z + 3.1415 * 0.5,
+              // },
             },
             {
               index: bones.findIndex((r) => r.name === 'Spine2'), // ""
@@ -310,14 +310,14 @@ async function init({ container }) {
     if (pose.worldLandmarks[0]) {
       leftHandTP.copy({
         x: -pose.worldLandmarks[0][16].x * 1.0 + 0.0 * initRightWP.x,
-        y: -pose.worldLandmarks[0][16].y * 1.0 + initRightWP.y,
-        z: -pose.worldLandmarks[0][16].z * 1.0 + 0.0 * initRightWP.z,
+        y: -pose.worldLandmarks[0][16].y * 1.0 + 1.0 * initRightWP.y,
+        z: -pose.worldLandmarks[0][16].z * 1.0 + 0.1 * initRightWP.z,
       })
 
       rightHandTP.copy({
         x: -pose.worldLandmarks[0][15].x * 1.0 + 0.0 * initLeftWP.x,
-        y: -pose.worldLandmarks[0][15].y * 1.0 + initLeftWP.y,
-        z: -pose.worldLandmarks[0][15].z * 1.0 + 0.0 * initLeftWP.z,
+        y: -pose.worldLandmarks[0][15].y * 1.0 + 1.0 * initLeftWP.y,
+        z: -pose.worldLandmarks[0][15].z * 1.0 + 0.1 * initLeftWP.z,
       })
     }
     video.requestVideoFrameCallback(anim)
