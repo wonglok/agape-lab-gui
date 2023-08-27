@@ -241,12 +241,11 @@ async function init({ container }) {
   window.addEventListener('resize', onWindowResize, false)
 
   let createPose = async () => {
-    let { PoseLandmarker, FilesetResolver } = await import('@mediapipe/tasks-vision')
+    let { PoseLandmarker, FilesetResolver, FaceLandmarker } = await import('@mediapipe/tasks-vision')
 
     const vision = await FilesetResolver.forVisionTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.4/wasm',
     )
-    let cvs = document.createElement('canvas')
 
     let poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
@@ -257,13 +256,26 @@ async function init({ container }) {
       numPoses: 1,
     })
 
-    cvs.width = 256
-    cvs.height = 256
+    const filesetResolver = await FilesetResolver.forVisionTasks(
+      `/FaceAvatar/task-vision-wasm`,
+      // 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
+    )
+    const faceLandmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+      baseOptions: {
+        // modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
+        modelAssetPath: `/FaceAvatar/face-landmark/face_landmarker.task`,
+        delegate: 'GPU',
+      },
+      outputFaceBlendshapes: true,
+      runningMode: 'VIDEO',
+      numFaces: 1,
+      outputFacialTransformationMatrixes: true,
+    })
 
-    return { poseLandmarker, cvs }
+    return { poseLandmarker, faceLandmarker }
   }
 
-  let { poseLandmarker, cvs } = await createPose()
+  let { poseLandmarker, faceLandmarker } = await createPose()
 
   let video = document.createElement('video')
 
@@ -295,17 +307,71 @@ async function init({ container }) {
   let center = new THREE.Vector3()
   let smoothCenter = new THREE.Vector3()
 
+  let m4 = new THREE.Matrix4()
+  let o3d = new THREE.Object3D()
+
   let anim = async () => {
     video.requestVideoFrameCallback(anim)
 
-    center.copy(leftHand.worldTargetHand).add(rightHand.worldTargetHand).multiplyScalar(0.5)
-    center.z += 1
-
-    smoothCenter.lerp(center, 0.1)
-    NAMES.Head.lookAt(smoothCenter)
+    // center.copy(leftHand.worldTargetHand).add(rightHand.worldTargetHand).multiplyScalar(0.5)
+    // center.z += 1
+    // center.y += 0.5
+    // smoothCenter.lerp(center, 0.1)
+    NAMES.Head.lookAt(camera.position)
 
     let ts = performance.now()
 
+    let results = await faceLandmarker.detectForVideo(video, ts)
+    let faceBlendshapes = results.faceBlendshapes
+    let faceMatrix = results.facialTransformationMatrixes
+
+    let fristMatrix = faceMatrix[0]
+    let firstFace = faceBlendshapes[0]
+    if (firstFace && fristMatrix) {
+      m4.fromArray(fristMatrix.data)
+      m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
+
+      // setData({
+      //   morphTargets: firstFace.categories,
+      //   o3d: o3d,
+      // })
+
+      let morphTargets = firstFace.categories
+
+      gltf.scene.traverse((r) => {
+        if (r && r.geometry && r.morphTargetDictionary && r.morphTargetInfluences) {
+          // morphTargets.find((r) => r.categoryName === 'mouthFunnel').score
+          // mouthSmileLeft
+          // console.log(r.morphTargetDictionary)
+
+          for (let kn in r.morphTargetDictionary) {
+            let foundTarget = morphTargets.find((r) => r.categoryName === kn)
+            if (foundTarget) {
+              let fromVal = r.morphTargetInfluences[r.morphTargetDictionary[kn]]
+              let toVal = foundTarget.score
+
+              r.morphTargetInfluences[r.morphTargetDictionary[kn]] = THREE.MathUtils.lerp(fromVal, toVal, 0.9)
+
+              // MathUtils.damp(
+              //   fromVal,
+              //   toVal,
+              //   1 * 150,
+              //   dt,
+              // )
+            }
+          }
+
+          //r.morphTargetDictionary
+
+          // let foundTarget = morphTargets.find((r) => r.categoryName === 'jawOpen')
+          // if (foundTarget) {
+          //   r.morphTargetInfluences[r.morphTargetDictionary['jawOpen']] = foundTarget.score
+          // }
+        }
+      })
+    }
+
+    ts = performance.now()
     let pose = await poseLandmarker.detectForVideo(video, ts)
 
     if (pose.worldLandmarks[0]) {
