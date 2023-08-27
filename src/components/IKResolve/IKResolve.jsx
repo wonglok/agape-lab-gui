@@ -234,7 +234,7 @@ async function init({ container }) {
     }
     video.requestVideoFrameCallback(anim)
   }
-  video.onplaying = async () => {
+  video.onloadeddata = async () => {
     video.requestVideoFrameCallback(anim)
   }
   video.autoplay = true
