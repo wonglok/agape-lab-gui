@@ -319,7 +319,7 @@ async function init({ container }) {
     // center.z += 1
     // center.y += 0.5
     // smoothCenter.lerp(center, 0.1)
-    NAMES.Head.lookAt(camera.position)
+    // NAMES.Head.lookAt(camera.position)
 
     let ts = performance.now()
 
