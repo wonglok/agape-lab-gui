@@ -119,6 +119,8 @@ async function init({ container }) {
       proxyMesh.add(targetBone)
       proxyMesh.bind(skeleton)
 
+      this.worldTargetHand = targetBone.position.clone()
+
       const iks = [
         {
           target: bones.findIndex((r) => r.name === `${side}HandTarget`), // ""
@@ -250,6 +252,7 @@ async function init({ container }) {
 
       this.myIKSolver = myIKSolver
       this.update = () => {
+        targetBone.position.lerp(this.worldTargetHand, 0.075)
         targetBone.updateMatrix()
         targetBone.updateMatrixWorld()
         myIKSolver.update()
@@ -304,6 +307,7 @@ async function init({ container }) {
   let initRightWP = new THREE.Vector3()
   gltf.scene.getObjectByName('LeftHand').getWorldPosition(initLeftWP)
   gltf.scene.getObjectByName('RightHand').getWorldPosition(initRightWP)
+
   let leftHandTP = new THREE.Vector3()
   let rightHandTP = new THREE.Vector3()
   leftHandTP.copy(initLeftWP)
@@ -319,13 +323,13 @@ async function init({ container }) {
     let pose = await poseLandmarker.detect(video)
 
     if (pose.worldLandmarks[0]) {
-      leftHandTP.copy({
+      leftHand.worldTargetHand.copy({
         x: -pose.worldLandmarks[0][16].x * 1.0 + 0.0 * initLeftWP.x,
         y: -pose.worldLandmarks[0][16].y * 1.0 + 1.0 * initLeftWP.y,
         z: -pose.worldLandmarks[0][16].z * 1.0 + 1.0 * initLeftWP.z,
       })
 
-      rightHandTP.copy({
+      rightHand.worldTargetHand.copy({
         x: -pose.worldLandmarks[0][15].x * 1.0 + 0.0 * initRightWP.x,
         y: -pose.worldLandmarks[0][15].y * 1.0 + 1.0 * initRightWP.y,
         z: -pose.worldLandmarks[0][15].z * 1.0 + 1.0 * initRightWP.z,
@@ -355,13 +359,11 @@ async function init({ container }) {
       if (object.isSkinnedMesh) object.geometry.computeBoundingSphere()
     })
 
-    leftHand.targetBone.position.lerp(leftHandTP, 0.07)
     leftHand.update()
-
-    rightHand.targetBone.position.lerp(rightHandTP, 0.07)
     rightHand.update()
 
     orbitControls.update()
+
     renderer.render(scene, camera)
 
     stats.update() // fps stats
