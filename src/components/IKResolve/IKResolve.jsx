@@ -105,8 +105,8 @@ async function init({ container }) {
     //
     // NAMES.Hips,
     // NAMES.Spine,
-    NAMES.Spine1,
-    NAMES.Spine2,
+    // NAMES.Spine1,
+    // NAMES.Spine2,
     NAMES.LeftShoulder,
     NAMES.LeftArm,
     NAMES.LeftForeArm,
@@ -139,16 +139,16 @@ async function init({ container }) {
           rotationMin: Clones.LeftShoulder.rotation.clone(),
           rotationMax: Clones.LeftShoulder.rotation.clone(),
         },
-        {
-          index: bones.findIndex((r) => r.name === 'Spine2'), // ""
-          rotationMin: Clones.Spine2.rotation.clone(),
-          rotationMax: Clones.Spine2.rotation.clone(),
-        },
-        {
-          index: bones.findIndex((r) => r.name === 'Spine1'), // ""
-          rotationMin: Clones.Spine1.rotation.clone(),
-          rotationMax: Clones.Spine1.rotation.clone(),
-        },
+        // {
+        //   index: bones.findIndex((r) => r.name === 'Spine2'), // ""
+        //   rotationMin: Clones.Spine2.rotation.clone(),
+        //   rotationMax: Clones.Spine2.rotation.clone(),
+        // },
+        // {
+        //   index: bones.findIndex((r) => r.name === 'Spine1'), // ""
+        //   rotationMin: Clones.Spine1.rotation.clone(),
+        //   rotationMax: Clones.Spine1.rotation.clone(),
+        // },
         //   {
         //     index: 2, // "Spine1"
         //     rotationMin: new THREE.Vector3(0, -1.8, 0),
