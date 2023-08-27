@@ -296,13 +296,13 @@ async function init({ container }) {
   let smoothCenter = new THREE.Vector3()
 
   let anim = async () => {
+    video.requestVideoFrameCallback(anim)
+
     center.copy(leftHand.worldTargetHand).add(rightHand.worldTargetHand).multiplyScalar(0.5)
     center.z += 1
 
     smoothCenter.lerp(center, 0.1)
     NAMES.Head.lookAt(smoothCenter)
-
-    video.requestVideoFrameCallback(anim)
 
     let pose = await poseLandmarker.detect(video)
 
@@ -335,6 +335,7 @@ async function init({ container }) {
 
   let leftHand = new CamHand({ side: 'Left', scene })
   let rightHand = new CamHand({ side: 'Right', scene })
+
   let rAF = () => {
     requestAnimationFrame(rAF)
 
@@ -343,14 +344,12 @@ async function init({ container }) {
       if (object.isSkinnedMesh) object.geometry.computeBoundingSphere()
     })
 
+    orbitControls.update()
+    renderer.render(scene, camera)
+    stats.update()
+
     leftHand.update()
     rightHand.update()
-
-    orbitControls.update()
-
-    renderer.render(scene, camera)
-
-    stats.update() // fps stats
   }
   requestAnimationFrame(rAF)
 }
