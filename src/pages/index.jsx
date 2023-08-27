@@ -21,7 +21,12 @@ const pages = [
   //src/pages/
   //
   //src/pages/blog/2023/07/28/ClothSimPage.jsx
-  //
+  {
+    key: md5(v4()),
+    url: `/blog/2023/08/27/ik`,
+    name: `IKCam`,
+    date: '2023-07-28',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/07/28/ClothSimCape`,

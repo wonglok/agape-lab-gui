@@ -4,13 +4,13 @@ import { useGLBLoader } from './glb-loader/useGLBLoader'
 // import { Avatar } from '../Avatar/Avatar'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import {
-  CubeCamera,
-  Environment,
-  MeshRefractionMaterial,
-  MeshTransMissionMaterial,
-  MeshTransmissionMaterial,
+  // CubeCamera,
+  // Environment,
+  // MeshRefractionMaterial,
+  // MeshTransMissionMaterial,
+  // MeshTransmissionMaterial,
   OrbitControls,
-  useEnvironment,
+  // useEnvironment,
 } from '@react-three/drei'
 // import { AvatarChaser } from '../AvatarChaser/AvatarChaser'
 import { AvatarGuide } from './AvatarGuide'
@@ -18,11 +18,11 @@ import { useEffect, useMemo } from 'react'
 import { Object3D, Vector3 } from 'three'
 import { Mouse3D } from './noodles/Noodle/Mouse3D'
 // import { Noodle } from '@/content-vfx/Noodle/Noodle'
-import { AvaZoom } from './AvaZoom'
+// import { AvaZoom } from './AvaZoom'
 import { BirdCamSync } from './BirdCamSync'
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
+// import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 // import { PlaneBufferGeometry } from 'three'
-import { BoxBufferGeometry, DoubleSide } from 'three'
+import { BoxBufferGeometry } from 'three' // DoubleSide
 import { Mesh } from 'three'
 import { MeshBasicMaterial } from 'three'
 import { Color } from 'three'
