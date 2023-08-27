@@ -159,14 +159,14 @@ async function init({ container }) {
             {
               index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
               rotationMin: {
-                x: Clones[`${side}Shoulder`].rotation.clone().x - 0.1,
-                y: Clones[`${side}Shoulder`].rotation.clone().y - 0.1,
-                z: Clones[`${side}Shoulder`].rotation.clone().z - 0.1,
+                x: Clones[`${side}Shoulder`].rotation.clone().x - 3.1415 * 0.5,
+                y: Clones[`${side}Shoulder`].rotation.clone().y - 3.1415 * 0.5,
+                z: Clones[`${side}Shoulder`].rotation.clone().z - 3.1415 * 0.5,
               },
               rotationMax: {
-                x: Clones[`${side}Shoulder`].rotation.clone().x + 0.1,
-                y: Clones[`${side}Shoulder`].rotation.clone().y + 0.1,
-                z: Clones[`${side}Shoulder`].rotation.clone().z + 0.1,
+                x: Clones[`${side}Shoulder`].rotation.clone().x + 3.1415 * 0.5,
+                y: Clones[`${side}Shoulder`].rotation.clone().y + 3.1415 * 0.5,
+                z: Clones[`${side}Shoulder`].rotation.clone().z + 3.1415 * 0.5,
               },
             },
             {
@@ -273,7 +273,7 @@ async function init({ container }) {
     )
     let poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
-        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task`,
+        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task`,
         delegate: 'GPU',
       },
       runningMode: 'IMAGE',
