@@ -43,8 +43,11 @@ async function init({ container }) {
   camera.far = 100
   camera.updateProjectionMatrix()
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1) // soft white light
-  scene.add(ambientLight)
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5) // soft white light
+  dirLight.position.set(3, 1, 1)
+  scene.add(dirLight)
+  const ambLight = new THREE.AmbientLight(0xffffff, 0.5) // soft white light
+  scene.add(ambLight)
 
   renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: false })
   renderer.setPixelRatio(window.devicePixelRatio)
