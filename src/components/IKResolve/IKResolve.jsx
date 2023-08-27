@@ -132,9 +132,6 @@ async function init({ container }) {
           links: [
             {
               index: bones.findIndex((r) => r.name === `${side}ForeArm`), // ""
-              // rotationMin: new THREE.Vector3(0, -1.8, 0),
-              // rotationMax: new THREE.Vector3(0, 1.8, 0),
-
               rotationMin: {
                 x: Clones[`${side}ForeArm`].rotation.clone().x - 3.14 * 0.333,
                 y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 0.1,
@@ -148,9 +145,6 @@ async function init({ container }) {
             },
             {
               index: bones.findIndex((r) => r.name === `${side}Arm`), // ""
-              // rotationMin: new THREE.Vector3(0, -1.8, 0),
-              // rotationMax: new THREE.Vector3(0, 1.8, 0),
-
               rotationMin: {
                 x: Clones[`${side}Arm`].rotation.clone().x - 3.14 * 0.333,
                 y: Clones[`${side}Arm`].rotation.clone().y - 3.14 * 0.333,
