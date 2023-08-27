@@ -305,13 +305,13 @@ async function init({ container }) {
       leftHand.worldTargetHand.copy({
         x: -pose.worldLandmarks[0][16].x * 1.0 + 0.0 * initLeftWP.x,
         y: -pose.worldLandmarks[0][16].y * 1.0 + 1.0 * initLeftWP.y,
-        z: -pose.worldLandmarks[0][16].z * 1.0 + 1.0 * initLeftWP.z,
+        z: -pose.worldLandmarks[0][16].z * 1.0 + 0.5 * initLeftWP.z,
       })
 
       rightHand.worldTargetHand.copy({
         x: -pose.worldLandmarks[0][15].x * 1.0 + 0.0 * initRightWP.x,
         y: -pose.worldLandmarks[0][15].y * 1.0 + 1.0 * initRightWP.y,
-        z: -pose.worldLandmarks[0][15].z * 1.0 + 1.0 * initRightWP.z,
+        z: -pose.worldLandmarks[0][15].z * 1.0 + 0.5 * initRightWP.z,
       })
     }
 
