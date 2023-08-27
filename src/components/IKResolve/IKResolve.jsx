@@ -304,9 +304,6 @@ async function init({ container }) {
   leftHandTP.copy(initLeftWP)
   rightHandTP.copy(initRightWP)
 
-  let center = new THREE.Vector3()
-  let smoothCenter = new THREE.Vector3()
-
   let m4 = new THREE.Matrix4()
   let o3d = new THREE.Object3D()
 
