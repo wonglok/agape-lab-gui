@@ -94,12 +94,13 @@ async function init({ container }) {
 
       let targetHandBone = new THREE.Bone()
       targetHandBone.name = `${side}HandTarget`
-      // if (transformControls) {
-      //   transformControls.attach(targetHandBone)
-      // }
-
       this.targetHandBone = targetHandBone
       gltf.scene.getObjectByName(`${side}Hand`).getWorldPosition(targetHandBone.position)
+
+      let targetForeArmBone = new THREE.Bone()
+      targetForeArmBone.name = `${side}ForeArmTarget`
+      this.targetForeArmBone = targetForeArmBone
+      gltf.scene.getObjectByName(`${side}ForeArm`).getWorldPosition(targetForeArmBone.position)
 
       let bones = [
         //
@@ -112,14 +113,17 @@ async function init({ container }) {
         NAMES[`${side}ForeArm`],
         NAMES[`${side}Hand`],
         targetHandBone,
+        targetForeArmBone,
       ]
 
       let skeleton = new THREE.Skeleton(bones)
 
       proxyMesh.add(targetHandBone)
+      proxyMesh.add(targetForeArmBone)
       proxyMesh.bind(skeleton)
 
       this.worldTargetHand = targetHandBone.position.clone()
+      this.worldTargetForeArm = targetForeArmBone.position.clone()
 
       const iks = [
         {
@@ -210,40 +214,80 @@ async function init({ container }) {
                 z: Clones.Spine.rotation.clone().z + 0.1,
               },
             },
-
-            // {
-            //   index: bones.findIndex((r) => r.name === 'Hips'), // ""
-            //   rotationMin: {
-            //     x: Clones.Hips.rotation.clone().x - 0.0,
-            //     y: Clones.Hips.rotation.clone().y - 0.0,
-            //     z: Clones.Hips.rotation.clone().z - 0.0,
-            //   },
-            //   rotationMax: {
-            //     x: Clones.Hips.rotation.clone().x + 0.0,
-            //     y: Clones.Hips.rotation.clone().y + 0.0,
-            //     z: Clones.Hips.rotation.clone().z + 0.0,
-            //   },
-            // },
-
-            //   {
-            //     index: 2, // "Spine1"
-            //     rotationMin: new THREE.Vector3(0, -1.8, 0),
-            //     rotationMax: new THREE.Vector3(0, 1.8, 0),
-            //   },
-            //   {
-            //     index: 1, // "Spine"
-            //     rotationMin: new THREE.Vector3(0, -1.8, 0),
-            //     rotationMax: new THREE.Vector3(0, 1.8, 0),
-            //   },
-            //   {
-            //     index: 0, // "Hips"
-            //     rotationMin: new THREE.Vector3(0, -1.8, 0),
-            //     rotationMax: new THREE.Vector3(0, 1.8, 0),
-            //     // rotationMin: new THREE.Vector3(1.2, -1.8, -0.4),
-            //     // rotationMax: new THREE.Vector3(1.7, -1.1, 0.3),
-            //   },
           ],
         },
+        // {
+        //   target: bones.findIndex((r) => r.name === `${side}ForeArmTarget`), // ""
+        //   effector: bones.findIndex((r) => r.name === `${side}ForeArm`), // ""
+        //   links: [
+        //     {
+        //       index: bones.findIndex((r) => r.name === `${side}Arm`), // ""
+
+        //       rotationMin: {
+        //         x: Clones[`${side}Arm`].rotation.clone().x - 3.14 * 0.333,
+        //         y: Clones[`${side}Arm`].rotation.clone().y - 3.14 * 0.333,
+        //         z: Clones[`${side}Arm`].rotation.clone().z - 3.14 * 0.333,
+        //       },
+        //       rotationMax: {
+        //         x: Clones[`${side}Arm`].rotation.clone().x + 3.14 * 0.333,
+        //         y: Clones[`${side}Arm`].rotation.clone().y + 3.14 * 0.333,
+        //         z: Clones[`${side}Arm`].rotation.clone().z + 3.14 * 0.333,
+        //       },
+        //     },
+        //     {
+        //       index: bones.findIndex((r) => r.name === `${side}Shoulder`), // ""
+        //       rotationMin: {
+        //         x: Clones[`${side}Shoulder`].rotation.clone().x - 3.14 * 0.333,
+        //         y: Clones[`${side}Shoulder`].rotation.clone().y - 3.14 * 0.333,
+        //         z: Clones[`${side}Shoulder`].rotation.clone().z - 3.14 * 0.333,
+        //       },
+        //       rotationMax: {
+        //         x: Clones[`${side}Shoulder`].rotation.clone().x + 3.14 * 0.333,
+        //         y: Clones[`${side}Shoulder`].rotation.clone().y + 3.14 * 0.333,
+        //         z: Clones[`${side}Shoulder`].rotation.clone().z + 3.14 * 0.333,
+        //       },
+        //     },
+        //     {
+        //       index: bones.findIndex((r) => r.name === 'Spine2'), // ""
+        //       rotationMin: {
+        //         x: Clones.Spine2.rotation.clone().x - 0.1,
+        //         y: Clones.Spine2.rotation.clone().y - 0.1,
+        //         z: Clones.Spine2.rotation.clone().z - 0.1,
+        //       },
+        //       rotationMax: {
+        //         x: Clones.Spine2.rotation.clone().x + 0.1,
+        //         y: Clones.Spine2.rotation.clone().y + 0.1,
+        //         z: Clones.Spine2.rotation.clone().z + 0.1,
+        //       },
+        //     },
+        //     {
+        //       index: bones.findIndex((r) => r.name === 'Spine1'), // ""
+        //       rotationMin: {
+        //         x: Clones.Spine1.rotation.clone().x - 0.1,
+        //         y: Clones.Spine1.rotation.clone().y - 0.1,
+        //         z: Clones.Spine1.rotation.clone().z - 0.1,
+        //       },
+        //       rotationMax: {
+        //         x: Clones.Spine1.rotation.clone().x + 0.1,
+        //         y: Clones.Spine1.rotation.clone().y + 0.1,
+        //         z: Clones.Spine1.rotation.clone().z + 0.1,
+        //       },
+        //     },
+        //     {
+        //       index: bones.findIndex((r) => r.name === 'Spine'), // ""
+        //       rotationMin: {
+        //         x: Clones.Spine.rotation.clone().x - 0.1,
+        //         y: Clones.Spine.rotation.clone().y - 0.1,
+        //         z: Clones.Spine.rotation.clone().z - 0.1,
+        //       },
+        //       rotationMax: {
+        //         x: Clones.Spine.rotation.clone().x + 0.1,
+        //         y: Clones.Spine.rotation.clone().y + 0.1,
+        //         z: Clones.Spine.rotation.clone().z + 0.1,
+        //       },
+        //     },
+        //   ],
+        // },
       ]
 
       let myIKSolver = new CCDIKSolver(proxyMesh, iks)
@@ -252,9 +296,15 @@ async function init({ container }) {
 
       this.myIKSolver = myIKSolver
       this.update = () => {
+        targetForeArmBone.position.lerp(this.worldTargetForeArm, 0.075)
+        targetForeArmBone.updateMatrix()
+        targetForeArmBone.updateMatrixWorld()
+
         targetHandBone.position.lerp(this.worldTargetHand, 0.075)
         targetHandBone.updateMatrix()
         targetHandBone.updateMatrixWorld()
+
+        //
         myIKSolver.update()
       }
     }
@@ -304,9 +354,16 @@ async function init({ container }) {
   video.srcObject = stream
 
   let initLeftWP = new THREE.Vector3()
-  let initRightWP = new THREE.Vector3()
   gltf.scene.getObjectByName('LeftHand').getWorldPosition(initLeftWP)
+
+  let initRightWP = new THREE.Vector3()
   gltf.scene.getObjectByName('RightHand').getWorldPosition(initRightWP)
+
+  let initLeftForeArmWP = new THREE.Vector3()
+  gltf.scene.getObjectByName('LeftForeArm').getWorldPosition(initLeftForeArmWP)
+
+  let initRightForeArmWP = new THREE.Vector3()
+  gltf.scene.getObjectByName('RightForeArm').getWorldPosition(initRightForeArmWP)
 
   let leftHandTP = new THREE.Vector3()
   let rightHandTP = new THREE.Vector3()
@@ -335,6 +392,20 @@ async function init({ container }) {
         z: -pose.worldLandmarks[0][15].z * 1.0 + 1.0 * initRightWP.z,
       })
     }
+
+    // if (pose.worldLandmarks[0]) {
+    //   leftHand.worldTargetForeArm.copy({
+    //     x: -pose.worldLandmarks[0][14].x * 0.0 + initLeftForeArmWP.x,
+    //     y: -pose.worldLandmarks[0][14].y * 0.0 + initLeftForeArmWP.y,
+    //     z: -pose.worldLandmarks[0][14].z * 1.0 + initLeftForeArmWP.z,
+    //   })
+
+    //   rightHand.worldTargetForeArm.copy({
+    //     x: -pose.worldLandmarks[0][13].x * 0.0 + initRightForeArmWP.x,
+    //     y: -pose.worldLandmarks[0][13].y * 0.0 + initRightForeArmWP.y,
+    //     z: -pose.worldLandmarks[0][13].z * 1.0 + initRightForeArmWP.z,
+    //   })
+    // }
   }
   video.onloadeddata = async () => {
     video.requestVideoFrameCallback(anim)
