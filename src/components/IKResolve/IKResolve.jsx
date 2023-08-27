@@ -232,11 +232,11 @@ async function init({ container }) {
     }
   }
 
-  gui = new GUI()
-  gui.add(conf, 'followSphere').name('follow sphere')
-  gui.add(conf, 'turnHead').name('turn head')
-  gui.add(conf, 'ik_solver').name('IK auto update')
-  gui.open()
+  // gui = new GUI()
+  // gui.add(conf, 'followSphere').name('follow sphere')
+  // gui.add(conf, 'turnHead').name('turn head')
+  // gui.add(conf, 'ik_solver').name('IK auto update')
+  // gui.open()
 
   window.addEventListener('resize', onWindowResize, false)
 
