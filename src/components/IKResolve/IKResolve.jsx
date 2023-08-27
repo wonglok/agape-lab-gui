@@ -137,12 +137,12 @@ async function init({ container }) {
 
               rotationMin: {
                 x: Clones[`${side}ForeArm`].rotation.clone().x - 3.14 * 0.333,
-                y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 0.333,
+                y: Clones[`${side}ForeArm`].rotation.clone().y - 3.14 * 0.1,
                 z: Clones[`${side}ForeArm`].rotation.clone().z - 3.14 * 0.333,
               },
               rotationMax: {
                 x: Clones[`${side}ForeArm`].rotation.clone().x + 3.14 * 0.333,
-                y: Clones[`${side}ForeArm`].rotation.clone().y + 3.14 * 0.333,
+                y: Clones[`${side}ForeArm`].rotation.clone().y + 3.14 * 0.1,
                 z: Clones[`${side}ForeArm`].rotation.clone().z + 3.14 * 0.333,
               },
             },
