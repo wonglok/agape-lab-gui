@@ -213,10 +213,10 @@ async function init({ container }) {
   })
   video.srcObject = stream
 
-  let wp = new THREE.Vector3()
-  gltf.scene.getObjectByName('LeftHand').getWorldPosition(wp)
+  let initWP = new THREE.Vector3()
+  gltf.scene.getObjectByName('LeftHand').getWorldPosition(initWP)
   let tp = new THREE.Vector3()
-  tp.copy(wp)
+  tp.copy(initWP)
   let rAF = () => {
     targetBone.position.lerp(tp, 0.1)
     requestAnimationFrame(rAF)
@@ -226,12 +226,10 @@ async function init({ container }) {
     let pose = await poseLandmarker.detect(video)
 
     if (pose.worldLandmarks[0]) {
-      // console.log(pose.worldLandmarks[0][15])
-
       tp.copy({
-        x: -pose.worldLandmarks[0][16].x + wp.x,
-        y: -pose.worldLandmarks[0][16].y + wp.y,
-        z: -pose.worldLandmarks[0][16].z + wp.z,
+        x: -pose.worldLandmarks[0][16].x + initWP.x,
+        y: -pose.worldLandmarks[0][16].y + initWP.y,
+        z: -pose.worldLandmarks[0][16].z + initWP.z,
       })
     }
     video.requestVideoFrameCallback(anim)
