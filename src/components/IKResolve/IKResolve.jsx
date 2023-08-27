@@ -246,11 +246,11 @@ async function init({ container }) {
   let createPose = async () => {
     let { PoseLandmarker, FilesetResolver, FaceLandmarker } = await import('@mediapipe/tasks-vision')
 
-    const vision = await FilesetResolver.forVisionTasks(
+    const poseFileResolver = await FilesetResolver.forVisionTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.4/wasm',
     )
 
-    let poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+    let poseLandmarker = await PoseLandmarker.createFromOptions(poseFileResolver, {
       baseOptions: {
         modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task`,
         delegate: 'GPU',
@@ -259,11 +259,12 @@ async function init({ container }) {
       numPoses: 1,
     })
 
-    const filesetResolver = await FilesetResolver.forVisionTasks(
+    const faceFileResolver = await FilesetResolver.forVisionTasks(
       `/FaceAvatar/task-vision-wasm`,
       // 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
     )
-    const faceLandmarker = await FaceLandmarker.createFromOptions(filesetResolver, {
+
+    const faceLandmarker = await FaceLandmarker.createFromOptions(faceFileResolver, {
       baseOptions: {
         // modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
         modelAssetPath: `/FaceAvatar/face-landmark/face_landmarker.task`,
