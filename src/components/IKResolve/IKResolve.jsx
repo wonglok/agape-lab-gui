@@ -92,14 +92,14 @@ async function init({ container }) {
 
       let proxyMesh = new THREE.SkinnedMesh()
 
-      let targetBone = new THREE.Bone()
-      targetBone.name = `${side}HandTarget`
+      let targetHandBone = new THREE.Bone()
+      targetHandBone.name = `${side}HandTarget`
       // if (transformControls) {
-      //   transformControls.attach(targetBone)
+      //   transformControls.attach(targetHandBone)
       // }
 
-      this.targetBone = targetBone
-      gltf.scene.getObjectByName(`${side}Hand`).getWorldPosition(targetBone.position)
+      this.targetHandBone = targetHandBone
+      gltf.scene.getObjectByName(`${side}Hand`).getWorldPosition(targetHandBone.position)
 
       let bones = [
         //
@@ -111,15 +111,15 @@ async function init({ container }) {
         NAMES[`${side}Arm`],
         NAMES[`${side}ForeArm`],
         NAMES[`${side}Hand`],
-        targetBone,
+        targetHandBone,
       ]
 
       let skeleton = new THREE.Skeleton(bones)
 
-      proxyMesh.add(targetBone)
+      proxyMesh.add(targetHandBone)
       proxyMesh.bind(skeleton)
 
-      this.worldTargetHand = targetBone.position.clone()
+      this.worldTargetHand = targetHandBone.position.clone()
 
       const iks = [
         {
@@ -252,9 +252,9 @@ async function init({ container }) {
 
       this.myIKSolver = myIKSolver
       this.update = () => {
-        targetBone.position.lerp(this.worldTargetHand, 0.075)
-        targetBone.updateMatrix()
-        targetBone.updateMatrixWorld()
+        targetHandBone.position.lerp(this.worldTargetHand, 0.075)
+        targetHandBone.updateMatrix()
+        targetHandBone.updateMatrixWorld()
         myIKSolver.update()
       }
     }
