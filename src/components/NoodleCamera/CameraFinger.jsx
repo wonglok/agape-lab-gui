@@ -309,7 +309,7 @@ export function FingerDetection({}) {
           delegate: 'GPU',
         },
         // runningMode: 'IMAGE',
-        runningMode: 'IMAGE',
+        runningMode: 'VIDEO',
         numHands: 8,
         // // /**
         // //  * The minimum confidence score for the hand detection to be considered
@@ -337,13 +337,30 @@ export function FingerDetection({}) {
   let handLandmarker = useFinger((r) => r.handLandmarker)
   let video = useFinger((r) => r.video)
 
-  // let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
-  useFrame(({}) => {
-    if (handLandmarker && video) {
-      const result = handLandmarker.detect(video)
-      useFinger.setState({ handLandmarkResult: result.landmarks })
+  useEffect(() => {
+    let cancel = false
+    let operate = () => {
+      if (!cancel) {
+        video.requestVideoFrameCallback(operate)
+      }
+
+      const result = handLandmarker.detectForVideo(video, window.performance.now())
+      if (result) {
+        useFinger.setState({ handLandmarkResult: result.landmarks })
+      }
     }
-  })
+    if (handLandmarker && video) {
+      video.requestVideoFrameCallback(operate)
+    }
+
+    return () => {
+      cancel = true
+    }
+  }, [handLandmarker, video])
+  // // let handLandmarkResult = useFinger((r) => r.handLandmarkResult)
+  // useFrame(({}) => {
+
+  // })
 
   //
 
