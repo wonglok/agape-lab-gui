@@ -310,7 +310,7 @@ function ParticleRelayCore({ idx = 0, rand, unitGeo, surfaceMesh }) {
     //
     color = '#00ff00',
     emissive = '#000000',
-    performanceProfile = 'medium',
+    performanceProfile = 'low',
     surfaceEmissionForce = 0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
@@ -1077,7 +1077,8 @@ export function CoreEngine({
     unitMaterial.map = new TextureLoader().load(`/leaf/color-map.jpg`)
     unitMaterial.alphaMap = new TextureLoader().load(`/leaf/alpha-mask.jpg`)
     unitMaterial.alphaTest = 0.5
-    geo.scale(0.1, 0.1, 0.1)
+    unitMaterial.color = new Color('#777777')
+    geo.scale(0.25, 0.25, 0.25)
     // new MeshPhysicalMaterial({
     //   color: new Color('#ffffff'),
     //   roughness: 0.0,
