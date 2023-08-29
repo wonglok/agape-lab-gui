@@ -44,11 +44,11 @@ export function MouseGesture() {
         )}
         <primitive object={camera}></primitive>
 
-        <Box args={[500, 0.1, 500]} name='floor_ground'>
+        <Box args={[5000, 0.01, 5000]} name='floor_ground'>
           <meshStandardMaterial color={'#bababa'}></meshStandardMaterial>
         </Box>
 
-        <gridHelper position={[0, 0.3, 0]} args={[500, 500, 0xffffff, 0xff0000]}></gridHelper>
+        <gridHelper position={[0, 1, 0]} args={[5000, 500, 0xffffff, 0xff0000]}></gridHelper>
         <OrbitControls object-position={[0, 10, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
