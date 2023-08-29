@@ -5,10 +5,6 @@ import { useEffect, useRef } from 'react'
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
 
-  let viewport = useThree((r) => r.viewport)
-  let cvp = viewport.getCurrentViewport()
-  let max = Math.max(cvp.width, cvp.height)
-
   let camera = useThree((r) => r.camera)
   useEffect(() => {
     useMouse.setState({ camera })
@@ -19,13 +15,17 @@ export function MouseGesture() {
     useMouse.setState({ scene })
   }, [scene])
 
+  let viewport = useThree((r) => r.viewport)
+  let cvp = viewport.getCurrentViewport(camera, [0, 0, 0])
+  let max = Math.max(cvp.width, cvp.height)
+
   return (
     <>
       <group>
         {videoTexture && (
           <>
             {createPortal(
-              <mesh scale={[max, max, 1]} position={[0, 0, -camera.position.z]}>
+              <mesh scale={[-max, max, 1]} position={[0, 0, -10]}>
                 <meshStandardMaterial map={videoTexture}></meshStandardMaterial>
                 <planeBufferGeometry></planeBufferGeometry>
               </mesh>,
@@ -33,6 +33,7 @@ export function MouseGesture() {
             )}
           </>
         )}
+        <primitive object={camera}></primitive>
 
         <Box args={[100, 0.1, 100]} name='floor_ground'>
           <meshStandardMaterial color={'red'}></meshStandardMaterial>
