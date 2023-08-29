@@ -1,14 +1,29 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { EquirectangularReflectionMapping, Object3D, Raycaster, Vector3, VideoTexture, sRGBEncoding } from 'three'
+import { CubicBezierCurve3, MeshBasicMaterial } from 'three'
+import { CubicBezierCurve, TubeGeometry } from 'three'
+import {
+  EquirectangularReflectionMapping,
+  ExtrudeGeometry,
+  Mesh,
+  Object3D,
+  PlaneGeometry,
+  Raycaster,
+  Vector3,
+  VideoTexture,
+  sRGBEncoding,
+} from 'three'
 import { create } from 'zustand'
 //
 
 export const useMouse = create((set, get) => {
   return {
+    handID: false,
     //
     hands: [],
     scene: false,
     camera: false,
+
+    activeUUID: false,
 
     loading: false,
     showStartMenu: true,
@@ -132,18 +147,30 @@ export const useMouse = create((set, get) => {
 
       let raycaster = new Raycaster()
       let array = []
-      let eachHandPointCount = 5 + 1
+      let eachHandPointCount = 5 + 0
       let dotCount = handCount * eachHandPointCount // plus 1 for palm
       for (let i = 0; i < dotCount; i++) {
         array.push(new Object3D())
       }
       array.map((r) => {
-        r.visible = false
+        r.visible = true
         return r
       })
 
-      let ptA = new Vector3()
-      let ptB = new Vector3()
+      let plGeo = new PlaneGeometry(1000000, 1000000)
+      let tempPlane = new Mesh(plGeo)
+      let v0 = new Vector3(0, 0, 0)
+      let v1 = new Vector3(0, 0, 0)
+      let v2 = new Vector3(0, 0, 0)
+      let v3 = new Vector3(0, 0, 0)
+
+      let curve = new CubicBezierCurve3(v0, v1, v2, v3)
+      let tube = new Mesh(undefined, new MeshBasicMaterial({ color: '#ff0000' }))
+      if (!get().scene.children.includes(tube)) {
+        get().scene.add(tube)
+      }
+
+      get().scene.add(tube)
 
       set({
         hands: array,
@@ -285,46 +312,75 @@ export const useMouse = create((set, get) => {
 
                 ////////
 
-                {
-                  // raycaster.setFromCamera({ x: x, y: y }, get().camera)
+                // {
+                //   // raycaster.setFromCamera({ x: x, y: y }, get().camera)
 
-                  // if (floor_ground) {
-                  //   let res = raycaster.intersectObject(floor_ground, true)
-                  //   if (res && res[0]) {
-                  //     ptA.copy(res[0]?.point)
-                  //   }
-                  // }
+                //   // if (floor_ground) {
+                //   //   let res = raycaster.intersectObject(floor_ground, true)
+                //   //   if (res && res[0]) {
+                //   //     ptA.copy(res[0]?.point)
+                //   //   }
+                //   // }
 
-                  let indexRoot = 9
-                  let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
-                  let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
+                //   let indexRoot = 9
+                //   let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
+                //   let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
 
-                  let palmRoot = 0
-                  let x2 = (lmk[palmRoot].x * 2.0 - 1.0) * -1
-                  let y2 = (lmk[palmRoot].y * 2.0 - 1.0) * -1
+                //   let palmRoot = 0
+                //   let x2 = (lmk[palmRoot].x * 2.0 - 1.0) * -1
+                //   let y2 = (lmk[palmRoot].y * 2.0 - 1.0) * -1
 
-                  let mix = (a, b, r) => {
-                    return a * (1.0 - r) + b * r
-                  }
+                //   let mix = (a, b, r) => {
+                //     return a * (1.0 - r) + b * r
+                //   }
 
-                  raycaster.setFromCamera({ x: mix(x, x2, 0.1), y: mix(y, y2, 0.1) }, get().camera)
+                //   raycaster.setFromCamera({ x: mix(x, x2, 0.5), y: mix(y, y2, 0.5) }, get().camera)
 
-                  if (floor_ground) {
-                    let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0]) {
-                      let pt = res[0]?.point
+                //   if (floor_ground) {
+                //     let res = raycaster.intersectObject(floor_ground, true)
+                //     let idx = res.findIndex((r) => r.uuid === get()?.handID)
+                //     if (idx === -1) {
+                //       idx = 0
+                //     }
+                //     if (res && res[idx]) {
+                //       let pt = res[idx]?.point
 
-                      if (array[handIndex * eachHandPointCount + 5]) {
-                        array[handIndex * eachHandPointCount + 5].position.copy(pt)
-                        array[handIndex * eachHandPointCount + 5].visible = true
-                        array[handIndex * eachHandPointCount + 5].userData = {
-                          gestureInfo: gestureInfo,
-                          handIndex: handIndex,
-                        }
-                      }
-                    }
-                  }
-                }
+                //       let found = res[idx].object
+
+                //       if (tempPlane && (found?.userData?.draggable || found?.userData?.hoverable)) {
+                //         tempPlane.position.copy(pt)
+                //         tempPlane.lookAt(get().camera.position)
+
+                //         let tempCoordRes = raycaster.intersectObject(tempPlane, true)
+                //         if (found?.userData?.draggable && gestureInfo[0]?.categoryName === 'Closed_Fist') {
+                //           if (!get().handID) {
+                //             set({ handID: found.uuid })
+                //           }
+                //         }
+
+                //         if (get().handID === found.uuid) {
+                //           if (gestureInfo[0]?.categoryName === 'Closed_Fist') {
+                //             if (tempCoordRes && tempCoordRes[0]?.point) {
+                //               let tempCoord = tempCoordRes[0]?.point
+                //               found.position.set(tempCoord.x, tempCoord.y, found.position.z)
+                //             }
+                //           } else {
+                //             set({ handID: false })
+                //           }
+                //         }
+
+                //         if (array[handIndex * eachHandPointCount + 5]) {
+                //           array[handIndex * eachHandPointCount + 5].position.set(pt.x, pt.y, found.position.z)
+                //           array[handIndex * eachHandPointCount + 5].visible = true
+                //           array[handIndex * eachHandPointCount + 5].userData = {
+                //             gestureInfo: gestureInfo,
+                //             handIndex: handIndex,
+                //           }
+                //         }
+                //       }
+                //     }
+                //   }
+                // }
 
                 ////////
               })
