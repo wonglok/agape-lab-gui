@@ -122,9 +122,18 @@ function Onehand({ hand }) {
 
   return (
     <group ref={ref}>
-      <Sphere position={[0, 1, 0]} args={[1, 25, 25]}>
+      <Sphere position={[0, 1, 0]} args={[0.5, 25, 25]}>
         <MeshTransmissionMaterial thickness={2} roughness={0.2}></MeshTransmissionMaterial>
       </Sphere>
     </group>
   )
 }
+//
+//
+//
+//
+
+///////
+///////
+///////
+///////
