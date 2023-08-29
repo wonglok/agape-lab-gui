@@ -1,15 +1,20 @@
 import { FilesetResolver, GestureRecognizer } from '@mediapipe/tasks-vision'
-import { EquirectangularReflectionMapping, VideoTexture, sRGBEncoding } from 'three'
+import { EquirectangularReflectionMapping, Object3D, Raycaster, VideoTexture, sRGBEncoding } from 'three'
 import { create } from 'zustand'
 //
 
 export const useMouse = create((set, get) => {
   return {
     //
+    hands: [],
+    scene: false,
+    camera: false,
+
     loading: false,
     showStartMenu: true,
     video: false,
     videoTexture: false,
+    cancel: () => {},
     cleanVideoTexture: () => {},
     runProcessVideoFrame: () => {},
     initVideo: () => {
@@ -42,15 +47,22 @@ export const useMouse = create((set, get) => {
           videoTexture.encoding = sRGBEncoding
           videoTexture.mapping = EquirectangularReflectionMapping
           let id = 0
+          let canRun = true
           let func = () => {
+            if (canRun) {
+              id = video.requestVideoFrameCallback(func)
+            }
             videoTexture.needsUpdate = true
-            get().runProcessVideoFrame({ videoTexture })
-            id = video.requestVideoFrameCallback(func)
+            get().runProcessVideoFrame({ video })
           }
           id = video.requestVideoFrameCallback(func)
 
-          console.log(videoTexture)
+          get().cancel()
           set({
+            cancel: () => {
+              canRun = false
+            },
+            vid: id,
             videoTexture: videoTexture,
             video: video,
           })
@@ -60,6 +72,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
+      const count = 8
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -71,16 +84,49 @@ export const useMouse = create((set, get) => {
           delegate: 'GPU',
         },
         runningMode: 'VIDEO',
-        numHands: 1,
+        numHands: count,
       })
 
+      let raycaster = new Raycaster()
+      let array = []
+      for (let i = 0; i < count; i++) {
+        array.push(new Object3D())
+      }
       set({
+        hands: array,
         runProcessVideoFrame: ({ video }) => {
           //
           if (video) {
             let result = gestureRecognizer.recognizeForVideo(video, performance.now())
-            if (result) {
+            if (result && result?.gestures?.length > 0) {
               set({ handResult: result })
+
+              array.map((r) => {
+                r.visible = false
+                return r
+              })
+
+              // console.log(result)
+              result.landmarks.forEach((lmk, index) => {
+                //
+
+                let x = (lmk[0].x * 2.0 - 1.0) * -1
+                let y = (lmk[0].y * 2.0 - 1.0) * -1
+
+                raycaster.setFromCamera({ x: x, y: y }, get().camera)
+
+                let floor_ground = get()?.scene?.getObjectByName('floor_ground')
+                //
+                if (floor_ground) {
+                  let res = raycaster.intersectObject(floor_ground, true)
+                  if (res && res[0] && array[index]) {
+                    array[index].position.copy(res[0]?.point)
+                    array[index].visible = true
+                  }
+                }
+              })
+
+              set({ hands: [...array] })
             }
           }
         },
