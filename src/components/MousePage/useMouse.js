@@ -98,6 +98,12 @@ export const useMouse = create((set, get) => {
         r.visible = false
         return r
       })
+
+      setTimeout(() => {
+        gestureRecognizer.setOptions({ baseOptions: { delegate: 'GPU' } })
+        console.log('set to gpu')
+      }, 100)
+
       set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {

@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { MouseGesture } from './MouseGesture'
 import { useMouse } from './useMouse.js'
+import { Stats } from '@react-three/drei'
 export function MousePage() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
   let loading = useMouse((r) => r.loading)
@@ -15,6 +16,8 @@ export function MousePage() {
             ev.preventDefault()
           }
         }}>
+        <Stats></Stats>
+
         <MouseGesture></MouseGesture>
       </Canvas>
 
