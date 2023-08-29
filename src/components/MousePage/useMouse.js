@@ -132,8 +132,8 @@ export const useMouse = create((set, get) => {
 
       let raycaster = new Raycaster()
       let array = []
-      let eachHandPointCount = 5
-      let dotCount = count * eachHandPointCount + 1 // plus 1 for palm
+      let eachHandPointCount = 5 + 1
+      let dotCount = count * eachHandPointCount // plus 1 for palm
       for (let i = 0; i < dotCount; i++) {
         array.push(new Object3D())
       }
@@ -286,7 +286,7 @@ export const useMouse = create((set, get) => {
                 ////////
 
                 {
-                  let indexRoot = 5
+                  let indexRoot = 9
                   let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
                   let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
 
@@ -309,6 +309,15 @@ export const useMouse = create((set, get) => {
                     let res = raycaster.intersectObject(floor_ground, true)
                     if (res && res[0]) {
                       ptB.copy(res[0]?.point)
+                    }
+                  }
+
+                  if (array[handIndex * eachHandPointCount + 5]) {
+                    array[handIndex * eachHandPointCount + 5].position.copy(ptA).add(ptB).multiplyScalar(0.5)
+                    array[handIndex * eachHandPointCount + 5].visible = true
+                    array[handIndex * eachHandPointCount + 5].userData = {
+                      gestureInfo: gestureInfo,
+                      handIndex: handIndex,
                     }
                   }
                 }
