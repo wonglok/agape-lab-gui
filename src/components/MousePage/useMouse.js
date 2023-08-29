@@ -22,8 +22,8 @@ export const useMouse = create((set, get) => {
       let video = document.createElement('video')
       video.playsInline = true
 
-      let width = 1
-      let height = 1
+      let width = window.innerWidth
+      let height = window.innerHeight
 
       if (width >= height) {
         video.width = 512
@@ -60,6 +60,11 @@ export const useMouse = create((set, get) => {
           get().cancel()
           set({
             cancel: () => {
+              let recogizer = get().recogizer
+
+              if (recogizer.close) {
+                recogizer.close()
+              }
               canRun = false
             },
             vid: id,
@@ -72,50 +77,58 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const count = 1
+      const count = 2
       // Create task for image file processing:
-      // const vision = await FilesetResolver.forVisionTasks(
-      //   // path/to/wasm/root
-      //   '/gesture-vision_wasm-v-0.10.4',
-      // )
-
-      // const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
-      //   baseOptions: {
-      //     modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
-      //     delegate: 'GPU',
-      //   },
-      //   runningMode: 'VIDEO',
-      //   numHands: count,
-      // })
-
       const vision = await FilesetResolver.forVisionTasks(
-        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
+        // path/to/wasm/root
+        '/gesture-vision_wasm-v-0.10.4',
       )
 
-      const handLandmarker = await HandLandmarker.createFromOptions(vision, {
+      const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: `/finger/hand_landmarker.task`,
+          modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
           delegate: 'GPU',
         },
-        // runningMode: 'IMAGE',
-        runningMode: 'VIDEO',
         numHands: count,
-        // // /**
-        // //  * The minimum confidence score for the hand detection to be considered
-        // //  * successful. Defaults to 0.5.
-        // //  */
-        minHandDetectionConfidence: 0.1,
-        // // /**
-        // //  * The minimum confidence score of hand presence score in the hand landmark
-        // //  * detection. Defaults to 0.5.
-        // //  */
-        minHandPresenceConfidence: 0.1,
-        // // /**
-        // //  * The minimum confidence score for the hand tracking to be considered
-        // //  * successful. Defaults to 0.5.
-        // //  */
-        minTrackingConfidence: 0.1,
+        runningMode: 'VIDEO',
       })
+
+      setTimeout(() => {
+        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: count })
+        console.log('set to gpu')
+      }, 100)
+
+      set({ recogizer: gestureRecognizer })
+
+      // const vision = await FilesetResolver.forVisionTasks(
+      //   'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
+      // )
+
+      // const handLandmarker = await HandLandmarker.createFromOptions(vision, {
+      //   baseOptions: {
+      //     modelAssetPath: `/finger/hand_landmarker.task`,
+      //     delegate: 'GPU',
+      //   },
+      //   // runningMode: 'IMAGE',
+      //   runningMode: 'VIDEO',
+      //   numHands: count,
+      //   // // /**
+      //   // //  * The minimum confidence score for the hand detection to be considered
+      //   // //  * successful. Defaults to 0.5.
+      //   // //  */
+      //   minHandDetectionConfidence: 0.1,
+      //   // // /**
+      //   // //  * The minimum confidence score of hand presence score in the hand landmark
+      //   // //  * detection. Defaults to 0.5.
+      //   // //  */
+      //   minHandPresenceConfidence: 0.1,
+      //   // // /**
+      //   // //  * The minimum confidence score for the hand tracking to be considered
+      //   // //  * successful. Defaults to 0.5.
+      //   // //  */
+      //   minTrackingConfidence: 0.1,
+      // })
+      let handLandmarker = gestureRecognizer
 
       let raycaster = new Raycaster()
       let array = []
@@ -129,19 +142,14 @@ export const useMouse = create((set, get) => {
         return r
       })
 
-      setTimeout(() => {
-        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' } })
-        console.log('set to gpu')
-      }, 100)
-
       set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {
           //
           if (video) {
             let nowInMs = Date.now()
-            let result = handLandmarker.detectForVideo(video, nowInMs, {
-              // rotationDegrees: 90,
+            let result = handLandmarker.recognizeForVideo(video, nowInMs, {
+              rotationDegrees: 90,
             })
 
             console.log(result)

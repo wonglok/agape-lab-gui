@@ -60,7 +60,6 @@ export function MouseGesture() {
         <Environment files={`/lok/shanghai.hdr`}></Environment>
 
         <Hand></Hand>
-        {/*  */}
       </group>
     </>
   )
@@ -68,7 +67,6 @@ export function MouseGesture() {
 
 // function World() {
 //   let point = new Vector3()
-
 //   useFrame(() => {
 //     let hands = useMouse.getState().hands
 //     if (hands[0]?.position) {
@@ -102,7 +100,7 @@ function Hand() {
     <group>
       {hands.map((r) => {
         return (
-          <group visible={r.visible} key={r.uuid}>
+          <group key={r.uuid}>
             <Onehand hand={r}></Onehand>
           </group>
         )
@@ -115,9 +113,11 @@ function Onehand({ hand }) {
   let ref = useRef()
   useFrame(() => {
     if (ref.current) {
-      ref.current.position.lerp(hand.position, 0.1)
+      ref.current.position.lerp(hand.position, 0.25)
+      ref.current.visible = hand.visible
     }
   })
+
   return (
     <group ref={ref}>
       <Box position={[0, 2, 0]} args={[2, 2, 2]}></Box>
