@@ -1,5 +1,5 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { EquirectangularReflectionMapping, Object3D, Raycaster, VideoTexture, sRGBEncoding } from 'three'
+import { EquirectangularReflectionMapping, Object3D, Raycaster, Vector3, VideoTexture, sRGBEncoding } from 'three'
 import { create } from 'zustand'
 //
 
@@ -133,7 +133,7 @@ export const useMouse = create((set, get) => {
       let raycaster = new Raycaster()
       let array = []
       let eachHandPointCount = 5
-      let dotCount = count * eachHandPointCount
+      let dotCount = count * eachHandPointCount + 1 // plus 1 for palm
       for (let i = 0; i < dotCount; i++) {
         array.push(new Object3D())
       }
@@ -142,6 +142,9 @@ export const useMouse = create((set, get) => {
         return r
       })
 
+      let ptA = new Vector3()
+      let ptB = new Vector3()
+
       set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {
@@ -149,23 +152,23 @@ export const useMouse = create((set, get) => {
           if (video) {
             let nowInMs = Date.now()
             let result = handLandmarker.recognizeForVideo(video, nowInMs, {
-              rotationDegrees: 90,
+              rotationDegrees: 0,
             })
 
-            console.log(result)
+            array.map((r) => {
+              r.visible = false
+              return r
+            })
+
             if (result && result?.landmarks?.length > 0) {
               set({ handResult: result })
 
-              array.map((r) => {
-                r.visible = false
-                return r
-              })
-
-              console.log(result)
-              result.landmarks.forEach((lmk, index) => {
+              result.landmarks.forEach((lmk, handIndex) => {
                 //
+                let gestureInfo = result.gestures[handIndex]
 
-                console.log(index)
+                console.log(gestureInfo[0]?.categoryName)
+
                 let floor_ground = get()?.scene?.getObjectByName('floor_ground')
 
                 {
@@ -178,11 +181,12 @@ export const useMouse = create((set, get) => {
                   //
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0] && array[index * eachHandPointCount + 0]) {
-                      array[index * eachHandPointCount + 0].position.copy(res[0]?.point)
-                      array[index * eachHandPointCount + 0].visible = true
-                      array[index * eachHandPointCount + 0].userData = {
-                        hand: index,
+                    if (res && res[0] && array[handIndex * eachHandPointCount + 0]) {
+                      array[handIndex * eachHandPointCount + 0].position.copy(res[0]?.point)
+                      array[handIndex * eachHandPointCount + 0].visible = true
+                      array[handIndex * eachHandPointCount + 0].userData = {
+                        gestureInfo: gestureInfo,
+                        handIndex: handIndex,
                       }
                     }
                   }
@@ -199,11 +203,12 @@ export const useMouse = create((set, get) => {
                   //
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0] && array[index * eachHandPointCount + 1]) {
-                      array[index * eachHandPointCount + 1].position.copy(res[0]?.point)
-                      array[index * eachHandPointCount + 1].visible = true
-                      array[index * eachHandPointCount + 1].userData = {
-                        hand: index,
+                    if (res && res[0] && array[handIndex * eachHandPointCount + 1]) {
+                      array[handIndex * eachHandPointCount + 1].position.copy(res[0]?.point)
+                      array[handIndex * eachHandPointCount + 1].visible = true
+                      array[handIndex * eachHandPointCount + 1].userData = {
+                        gestureInfo: gestureInfo,
+                        handIndex: handIndex,
                       }
                     }
                   }
@@ -221,11 +226,12 @@ export const useMouse = create((set, get) => {
                   //
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0] && array[index * eachHandPointCount + 2]) {
-                      array[index * eachHandPointCount + 2].position.copy(res[0]?.point)
-                      array[index * eachHandPointCount + 2].visible = true
-                      array[index * eachHandPointCount + 2].userData = {
-                        hand: index,
+                    if (res && res[0] && array[handIndex * eachHandPointCount + 2]) {
+                      array[handIndex * eachHandPointCount + 2].position.copy(res[0]?.point)
+                      array[handIndex * eachHandPointCount + 2].visible = true
+                      array[handIndex * eachHandPointCount + 2].userData = {
+                        gestureInfo: gestureInfo,
+                        handIndex: handIndex,
                       }
                     }
                   }
@@ -243,11 +249,12 @@ export const useMouse = create((set, get) => {
                   //
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0] && array[index * eachHandPointCount + 3]) {
-                      array[index * eachHandPointCount + 3].position.copy(res[0]?.point)
-                      array[index * eachHandPointCount + 3].visible = true
-                      array[index * eachHandPointCount + 3].userData = {
-                        hand: index,
+                    if (res && res[0] && array[handIndex * eachHandPointCount + 3]) {
+                      array[handIndex * eachHandPointCount + 3].position.copy(res[0]?.point)
+                      array[handIndex * eachHandPointCount + 3].visible = true
+                      array[handIndex * eachHandPointCount + 3].userData = {
+                        gestureInfo: gestureInfo,
+                        handIndex: handIndex,
                       }
                     }
                   }
@@ -265,21 +272,52 @@ export const useMouse = create((set, get) => {
                   //
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0] && array[index * eachHandPointCount + 4]) {
-                      array[index * eachHandPointCount + 4].position.copy(res[0]?.point)
-                      array[index * eachHandPointCount + 4].visible = true
-                      array[index * eachHandPointCount + 4].userData = {
-                        hand: index,
+                    if (res && res[0] && array[handIndex * eachHandPointCount + 4]) {
+                      array[handIndex * eachHandPointCount + 4].position.copy(res[0]?.point)
+                      array[handIndex * eachHandPointCount + 4].visible = true
+                      array[handIndex * eachHandPointCount + 4].userData = {
+                        gestureInfo: gestureInfo,
+                        handIndex: handIndex,
                       }
                     }
                   }
                 }
 
                 ////////
-              })
 
-              set({ hands: [...array] })
+                {
+                  let indexRoot = 5
+                  let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
+                  let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
+
+                  raycaster.setFromCamera({ x: x, y: y }, get().camera)
+
+                  if (floor_ground) {
+                    let res = raycaster.intersectObject(floor_ground, true)
+                    if (res && res[0]) {
+                      ptA.copy(res[0]?.point)
+                    }
+                  }
+
+                  let palmRoot = 0
+                  let x2 = (lmk[palmRoot].x * 2.0 - 1.0) * -1
+                  let y2 = (lmk[palmRoot].y * 2.0 - 1.0) * -1
+
+                  raycaster.setFromCamera({ x: x2, y: y2 }, get().camera)
+
+                  if (floor_ground) {
+                    let res = raycaster.intersectObject(floor_ground, true)
+                    if (res && res[0]) {
+                      ptB.copy(res[0]?.point)
+                    }
+                  }
+                }
+
+                ////////
+              })
             }
+
+            set({ hands: array.filter((r) => r.visible) })
           }
         },
       })
