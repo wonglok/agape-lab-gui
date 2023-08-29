@@ -1,6 +1,6 @@
 import { Box, Environment, OrbitControls, RenderTexture } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
-import { useFrame, useThree } from '@react-three/fiber'
+import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -23,10 +23,15 @@ export function MouseGesture() {
     <>
       <group>
         {videoTexture && (
-          <mesh scale={[max, max, 1]}>
-            <meshStandardMaterial map={videoTexture}></meshStandardMaterial>
-            <planeBufferGeometry></planeBufferGeometry>
-          </mesh>
+          <>
+            {createPortal(
+              <mesh scale={[max, max, 1]} position={[0, 0, -camera.position.z]}>
+                <meshStandardMaterial map={videoTexture}></meshStandardMaterial>
+                <planeBufferGeometry></planeBufferGeometry>
+              </mesh>,
+              camera,
+            )}
+          </>
         )}
 
         <Box args={[100, 0.1, 100]} name='floor_ground'>
