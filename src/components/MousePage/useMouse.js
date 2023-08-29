@@ -167,7 +167,7 @@ export const useMouse = create((set, get) => {
                 //
                 let gestureInfo = result.gestures[handIndex]
 
-                console.log(gestureInfo[0]?.categoryName)
+                console.log(handIndex, gestureInfo[0]?.categoryName)
 
                 let floor_ground = get()?.scene?.getObjectByName('floor_ground')
 
@@ -286,38 +286,42 @@ export const useMouse = create((set, get) => {
                 ////////
 
                 {
+                  // raycaster.setFromCamera({ x: x, y: y }, get().camera)
+
+                  // if (floor_ground) {
+                  //   let res = raycaster.intersectObject(floor_ground, true)
+                  //   if (res && res[0]) {
+                  //     ptA.copy(res[0]?.point)
+                  //   }
+                  // }
+
                   let indexRoot = 9
                   let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
                   let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
-
-                  raycaster.setFromCamera({ x: x, y: y }, get().camera)
-
-                  if (floor_ground) {
-                    let res = raycaster.intersectObject(floor_ground, true)
-                    if (res && res[0]) {
-                      ptA.copy(res[0]?.point)
-                    }
-                  }
 
                   let palmRoot = 0
                   let x2 = (lmk[palmRoot].x * 2.0 - 1.0) * -1
                   let y2 = (lmk[palmRoot].y * 2.0 - 1.0) * -1
 
-                  raycaster.setFromCamera({ x: x2, y: y2 }, get().camera)
+                  let mix = (a, b, r) => {
+                    return a * (1.0 - r) + b * r
+                  }
+
+                  raycaster.setFromCamera({ x: mix(x, x2, 0.1), y: mix(y, y2, 0.1) }, get().camera)
 
                   if (floor_ground) {
                     let res = raycaster.intersectObject(floor_ground, true)
                     if (res && res[0]) {
-                      ptB.copy(res[0]?.point)
-                    }
-                  }
+                      let pt = res[0]?.point
 
-                  if (array[handIndex * eachHandPointCount + 5]) {
-                    array[handIndex * eachHandPointCount + 5].position.copy(ptA).add(ptB).multiplyScalar(0.35)
-                    array[handIndex * eachHandPointCount + 5].visible = true
-                    array[handIndex * eachHandPointCount + 5].userData = {
-                      gestureInfo: gestureInfo,
-                      handIndex: handIndex,
+                      if (array[handIndex * eachHandPointCount + 5]) {
+                        array[handIndex * eachHandPointCount + 5].position.copy(pt)
+                        array[handIndex * eachHandPointCount + 5].visible = true
+                        array[handIndex * eachHandPointCount + 5].userData = {
+                          gestureInfo: gestureInfo,
+                          handIndex: handIndex,
+                        }
+                      }
                     }
                   }
                 }
