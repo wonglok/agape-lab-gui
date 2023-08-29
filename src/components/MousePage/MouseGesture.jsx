@@ -1,13 +1,13 @@
-import { Box, Environment, OrbitControls, RenderTexture } from '@react-three/drei'
+import { Box, Environment, OrbitControls } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
-import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef } from 'react'
-import { PerspectiveCamera } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
+import { useEffect, useRef } from 'react'
+// import { PerspectiveCamera } from 'three'
 
-import { WorldBirdy } from '../worldbirdy/WorldBirdy'
-import { WaterSurfaceAvatarContent } from '../WaterSurfaceAvatar/WaterSurfaceAvatar'
-import { Object3D } from 'three'
-import { Vector3 } from 'three'
+// import { WorldBirdy } from '../worldbirdy/WorldBirdy'
+// import { WaterSurfaceAvatarContent } from '../WaterSurfaceAvatar/WaterSurfaceAvatar'
+// import { Object3D } from 'three'
+// import { Vector3 } from 'three'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
