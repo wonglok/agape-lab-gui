@@ -62,7 +62,7 @@ export const useMouse = create((set, get) => {
             cancel: () => {
               let recogizer = get().recogizer
 
-              if (recogizer.close) {
+              if (recogizer?.close) {
                 recogizer.close()
               }
               canRun = false
@@ -313,7 +313,7 @@ export const useMouse = create((set, get) => {
                   }
 
                   if (array[handIndex * eachHandPointCount + 5]) {
-                    array[handIndex * eachHandPointCount + 5].position.copy(ptA).add(ptB).multiplyScalar(0.5)
+                    array[handIndex * eachHandPointCount + 5].position.copy(ptA).add(ptB).multiplyScalar(0.35)
                     array[handIndex * eachHandPointCount + 5].visible = true
                     array[handIndex * eachHandPointCount + 5].userData = {
                       gestureInfo: gestureInfo,
