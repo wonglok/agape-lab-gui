@@ -28,6 +28,7 @@ export function MouseGesture() {
   useFrame(({ controls, size }) => {
     if (bg.current) {
       let cvp = viewport.getCurrentViewport(controls.object, controls.target.toArray(), size)
+
       bg.current.scale.fromArray([-cvp.width, cvp.height, 1])
       bg.current.lookAt(...controls.object.position.toArray())
     }
@@ -42,7 +43,7 @@ export function MouseGesture() {
               <meshStandardMaterial
                 depthTest={false}
                 transparent
-                opacity={0.1}
+                opacity={0.1333}
                 map={videoTexture}></meshStandardMaterial>
               <planeBufferGeometry></planeBufferGeometry>
             </mesh>
@@ -113,7 +114,7 @@ function Onehand({ hand }) {
   let ref = useRef()
   useFrame(() => {
     if (ref.current) {
-      ref.current.position.lerp(hand.position, 0.25)
+      ref.current.position.lerp(hand.position, 0.5)
       ref.current.visible = hand.visible
     }
   })

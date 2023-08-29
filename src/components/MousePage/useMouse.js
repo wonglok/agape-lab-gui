@@ -181,6 +181,9 @@ export const useMouse = create((set, get) => {
                     if (res && res[0] && array[index * eachHandPointCount + 0]) {
                       array[index * eachHandPointCount + 0].position.copy(res[0]?.point)
                       array[index * eachHandPointCount + 0].visible = true
+                      array[index * eachHandPointCount + 0].userData = {
+                        hand: index,
+                      }
                     }
                   }
                 }
@@ -199,6 +202,9 @@ export const useMouse = create((set, get) => {
                     if (res && res[0] && array[index * eachHandPointCount + 1]) {
                       array[index * eachHandPointCount + 1].position.copy(res[0]?.point)
                       array[index * eachHandPointCount + 1].visible = true
+                      array[index * eachHandPointCount + 1].userData = {
+                        hand: index,
+                      }
                     }
                   }
                 }
@@ -218,6 +224,9 @@ export const useMouse = create((set, get) => {
                     if (res && res[0] && array[index * eachHandPointCount + 2]) {
                       array[index * eachHandPointCount + 2].position.copy(res[0]?.point)
                       array[index * eachHandPointCount + 2].visible = true
+                      array[index * eachHandPointCount + 2].userData = {
+                        hand: index,
+                      }
                     }
                   }
                 }
@@ -237,6 +246,9 @@ export const useMouse = create((set, get) => {
                     if (res && res[0] && array[index * eachHandPointCount + 3]) {
                       array[index * eachHandPointCount + 3].position.copy(res[0]?.point)
                       array[index * eachHandPointCount + 3].visible = true
+                      array[index * eachHandPointCount + 3].userData = {
+                        hand: index,
+                      }
                     }
                   }
                 }
@@ -256,6 +268,9 @@ export const useMouse = create((set, get) => {
                     if (res && res[0] && array[index * eachHandPointCount + 4]) {
                       array[index * eachHandPointCount + 4].position.copy(res[0]?.point)
                       array[index * eachHandPointCount + 4].visible = true
+                      array[index * eachHandPointCount + 4].userData = {
+                        hand: index,
+                      }
                     }
                   }
                 }
