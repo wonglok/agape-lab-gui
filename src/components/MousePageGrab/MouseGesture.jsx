@@ -61,13 +61,21 @@ export function MouseGesture() {
 
         <primitive object={camera}></primitive>
 
-        <group name='floor_ground'>
-          <Sphere userData={{ hoverable: true }} position={[0, 0, 0]} args={[100, 24, 24]}>
-            <meshStandardMaterial color={'#bababa'} side={DoubleSide}></meshStandardMaterial>
+        <group name='raycast-group'>
+          <Sphere position={[3, 3, -3]}>
+            <meshStandardMaterial color={'red'}></meshStandardMaterial>
+          </Sphere>
+
+          <Sphere position={[-3, 4, -3]}>
+            <meshStandardMaterial color={'green'}></meshStandardMaterial>
+          </Sphere>
+
+          <Sphere position={[-2, 2, -3]}>
+            <meshStandardMaterial color={'blue'}></meshStandardMaterial>
           </Sphere>
         </group>
 
-        <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xffffff, 0xff0000]}></gridHelper>
+        <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xff0000, 0xff0000]}></gridHelper>
 
         <OrbitControls object-position={[0, 10, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 

@@ -120,7 +120,7 @@ export const useMouse = create((set, get) => {
 
       let handLandmarker = gestureRecognizer
 
-      let raycaster = new Raycaster()
+      // let raycaster = new Raycaster()
       let array = []
       let eachHandPointCount = 21
       let dotCount = handCount * eachHandPointCount // plus 1 for palm
@@ -132,14 +132,21 @@ export const useMouse = create((set, get) => {
         return r
       })
 
-      let handRootOfFristHand = array[0 * eachHandPointCount + 5]
+      let handRootOfFristHand = array[0 * eachHandPointCount + 7]
 
       handRootOfFristHand.clear()
-      let stick = new Mesh(new BoxGeometry(0.1, 0.1, 5), new MeshBasicMaterial({ color: 0xff0000 }))
+      let stick = new Mesh(new BoxGeometry(0.04, 0.04, 5), new MeshBasicMaterial({ color: 0xff0000 }))
       stick.geometry.translate(0, 0, 5 / 2)
+      stick.name = 'handFingerStick'
+      stick.visible = false
+
+      let handFingerStick = get()?.scene?.getObjectByName('handFingerStick')
+      handFingerStick?.removeFromParent()
 
       get().scene.add(stick)
 
+      let raycaster = new Raycaster()
+      let dir = new Vector3()
       set({
         onLoop: () => {
           //
@@ -193,9 +200,37 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    let handRoot = array[handIndex * eachHandPointCount + 5]
-                    let handMid1 = array[handIndex * eachHandPointCount + 8]
-                    handRoot.lookAt(handMid1.position)
+                    stick.visible = true
+                  }
+
+                  {
+                    let beforeTip = array[handIndex * eachHandPointCount + 7]
+                    let tip = array[handIndex * eachHandPointCount + 8]
+                    beforeTip.lookAt(tip.position)
+
+                    //
+                    beforeTip.getWorldDirection(dir)
+                    raycaster.set(beforeTip.position, dir)
+
+                    let casterGroup = get().scene.getObjectByName('raycast-group')
+                    if (casterGroup) {
+                      raycaster.firstHitOnly = true
+                      let res = raycaster.intersectObject(casterGroup, true)
+                      casterGroup.traverse((it) => {
+                        if (it.material) {
+                          it.material.emissive.set(0x000000)
+                        }
+                      })
+                      if (res) {
+                        res
+                          .map((r) => r.object)
+                          .forEach((it) => {
+                            if (it.material) {
+                              it.material.emissive.set(0xffffff)
+                            }
+                          })
+                      }
+                    }
                   }
 
                   // let gestureInfo = result.gestures[handIndex]
