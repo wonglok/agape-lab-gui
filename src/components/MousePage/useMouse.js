@@ -77,7 +77,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const count = 2
+      const handCount = 2
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -89,12 +89,12 @@ export const useMouse = create((set, get) => {
           modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
           delegate: 'GPU',
         },
-        numHands: count,
+        numHands: handCount,
         runningMode: 'VIDEO',
       })
 
       setTimeout(() => {
-        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: count })
+        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount })
         console.log('set to gpu')
       }, 100)
 
@@ -111,7 +111,7 @@ export const useMouse = create((set, get) => {
       //   },
       //   // runningMode: 'IMAGE',
       //   runningMode: 'VIDEO',
-      //   numHands: count,
+      //   numHands: handCount,
       //   // // /**
       //   // //  * The minimum confidence score for the hand detection to be considered
       //   // //  * successful. Defaults to 0.5.
@@ -133,7 +133,7 @@ export const useMouse = create((set, get) => {
       let raycaster = new Raycaster()
       let array = []
       let eachHandPointCount = 5 + 1
-      let dotCount = count * eachHandPointCount // plus 1 for palm
+      let dotCount = handCount * eachHandPointCount // plus 1 for palm
       for (let i = 0; i < dotCount; i++) {
         array.push(new Object3D())
       }
