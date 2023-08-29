@@ -3,6 +3,12 @@ import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { PerspectiveCamera } from 'three'
+
+import { WorldBirdy } from '../worldbirdy/WorldBirdy'
+import { WaterSurfaceAvatarContent } from '../WaterSurfaceAvatar/WaterSurfaceAvatar'
+import { Object3D } from 'three'
+import { Vector3 } from 'three'
+
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
 
@@ -59,6 +65,35 @@ export function MouseGesture() {
     </>
   )
 }
+
+// function World() {
+//   let point = new Vector3()
+
+//   useFrame(() => {
+//     let hands = useMouse.getState().hands
+//     if (hands[0]?.position) {
+//       point.copy(hands[0]?.position)
+//     }
+//   })
+
+//   return (
+//     <>
+//       {
+//         <>
+//           <group position={[0, -0.5, 0]}>
+//             <group rotation={[Math.PI * -0.5, 0, 0]}>
+//               <WaterSurfaceAvatarContent point={point}></WaterSurfaceAvatarContent>
+//             </group>
+//           </group>
+
+//           <group scale={[1, 1, 1]}>
+//             <WorldBirdy cape={new Object3D()} point={point}></WorldBirdy>
+//           </group>
+//         </>
+//       }
+//     </>
+//   )
+// }
 
 function Hand() {
   let hands = useMouse((r) => r.hands)

@@ -1,4 +1,4 @@
-import { FilesetResolver, GestureRecognizer } from '@mediapipe/tasks-vision'
+import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
 import { EquirectangularReflectionMapping, Object3D, Raycaster, VideoTexture, sRGBEncoding } from 'three'
 import { create } from 'zustand'
 //
@@ -72,24 +72,54 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const count = 8
+      const count = 1
       // Create task for image file processing:
+      // const vision = await FilesetResolver.forVisionTasks(
+      //   // path/to/wasm/root
+      //   '/gesture-vision_wasm-v-0.10.4',
+      // )
+
+      // const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+      //   baseOptions: {
+      //     modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
+      //     delegate: 'GPU',
+      //   },
+      //   runningMode: 'VIDEO',
+      //   numHands: count,
+      // })
+
       const vision = await FilesetResolver.forVisionTasks(
-        // path/to/wasm/root
-        '/gesture-vision_wasm-v-0.10.4',
+        'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
       )
-      const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+
+      const handLandmarker = await HandLandmarker.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
+          modelAssetPath: `/finger/hand_landmarker.task`,
           delegate: 'GPU',
         },
+        // runningMode: 'IMAGE',
         runningMode: 'VIDEO',
         numHands: count,
+        // // /**
+        // //  * The minimum confidence score for the hand detection to be considered
+        // //  * successful. Defaults to 0.5.
+        // //  */
+        minHandDetectionConfidence: 0.1,
+        // // /**
+        // //  * The minimum confidence score of hand presence score in the hand landmark
+        // //  * detection. Defaults to 0.5.
+        // //  */
+        minHandPresenceConfidence: 0.1,
+        // // /**
+        // //  * The minimum confidence score for the hand tracking to be considered
+        // //  * successful. Defaults to 0.5.
+        // //  */
+        minTrackingConfidence: 0.1,
       })
 
       let raycaster = new Raycaster()
       let array = []
-      let eachHandPointCount = 2
+      let eachHandPointCount = 5
       let dotCount = count * eachHandPointCount
       for (let i = 0; i < dotCount; i++) {
         array.push(new Object3D())
@@ -100,7 +130,7 @@ export const useMouse = create((set, get) => {
       })
 
       setTimeout(() => {
-        gestureRecognizer.setOptions({ baseOptions: { delegate: 'GPU' } })
+        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' } })
         console.log('set to gpu')
       }, 100)
 
@@ -110,10 +140,12 @@ export const useMouse = create((set, get) => {
           //
           if (video) {
             let nowInMs = Date.now()
-            let result = gestureRecognizer.recognizeForVideo(video, nowInMs, {
-              rotationDegrees: 90,
+            let result = handLandmarker.detectForVideo(video, nowInMs, {
+              // rotationDegrees: 90,
             })
-            if (result && result?.gestures?.length > 0) {
+
+            console.log(result)
+            if (result && result?.landmarks?.length > 0) {
               set({ handResult: result })
 
               array.map((r) => {
@@ -121,10 +153,11 @@ export const useMouse = create((set, get) => {
                 return r
               })
 
-              // console.log(result)
+              console.log(result)
               result.landmarks.forEach((lmk, index) => {
                 //
 
+                console.log(index)
                 let floor_ground = get()?.scene?.getObjectByName('floor_ground')
 
                 {
