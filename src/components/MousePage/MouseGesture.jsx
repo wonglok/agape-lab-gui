@@ -2,6 +2,7 @@ import { Box, Environment, OrbitControls, RenderTexture } from '@react-three/dre
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
+import { PerspectiveCamera } from 'three'
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
 
@@ -16,35 +17,38 @@ export function MouseGesture() {
   }, [scene])
 
   let viewport = useThree((r) => r.viewport)
-  let clonedCam = useMemo(() => camera.clone(), [camera])
-  let cvp = viewport.getCurrentViewport(clonedCam, [0, 0, 10], { width: window.innerWidth, height: window.innerHeight })
-  let max = Math.max(cvp.width, cvp.height)
+
+  let bg = useRef()
+  useFrame(({ controls, size }) => {
+    if (bg.current) {
+      let cvp = viewport.getCurrentViewport(controls.object, controls.target.toArray(), size)
+      bg.current.scale.fromArray([-cvp.width, cvp.height, 1])
+      bg.current.lookAt(...controls.object.position.toArray())
+    }
+  })
 
   return (
     <>
       <group>
         {videoTexture && (
           <>
-            {createPortal(
-              <mesh scale={[-max, max, 1]} position={[0, 0, -10]}>
-                <meshStandardMaterial
-                  depthTest={false}
-                  transparent
-                  opacity={0.1}
-                  map={videoTexture}></meshStandardMaterial>
-                <planeBufferGeometry></planeBufferGeometry>
-              </mesh>,
-              camera,
-            )}
+            <mesh ref={bg} position={[0, 0, 0]}>
+              <meshStandardMaterial
+                depthTest={false}
+                transparent
+                opacity={0.1}
+                map={videoTexture}></meshStandardMaterial>
+              <planeBufferGeometry></planeBufferGeometry>
+            </mesh>
           </>
         )}
         <primitive object={camera}></primitive>
 
-        <Box args={[100, 0.1, 100]} name='floor_ground'>
+        <Box args={[500, 0.1, 500]} name='floor_ground'>
           <meshStandardMaterial color={'#bababa'}></meshStandardMaterial>
         </Box>
 
-        <gridHelper position={[0, 0.3, 0]} args={[100, 100, 0xffffff, 0xff0000]}></gridHelper>
+        <gridHelper position={[0, 0.3, 0]} args={[500, 500, 0xffffff, 0xff0000]}></gridHelper>
         <OrbitControls object-position={[0, 10, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
@@ -81,7 +85,7 @@ function Onehand({ hand }) {
   })
   return (
     <group ref={ref}>
-      <Box></Box>
+      <Box position={[0, 2, 0]} args={[2, 2, 2]}></Box>
     </group>
   )
 }
