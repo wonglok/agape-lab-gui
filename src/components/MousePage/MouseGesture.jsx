@@ -1,6 +1,6 @@
 import { Box, Environment, MeshTransmissionMaterial, OrbitControls, Sphere } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
-import { useFrame, useThree } from '@react-three/fiber'
+import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { DoubleSide, Spherical } from 'three'
 // import { PerspectiveCamera } from 'three'
@@ -23,63 +23,34 @@ export function MouseGesture() {
     useMouse.setState({ scene })
   }, [scene])
 
-  let ref = useRef()
-  useFrame(({ camera, viewport, size }) => {
-    //
-    if (ref.current) {
-      let vp = viewport.getCurrentViewport(camera, [0, 0, 1], size)
-
-      ref.current.scale.x = -vp.width
-      ref.current.scale.y = vp.height
-      ref.current.scale.z = 1
-
-      // ref.current.lookAt(camera.position.x, camera.position.y, camera.position.z)
-    }
-    //
-  })
   return (
     <>
       <group>
-        {videoTexture && (
+        {/* {videoTexture && (
           <>
-            <mesh ref={ref}>
-              <meshStandardMaterial
-                transparent
-                side={DoubleSide}
-                opacity={0.5}
-                map={videoTexture}></meshStandardMaterial>
-              <planeGeometry args={[1, 1]}></planeGeometry>
-            </mesh>
+            {createPortal(
+              <mesh scale={[-7.5, 7.5, 7.5]} position={[0, 0, -5]}>
+                <meshStandardMaterial
+                  transparent
+                  side={DoubleSide}
+                  opacity={0.5}
+                  map={videoTexture}></meshStandardMaterial>
+                <planeGeometry args={[1, 1]}></planeGeometry>
+              </mesh>,
+              camera,
+            )}
           </>
-        )}
+        )} */}
 
         <primitive object={camera}></primitive>
 
         <group name='floor_ground'>
-          <Box userData={{ hoverable: true }} position={[0, 0, -20]} args={[100, 100, 0.5]}>
+          <Box userData={{ hoverable: true }} position={[0, -5, -5]} args={[100, 0.1, 100]}>
             <meshStandardMaterial color={'#bababa'} side={DoubleSide}></meshStandardMaterial>
-          </Box>
-
-          <Box userData={{ draggable: true }} position={[0, 4 - 10, -5]} args={[10, 5, 0.5]}>
-            <meshStandardMaterial color={'#fffff'} side={DoubleSide}></meshStandardMaterial>
-          </Box>
-
-          <Box userData={{ draggable: true }} position={[10, 10 - 10, -5 + 3]} args={[10, 5, 0.5]}>
-            <meshStandardMaterial color={'#fffff'} side={DoubleSide}></meshStandardMaterial>
-          </Box>
-
-          <Box userData={{ draggable: true }} position={[-10, 10 - 10, -5 + 0]} args={[10, 5, 0.5]}>
-            <meshStandardMaterial color={'#fffff'} side={DoubleSide}></meshStandardMaterial>
           </Box>
         </group>
 
-        <OrbitControls
-          object-position={[0, 0, 20 + 0.001]}
-          maxDistance={0.0001}
-          minDistance={0.0001}
-          target={[0, 0, 19]}
-          rotateSpeed={-1}
-          makeDefault></OrbitControls>
+        <OrbitControls object-position={[0, 10, 10]} target={[0, -5, 0]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
 

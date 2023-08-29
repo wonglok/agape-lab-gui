@@ -92,7 +92,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const handCount = 2
+      const handCount = 1
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -115,34 +115,6 @@ export const useMouse = create((set, get) => {
 
       set({ recogizer: gestureRecognizer })
 
-      // const vision = await FilesetResolver.forVisionTasks(
-      //   'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm',
-      // )
-
-      // const handLandmarker = await HandLandmarker.createFromOptions(vision, {
-      //   baseOptions: {
-      //     modelAssetPath: `/finger/hand_landmarker.task`,
-      //     delegate: 'GPU',
-      //   },
-      //   // runningMode: 'IMAGE',
-      //   runningMode: 'VIDEO',
-      //   numHands: handCount,
-      //   // // /**
-      //   // //  * The minimum confidence score for the hand detection to be considered
-      //   // //  * successful. Defaults to 0.5.
-      //   // //  */
-      //   minHandDetectionConfidence: 0.1,
-      //   // // /**
-      //   // //  * The minimum confidence score of hand presence score in the hand landmark
-      //   // //  * detection. Defaults to 0.5.
-      //   // //  */
-      //   minHandPresenceConfidence: 0.1,
-      //   // // /**
-      //   // //  * The minimum confidence score for the hand tracking to be considered
-      //   // //  * successful. Defaults to 0.5.
-      //   // //  */
-      //   minTrackingConfidence: 0.1,
-      // })
       let handLandmarker = gestureRecognizer
 
       let raycaster = new Raycaster()
@@ -156,21 +128,6 @@ export const useMouse = create((set, get) => {
         r.visible = true
         return r
       })
-
-      let plGeo = new PlaneGeometry(1000000, 1000000)
-      let tempPlane = new Mesh(plGeo)
-      let v0 = new Vector3(0, 0, 0)
-      let v1 = new Vector3(0, 0, 0)
-      let v2 = new Vector3(0, 0, 0)
-      let v3 = new Vector3(0, 0, 0)
-
-      let curve = new CubicBezierCurve3(v0, v1, v2, v3)
-      let tube = new Mesh(undefined, new MeshBasicMaterial({ color: '#ff0000' }))
-      if (!get().scene.children.includes(tube)) {
-        get().scene.add(tube)
-      }
-
-      get().scene.add(tube)
 
       set({
         hands: array,
@@ -194,7 +151,7 @@ export const useMouse = create((set, get) => {
                 //
                 let gestureInfo = result.gestures[handIndex]
 
-                console.log(handIndex, gestureInfo[0]?.categoryName)
+                // console.log(handIndex, gestureInfo[0]?.categoryName)
 
                 let floor_ground = get()?.scene?.getObjectByName('floor_ground')
 
@@ -309,80 +266,6 @@ export const useMouse = create((set, get) => {
                     }
                   }
                 }
-
-                ////////
-
-                // {
-                //   // raycaster.setFromCamera({ x: x, y: y }, get().camera)
-
-                //   // if (floor_ground) {
-                //   //   let res = raycaster.intersectObject(floor_ground, true)
-                //   //   if (res && res[0]) {
-                //   //     ptA.copy(res[0]?.point)
-                //   //   }
-                //   // }
-
-                //   let indexRoot = 9
-                //   let x = (lmk[indexRoot].x * 2.0 - 1.0) * -1
-                //   let y = (lmk[indexRoot].y * 2.0 - 1.0) * -1
-
-                //   let palmRoot = 0
-                //   let x2 = (lmk[palmRoot].x * 2.0 - 1.0) * -1
-                //   let y2 = (lmk[palmRoot].y * 2.0 - 1.0) * -1
-
-                //   let mix = (a, b, r) => {
-                //     return a * (1.0 - r) + b * r
-                //   }
-
-                //   raycaster.setFromCamera({ x: mix(x, x2, 0.5), y: mix(y, y2, 0.5) }, get().camera)
-
-                //   if (floor_ground) {
-                //     let res = raycaster.intersectObject(floor_ground, true)
-                //     let idx = res.findIndex((r) => r.uuid === get()?.handID)
-                //     if (idx === -1) {
-                //       idx = 0
-                //     }
-                //     if (res && res[idx]) {
-                //       let pt = res[idx]?.point
-
-                //       let found = res[idx].object
-
-                //       if (tempPlane && (found?.userData?.draggable || found?.userData?.hoverable)) {
-                //         tempPlane.position.copy(pt)
-                //         tempPlane.lookAt(get().camera.position)
-
-                //         let tempCoordRes = raycaster.intersectObject(tempPlane, true)
-                //         if (found?.userData?.draggable && gestureInfo[0]?.categoryName === 'Closed_Fist') {
-                //           if (!get().handID) {
-                //             set({ handID: found.uuid })
-                //           }
-                //         }
-
-                //         if (get().handID === found.uuid) {
-                //           if (gestureInfo[0]?.categoryName === 'Closed_Fist') {
-                //             if (tempCoordRes && tempCoordRes[0]?.point) {
-                //               let tempCoord = tempCoordRes[0]?.point
-                //               found.position.set(tempCoord.x, tempCoord.y, found.position.z)
-                //             }
-                //           } else {
-                //             set({ handID: false })
-                //           }
-                //         }
-
-                //         if (array[handIndex * eachHandPointCount + 5]) {
-                //           array[handIndex * eachHandPointCount + 5].position.set(pt.x, pt.y, found.position.z)
-                //           array[handIndex * eachHandPointCount + 5].visible = true
-                //           array[handIndex * eachHandPointCount + 5].userData = {
-                //             gestureInfo: gestureInfo,
-                //             handIndex: handIndex,
-                //           }
-                //         }
-                //       }
-                //     }
-                //   }
-                // }
-
-                ////////
               })
             }
 
