@@ -135,7 +135,7 @@ export const useMouse = create((set, get) => {
       let handRootOfFristHand = array[0 * eachHandPointCount + 7]
 
       handRootOfFristHand.clear()
-      let stick = new Mesh(new BoxGeometry(0.04, 0.04, 5), new MeshBasicMaterial({ color: 0xff0000 }))
+      let stick = new Mesh(new BoxGeometry(0.02, 0.02, 5), new MeshBasicMaterial({ color: 0xff0000 }))
       stick.geometry.translate(0, 0, 5 / 2)
       stick.name = 'handFingerStick'
       stick.visible = false
