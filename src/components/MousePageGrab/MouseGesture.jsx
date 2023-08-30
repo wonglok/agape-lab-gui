@@ -47,6 +47,7 @@ export function MouseGesture() {
   useFrame((st, dt) => {
     useMouse.getState().onLoop(st, dt)
   })
+
   // useEffect(() => {
   //   useMouse.getState().initVideo()
   //   useMouse.getState().initTask()
