@@ -12,9 +12,11 @@ import {
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
-import { DoubleSide, Spherical, Vector3 } from 'three'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
-import { Vector2 } from 'three'
+import { Vector3 } from 'three'
+
+//DoubleSide, Spherical,
+// import { Bloom, EffectComposer } from '@react-three/postprocessing'
+// import { Vector2 } from 'three'
 // import { PerspectiveCamera } from 'three'
 
 // import { WorldBirdy } from '../worldbirdy/WorldBirdy'
