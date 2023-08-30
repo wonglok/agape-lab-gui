@@ -33,6 +33,7 @@ export function MouseGesture() {
   }, [scene])
 
   let viewport = useThree((r) => r.viewport)
+
   let controls = useThree((r) => r.controls)
 
   useEffect(() => {
