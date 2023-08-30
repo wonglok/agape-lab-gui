@@ -151,16 +151,11 @@ export const useMouse = create((set, get) => {
       let dir = new Vector3()
 
       let plane = new Mesh(
-        new PlaneGeometry(1000, 1000),
+        new PlaneGeometry(1000, 1000, 100, 100),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
-      plane.position.z = -100
+      plane.position.z = -5
       plane.name = 'raycast-plane'
-
-      if (get()?.scene?.getObjectByName('raycast-plane')) {
-        get()?.scene?.getObjectByName('raycast-plane').removeFromParent()
-      }
-      get().scene.add(plane)
 
       let targetGoal = new Vector3()
 
