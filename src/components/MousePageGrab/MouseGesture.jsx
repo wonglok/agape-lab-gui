@@ -154,6 +154,10 @@ function Init() {
 
     useMouse.getState().initVideo()
     useMouse.getState().initTask()
+
+    return () => {
+      useMouse.getState().cleanMini()
+    }
   }, [scene, gl, camera, collider, inited])
 
   return null

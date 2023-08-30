@@ -37,6 +37,7 @@ export const useMouse = create((set, get) => {
     showStartMenu: true,
     video: false,
     videoTexture: false,
+    cleanMini: () => {},
     onLoop: () => {},
     cancel: () => {},
     cleanVideoTexture: () => {},
@@ -160,6 +161,11 @@ export const useMouse = create((set, get) => {
         color: new Color('#ffffff'),
       })
 
+      set({
+        cleanMini: () => {
+          tail.mini.clean()
+        },
+      })
       let ray = new Ray()
       set({
         onLoop: (st, dt) => {
