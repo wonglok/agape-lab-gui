@@ -698,8 +698,8 @@ export class CursorTrackerTail {
         },
         update: ({ origin, orbit }) => {
           //
-          origin.rotation.z += 0.1
-          orbit.position.x = 0.35 + 0.35 * Math.sin((window.performance.now() / 1000) * 1)
+          origin.rotation.z += 0.05
+          orbit.position.x = 1.2 + 0.8 * Math.sin((window.performance.now() / 1000) * 1)
           //
         },
       })

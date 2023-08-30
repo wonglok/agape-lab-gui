@@ -185,13 +185,13 @@ export const useMouse = create((set, get) => {
 
             let res = boundsTree.raycastFirst(ray, DoubleSide)
 
-            if (res) {
-              cursor.position.copy(res.point)
-            }
-
             let activeObjects = get().activeObjects
             if (activeObjects && activeObjects.length > 0) {
               cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.4)
+            } else {
+              if (res) {
+                cursor.position.lerp(res.point, 0.1)
+              }
             }
           }
           // console.log(cursor.position)
