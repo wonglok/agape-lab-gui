@@ -114,7 +114,7 @@ export const useMouse = create((set, get) => {
       })
 
       setTimeout(() => {
-        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount })
+        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount, runningMode: 'VIDEO' })
         console.log('set to gpu')
       }, 100)
 
@@ -156,7 +156,13 @@ export const useMouse = create((set, get) => {
 
       set({
         onLoop: () => {
+          //
+          //
+          //
           ///!SECTION
+          //
+          //
+          //
 
           {
             let handIndex = 0
