@@ -360,25 +360,28 @@ export function MindARCompilerHologram() {
       <div className='absolute top-0 left-0 flex flex-col items-center justify-center w-full h-full'>
         {!noGUI && qrCode && start && (
           <>
-            <button
-              className='p-2 m-1 bg-blue-300 rounded-2xl'
-              onClick={() => {
-                // start()
-                // // let input = document.createElement('input')
-                // // input.type = 'file'
-                // // input.onchange = () => {
-                // //   let file = input.files[0]
-                // //   compile({ fileURL: `${URL.createObjectURL(file)}`, autoStart: true })
-                // // }
-                // // input.click()
+            <div>1. Open this image on another device to be scanned</div>
+            <div>
+              <button
+                className='p-2 m-1 bg-blue-300 rounded-2xl'
+                onClick={() => {
+                  // start()
+                  // // let input = document.createElement('input')
+                  // // input.type = 'file'
+                  // // input.onchange = () => {
+                  // //   let file = input.files[0]
+                  // //   compile({ fileURL: `${URL.createObjectURL(file)}`, autoStart: true })
+                  // // }
+                  // // input.click()
 
-                start()
+                  start()
 
-                // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png`, autoStart: false })
-              }}>
-              Start
-            </button>
-            {progress}
+                  // compile({ fileURL: `/2023/06/agape-ar-target/white/agape-white.png`, autoStart: false })
+                }}>
+                2. Start Scanning
+              </button>
+              {progress}
+            </div>
             <img className='max-w-full w-96' src={qrCode}></img>
           </>
         )}
