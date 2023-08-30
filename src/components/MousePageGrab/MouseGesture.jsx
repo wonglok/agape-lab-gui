@@ -100,7 +100,7 @@ export function MouseGesture() {
         <Hand></Hand>
 
         <Suspense fallback={null}>
-          <group position={[0, -5, 10]} scale={5}>
+          <group position={[0, -5 * 3, 10 * 0]} scale={5 * 2}>
             <BG></BG>
           </group>
         </Suspense>
