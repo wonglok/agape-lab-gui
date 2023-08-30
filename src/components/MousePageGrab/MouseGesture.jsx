@@ -132,7 +132,7 @@ function Onehand({ hand }) {
 
   return (
     <group ref={ref}>
-      <Sphere frustumCulled={false} position={[0, 0, 0]} args={[0.235, 25, 25]}>
+      <Sphere frustumCulled={false} position={[0, 0, 0]} args={[0.1, 25, 25]}>
         <meshPhysicalMaterial color={'#0000ff'} metalness={1} roughness={0.0}></meshPhysicalMaterial>
       </Sphere>
     </group>
