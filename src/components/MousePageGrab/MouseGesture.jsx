@@ -43,21 +43,12 @@ export function MouseGesture() {
   return (
     <>
       <group>
-        {/* {videoTexture && (
-          <>
-            {createPortal(
-              <mesh scale={[-7.5, 7.5, 7.5]} position={[0, 0, -5]}>
-                <meshStandardMaterial
-                  transparent
-                  side={DoubleSide}
-                  opacity={0.5}
-                  map={videoTexture}></meshStandardMaterial>
-                <planeGeometry args={[1, 1]}></planeGeometry>
-              </mesh>,
-              camera,
-            )}
-          </>
-        )} */}
+        {videoTexture && <>{createPortal(<></>, camera)}</>}
+
+        {/* <mesh scale={[-7.5, 7.5, 7.5]} position={[0, 5, -10]}>
+          <meshStandardMaterial transparent side={DoubleSide} opacity={0.5} map={videoTexture}></meshStandardMaterial>
+          <planeGeometry args={[1, 1]}></planeGeometry>
+        </mesh> */}
 
         <primitive object={camera}></primitive>
 
@@ -77,7 +68,7 @@ export function MouseGesture() {
 
         <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xff0000, 0xff0000]}></gridHelper>
 
-        <OrbitControls object-position={[0, 10, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
+        <OrbitControls object-position={[0, 3, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
 

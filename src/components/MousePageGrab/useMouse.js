@@ -1,5 +1,5 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { CubicBezierCurve3, MeshBasicMaterial } from 'three'
+import { Color, CubicBezierCurve3, MeshBasicMaterial } from 'three'
 import { BoxGeometry } from 'three'
 import { CubicBezierCurve, TubeGeometry } from 'three'
 import {
@@ -24,6 +24,8 @@ export const useMouse = create((set, get) => {
     scene: false,
     camera: false,
 
+    picking: [],
+    activeObjects: [],
     activeUUID: false,
 
     viewport: false,
@@ -147,12 +149,44 @@ export const useMouse = create((set, get) => {
 
       let raycaster = new Raycaster()
       let dir = new Vector3()
+
+      let plane = new Mesh(new PlaneGeometry(1000, 1000))
+
+      let targetGoal = new Vector3()
+
       set({
         onLoop: () => {
-          //
+          {
+            let handIndex = 0
+            let beforeTip = array[handIndex * eachHandPointCount + 7]
+            let indexTip = array[handIndex * eachHandPointCount + 8]
+            beforeTip.lookAt(indexTip.position)
+            let picking = get()?.picking || []
 
-          handRootOfFristHand.getWorldPosition(stick.position)
-          handRootOfFristHand.getWorldQuaternion(stick.quaternion)
+            picking.forEach((it) => {
+              if (it) {
+                it.getWorldPosition(plane.position)
+
+                plane.lookAt(get().camera.position)
+
+                let raycaster = new Raycaster()
+                beforeTip.getWorldDirection(dir)
+                raycaster.set(beforeTip.position, dir)
+
+                raycaster.firstHitOnly = true
+                let results = raycaster.intersectObject(plane)
+                let result = results[0]
+
+                if (it && it.material && result) {
+                  it.material.transparent = true
+                  it.material.opacity = 0.5
+                  targetGoal.set(result.point.x, result.point.y, it.position.z)
+
+                  it.position.lerp(targetGoal, 0.35)
+                }
+              }
+            })
+          }
         },
         hands: array,
         runProcessVideoFrame: ({ video }) => {
@@ -205,32 +239,70 @@ export const useMouse = create((set, get) => {
 
                   {
                     let beforeTip = array[handIndex * eachHandPointCount + 7]
-                    let tip = array[handIndex * eachHandPointCount + 8]
-                    beforeTip.lookAt(tip.position)
+                    let indexTip = array[handIndex * eachHandPointCount + 8]
+                    beforeTip.lookAt(indexTip.position)
 
                     //
                     beforeTip.getWorldDirection(dir)
                     raycaster.set(beforeTip.position, dir)
 
                     let casterGroup = get().scene.getObjectByName('raycast-group')
-                    if (casterGroup) {
-                      raycaster.firstHitOnly = true
+                    if (casterGroup && get()?.picking?.length === 0) {
+                      raycaster.firstHitOnly = false
                       let res = raycaster.intersectObject(casterGroup, true)
-                      casterGroup.traverse((it) => {
-                        if (it.material) {
-                          it.material.emissive.set(0x000000)
-                        }
-                      })
+
                       if (res) {
-                        res
-                          .map((r) => r.object)
-                          .forEach((it) => {
-                            if (it.material) {
-                              it.material.emissive.set(0xffffff)
-                            }
-                          })
+                        get().activeObjects?.forEach((it) => {
+                          if (it) {
+                            it.material.emissive = new Color(0x000000)
+                          }
+                        })
+                        set({
+                          activeObjects: res.map((r) => {
+                            let it = r.object
+
+                            it.userData.raycastPoint = r.point
+
+                            it.material.emissive = new Color(0x555555)
+
+                            return it
+                          }),
+                        })
                       }
                     }
+                  }
+
+                  {
+                    handRootOfFristHand.getWorldPosition(stick.position)
+                    handRootOfFristHand.getWorldQuaternion(stick.quaternion)
+
+                    get().handResult?.landmarks?.forEach((lmk, handIndex) => {
+                      //
+
+                      {
+                        let thumbTip = array[handIndex * eachHandPointCount + 4]
+                        let midTip = array[handIndex * eachHandPointCount + 12]
+
+                        if (thumbTip.position.distanceTo(midTip.position) > 0.75) {
+                          set((b4) => {
+                            if (b4.picking && b4.picking.length > 0) {
+                              return { ...b4, picking: [] }
+                            } else {
+                              return { ...b4 }
+                            }
+                          })
+                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.6) {
+                          set((b4) => {
+                            if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
+                              return { ...b4, picking: [get()?.activeObjects[0]] }
+                            } else {
+                              return b4
+                            }
+                          })
+                        } else {
+                        }
+                      }
+                    })
                   }
 
                   // let gestureInfo = result.gestures[handIndex]
@@ -253,8 +325,6 @@ export const useMouse = create((set, get) => {
                 //
               }
             }
-
-            set({ hands: array.filter((r) => r.visible) })
           }
         },
       })

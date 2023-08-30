@@ -2,10 +2,11 @@ import { Canvas } from '@react-three/fiber'
 import { MouseGesture } from './MouseGesture'
 import { useMouse } from './useMouse.js'
 import { Stats } from '@react-three/drei'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 // import { useEffect } from 'react'
 export function MousePageGrab() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
+  let video = useMouse((r) => r.video)
   let loading = useMouse((r) => r.loading)
 
   useEffect(() => {
@@ -44,6 +45,24 @@ export function MousePageGrab() {
           }
         </div>
       )}
+
+      {video && (
+        <div className='absolute top-0 right-0'>
+          <InsertV dom={video}></InsertV>
+        </div>
+      )}
     </>
   )
+}
+
+function InsertV({ dom }) {
+  let ref = useRef()
+  useEffect(() => {
+    let target = ref.current
+    ref.current.appendChild(dom)
+    return () => {
+      target.innerHTML = ''
+    }
+  }, [dom])
+  return <div className='w-36 -scale-x-100' ref={ref}></div>
 }
