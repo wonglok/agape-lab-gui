@@ -45,6 +45,7 @@
     "nipplejs": "^0.10.1",
     "nprogress": "^0.2.0",
     "postprocessing": "^6.30.1",
+    "qrcode": "^1.5.3",
     "r3f-perf": "^7.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

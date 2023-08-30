@@ -23,6 +23,12 @@ const pages = [
   //src/pages/blog/2023/07/28/ClothSimPage.jsx
   {
     key: md5(v4()),
+    url: `/blog/2023/08/27/compiler`,
+    name: `ARCompiler Hologram`,
+    date: '2023-07-28',
+  },
+  {
+    key: md5(v4()),
     url: `/blog/2023/08/27/mouse2`,
     name: `WebcamMouseGrab`,
     date: '2023-07-28',

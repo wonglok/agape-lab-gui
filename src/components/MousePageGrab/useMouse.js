@@ -145,9 +145,10 @@ export const useMouse = create((set, get) => {
 
       set({
         onLoop: () => {
+          //
           {
             let handIndex = 0
-            let beforeTip = array[handIndex * eachHandPointCount + 7]
+            let beforeTip = array[handIndex * eachHandPointCount + 6]
             let indexTip = array[handIndex * eachHandPointCount + 8]
             beforeTip.lookAt(indexTip.position)
             let picking = get()?.picking || []
