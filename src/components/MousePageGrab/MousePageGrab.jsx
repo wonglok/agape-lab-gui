@@ -8,13 +8,20 @@ export function MousePageGrab() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
   let video = useMouse((r) => r.video)
   let loading = useMouse((r) => r.loading)
-  let scene = useMouse((r) => r.scene)
+  // let scene = useMouse((r) => r.scene)
+  // let camera = useMouse((r) => r.camera)
+  // let controls = useMouse((r) => r.controls)
+  // useEffect(() => {
+  //   if (showStartMenu && scene && camera && controls) {
+  //     useMouse.getState().initVideo()
+  //     useMouse.getState().initTask()
+  //   }
+  // }, [showStartMenu, scene, camera, controls])
+
   useEffect(() => {
-    if (showStartMenu && scene) {
-      useMouse.getState().initVideo()
-      useMouse.getState().initTask()
-    }
-  }, [showStartMenu, scene])
+    useMouse.getState().initVideo()
+    useMouse.getState().initTask()
+  }, [])
   return (
     <>
       <Canvas

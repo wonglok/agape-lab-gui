@@ -168,7 +168,7 @@ function OneHand({ hand }) {
   let ref = useRef()
   useFrame(() => {
     if (ref.current) {
-      ref.current.position.lerp(hand.position, 0.9)
+      ref.current.position.lerp(hand.position, 0.2)
       ref.current.visible = hand.visible
     }
   })
