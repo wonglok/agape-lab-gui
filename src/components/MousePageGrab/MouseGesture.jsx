@@ -71,21 +71,25 @@ export function MouseGesture() {
             <Computer></Computer>
           </group>
 
-          <Sphere args={[1, 32, 32]} scale={1} position={[-3, 4, -3]}>
-            <MeshTransmissionMaterial
-              thickness={1.5}
-              transmission={1}
-              reflectivity={1}
-              roughness={0.15}></MeshTransmissionMaterial>
-          </Sphere>
+          <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -3]}>
+            <Sphere args={[1, 32, 32]}>
+              <MeshTransmissionMaterial
+                thickness={1.5}
+                transmission={1}
+                reflectivity={1}
+                roughness={0.15}></MeshTransmissionMaterial>
+            </Sphere>
+          </group>
 
-          <Sphere args={[1, 32, 32]} scale={1} position={[-2, 2, -3]}>
-            <MeshTransmissionMaterial
-              thickness={1.5}
-              transmission={1}
-              reflectivity={1}
-              roughness={0.15}></MeshTransmissionMaterial>
-          </Sphere>
+          <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -3]}>
+            <Sphere args={[1, 32, 32]}>
+              <MeshTransmissionMaterial
+                thickness={1.5}
+                transmission={1}
+                reflectivity={1}
+                roughness={0.15}></MeshTransmissionMaterial>
+            </Sphere>
+          </group>
         </group>
 
         {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
