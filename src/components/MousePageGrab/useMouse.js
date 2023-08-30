@@ -204,6 +204,9 @@ export const useMouse = create((set, get) => {
               r.visible = false
               return r
             })
+            {
+              stick.visible = false
+            }
 
             let cam = get().camera
             let target = get().controlsTarget
@@ -213,6 +216,10 @@ export const useMouse = create((set, get) => {
 
               if (vp && result && result?.landmarks?.length > 0) {
                 set({ handResult: result })
+
+                {
+                  stick.visible = true
+                }
 
                 result.landmarks.forEach((lmk, handIndex) => {
                   let vpx = (lmk[0].x * 2.0 - 1.0) * 0.75 * vp.width
@@ -231,10 +238,6 @@ export const useMouse = create((set, get) => {
                     hand.position.z += -vpz
 
                     hand.visible = true
-                  }
-
-                  {
-                    stick.visible = true
                   }
 
                   {
