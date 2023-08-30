@@ -7,6 +7,7 @@ import {
   Sphere,
   Plane,
   useGLTF,
+  MeshDiscardMaterial,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
@@ -66,13 +67,13 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group name='raycast-group'>
-          <Sphere args={[1, 32, 32]} scale={1} position={[3, 3, -3]}>
-            <MeshTransmissionMaterial
-              thickness={1.5}
-              transmission={1}
-              reflectivity={1}
-              roughness={0.15}></MeshTransmissionMaterial>
-          </Sphere>
+          <Box args={[2, 2, 2]} scale={1} position={[1, 3, -1]}>
+            <MeshDiscardMaterial></MeshDiscardMaterial>
+
+            <group position={[0, 0, 0]} scale={1}>
+              <Computer></Computer>
+            </group>
+          </Box>
 
           <Sphere args={[1, 32, 32]} scale={1} position={[-3, 4, -3]}>
             <MeshTransmissionMaterial
@@ -111,10 +112,13 @@ export function MouseGesture() {
     </>
   )
 }
+
+function Computer() {
+  let gltf = useGLTF(`/mini-homes/computer.glb`)
+  return <primitive object={gltf.scene} />
+}
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
-  //
-
   return <primitive object={gltf.scene} />
 }
 // function World() {
