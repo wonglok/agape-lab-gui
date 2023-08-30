@@ -111,22 +111,13 @@ export function MouseGesture() {
 }
 
 function SelectiveBloomRender() {
-  let bloomMeshes = useMouse((r) => r.bloomMeshes)
-  let bloomLights = useMouse((r) => r.bloomLights)
+  // let bloomMeshes = useMouse((r) => r.bloomMeshes)
+  // let bloomLights = useMouse((r) => r.bloomLights)
 
   return (
     <>
       <EffectComposer multisampling={4} disableNormalPass>
-        <N8AO intensity={5}></N8AO>
-        <SelectiveBloom
-          lights={bloomLights}
-          selection={bloomMeshes}
-          selectionLayer={10}
-          luminanceThreshold={0.5}
-          intensity={3}
-          mipmapBlur
-          height={300}
-        />
+        <N8AO intensity={5} aoRadius={3}></N8AO>
       </EffectComposer>
     </>
   )

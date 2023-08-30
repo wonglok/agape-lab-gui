@@ -11,6 +11,7 @@ import {
   Mesh,
   Object3D,
   Color,
+  CylinderGeometry,
 } from 'three'
 // import { GPUComputationRenderer } from 'three-stdlib'
 // import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
@@ -419,7 +420,7 @@ class LokLokWiggleDisplay {
 
           vT = t;
 
-          vec2 volume = vec2(0.01, 0.01);
+          vec2 volume = vec2(0.01, 0.01) * 3.0;
           createTube(t, volume, transformed, objectNormal);
 
           vec3 transformedNormal = normalMatrix * objectNormal;
@@ -530,7 +531,7 @@ class NoodleGeo {
     const radius = 1
     const length = 1
 
-    const cylinderBufferGeo = new CylinderBufferGeometry(radius, radius, length, numSides, subdivisions, openEnded)
+    const cylinderBufferGeo = new CylinderGeometry(radius, radius, length, numSides, subdivisions, openEnded)
 
     let baseGeometry = new Geometry()
     baseGeometry = baseGeometry.fromBufferGeometry(cylinderBufferGeo)
