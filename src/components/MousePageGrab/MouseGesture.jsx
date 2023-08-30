@@ -53,8 +53,6 @@ export function MouseGesture() {
   //   useMouse.getState().initTask()
   // }, [])
 
-  //
-
   return (
     <>
       <group>
