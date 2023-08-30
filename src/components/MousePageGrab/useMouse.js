@@ -152,22 +152,28 @@ export const useMouse = create((set, get) => {
             let indexTip = array[handIndex * eachHandPointCount + 8]
             beforeTip.lookAt(indexTip.position)
             let picking = get()?.picking || []
-            picking.forEach((it) => {
-              if (it) {
-                it.getWorldPosition(plane.position)
-                plane.lookAt(get().camera.position)
-                let raycaster = new Raycaster()
-                beforeTip.getWorldDirection(dir)
-                raycaster.set(beforeTip.position, dir)
-                raycaster.firstHitOnly = true
-                let results = raycaster.intersectObject(plane)
-                let result = results[0]
-                if (it && it.material && result) {
-                  it.material.transparent = true
-                  it.material.opacity = 0.5
-                  targetGoal.set(result.point.x, result.point.y, it.position.z)
-                  it.position.lerp(targetGoal, 0.35)
-                }
+            picking.forEach((picked) => {
+              if (picked) {
+                picked.traverseAncestors((it) => {
+                  if (it?.userData?.dragGroup) {
+                    console.log(it)
+
+                    picked.getWorldPosition(plane.position)
+                    plane.lookAt(get().camera.position)
+                    let raycaster = new Raycaster()
+                    beforeTip.getWorldDirection(dir)
+                    raycaster.set(beforeTip.position, dir)
+                    raycaster.firstHitOnly = true
+                    let results = raycaster.intersectObject(plane)
+                    let result = results[0]
+                    if (picked && picked.material && result) {
+                      picked.material.transparent = true
+                      picked.material.opacity = 0.5
+                      targetGoal.set(result.point.x, result.point.y, it.position.z)
+                      it.position.lerp(targetGoal, 0.35)
+                    }
+                  }
+                })
               }
             })
           }

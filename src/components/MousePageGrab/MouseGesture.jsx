@@ -67,13 +67,9 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group name='raycast-group'>
-          <Box args={[2, 2, 2]} scale={1} position={[1, 3, -1]}>
-            <MeshDiscardMaterial></MeshDiscardMaterial>
-
-            <group position={[0, 0, 0]} scale={1}>
-              <Computer></Computer>
-            </group>
-          </Box>
+          <group userData={{ dragGroup: true }} position={[1, 3, -1]} scale={1}>
+            <Computer></Computer>
+          </group>
 
           <Sphere args={[1, 32, 32]} scale={1} position={[-3, 4, -3]}>
             <MeshTransmissionMaterial
