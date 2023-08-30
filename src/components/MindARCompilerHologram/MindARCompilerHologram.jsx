@@ -42,6 +42,7 @@ import { Bloom, DepthOfField, EffectComposer, SelectiveBloom, Texture } from '@r
 import * as QRCode from 'qrcode'
 // import { EnergySpaFa } from '../EnergySpaFa/EnergySpaFa'
 import { useMindAR } from './useMindAR'
+import { LoopThroughHolograms } from './Hologram/HologramV7'
 // import * as MindARCore from
 // console.log(MindARCore)
 
@@ -126,13 +127,14 @@ export function MindARCompilerHologram() {
         const material = new MeshBasicMaterial({
           color: 0x333333,
           transparent: true,
-          opacity: 0.9,
+          opacity: 0.5,
           depthWrite: false,
           depthTest: false,
           side: DoubleSide,
         })
         const plane = new Mesh(geometry, material)
         plane.frustumCulled = false
+        plane.visible = false
 
         const anchor = mindarThree.addAnchor(0)
         anchor.group.add(plane)
@@ -330,7 +332,9 @@ export function MindARCompilerHologram() {
         {anchorGroup &&
           createPortal(
             <group position={[0.0, 0, 0]}>
-              <Box></Box>
+              {/* <Box></Box> */}
+
+              <LoopThroughHolograms></LoopThroughHolograms>
 
               <group frustumCulled={false} rotation={[Math.PI * 0.0, 0, 0]} scale={0.08}>
                 {/* <EnergySpa meshRef={meshRef}></EnergySpa> */}
@@ -344,7 +348,7 @@ export function MindARCompilerHologram() {
           <PPSwitch useStore={useStore}></PPSwitch> */}
         <CamSync></CamSync>
         <EffectComposer disableNormalPass multisampling={0}>
-          <Bloom intensity={7} luminanceThreshold={0.5} mipmapBlur={true}></Bloom>
+          {/* <Bloom intensity={7} luminanceThreshold={0.5} mipmapBlur={true}></Bloom> */}
           {/* <DepthOfField></DepthOfField> */}
           {/* <SelectiveBloom luminanceThreshold={0.3} mipmapBlur intensity={2} /> */}
         </EffectComposer>
