@@ -51,18 +51,19 @@ export const useMouse = create((set, get) => {
       video.playsInline = true
       let width = window.innerWidth
       let height = window.innerHeight
-      if (width >= height) {
-        video.width = 512
-        video.height = 512 * (height / width)
-      }
-      if (width < height) {
-        video.width = 512 * (width / height)
-        video.height = 512
-      }
+      // if (width >= height) {
+      //   video.width = 512
+      //   video.height = 512 * (height / width)
+      // }
+      // if (width < height) {
+      //   video.width = 512 * (width / height)
+      //   video.height = 512
+      // }
+
       let stream = navigator.mediaDevices.getUserMedia({
         video: {
-          width: width,
-          height: height,
+          width: 512,
+          height: 512,
         },
       })
       stream.then((r) => {
@@ -281,7 +282,7 @@ export const useMouse = create((set, get) => {
                     goal.position.z += -vpz
                     goal.position.z += 0
 
-                    hand.position.lerp(goal.position, 0.1)
+                    hand.position.lerp(goal.position, 0.3)
                     hand.visible = true
 
                     // if (bone === 7) {
