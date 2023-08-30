@@ -67,7 +67,7 @@ export function MouseGesture() {
           </Sphere>
         </group>
 
-        {/* <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xff0000, 0xff0000]}></gridHelper> */}
+        <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper>
 
         <OrbitControls object-position={[0, 3, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
