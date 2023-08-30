@@ -134,7 +134,7 @@ export const useMouse = create((set, get) => {
         return r
       })
 
-      let handRootOfFristHand = array[0 * eachHandPointCount + 7]
+      let handRootOfFristHand = array[0 * eachHandPointCount + 0]
       handRootOfFristHand.clear()
 
       let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
@@ -159,6 +159,9 @@ export const useMouse = create((set, get) => {
 
       let targetGoal = new Vector3()
 
+      let midThumbIndex = new Object3D()
+      let midSegThumbIndex = new Object3D()
+
       set({
         onLoop: () => {
           //
@@ -170,10 +173,6 @@ export const useMouse = create((set, get) => {
           //
 
           {
-            let handIndex = 0
-            let beforeTip = array[handIndex * eachHandPointCount + 7]
-            let indexTip = array[handIndex * eachHandPointCount + 8]
-            beforeTip.lookAt(indexTip.position)
             let picking = get()?.picking || []
 
             picking.forEach((it) => {
@@ -183,8 +182,8 @@ export const useMouse = create((set, get) => {
                 plane.lookAt(get().camera.position)
 
                 let raycaster = new Raycaster()
-                beforeTip.getWorldDirection(dir)
-                raycaster.set(beforeTip.position, dir)
+                stick.getWorldDirection(dir)
+                raycaster.set(stick.position, dir)
 
                 raycaster.firstHitOnly = true
                 let results = raycaster.intersectObject(plane)
@@ -263,13 +262,24 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    let beforeTip = array[handIndex * eachHandPointCount + 7]
+                    let rootSeg = array[handIndex * eachHandPointCount + 0]
+                    let indexTipSeg = array[handIndex * eachHandPointCount + 7]
+                    let thumbTipSeg = array[handIndex * eachHandPointCount + 3]
+                    midSegThumbIndex.position.lerpVectors(indexTipSeg.position, thumbTipSeg.position, 0.5)
+
                     let indexTip = array[handIndex * eachHandPointCount + 8]
-                    beforeTip.lookAt(indexTip.position)
+                    let thumbTip = array[handIndex * eachHandPointCount + 4]
+                    midThumbIndex.position.lerpVectors(indexTip.position, thumbTip.position, 0.5)
+
+                    rootSeg.lookAt(midThumbIndex.position)
 
                     //
-                    beforeTip.getWorldDirection(dir)
-                    raycaster.set(beforeTip.position, dir)
+                    rootSeg.getWorldPosition(stick.position)
+                    rootSeg.getWorldQuaternion(stick.quaternion)
+
+                    //
+                    stick.getWorldDirection(dir)
+                    raycaster.set(stick.position, dir)
 
                     let casterGroup = get().scene.getObjectByName('raycast-group')
                     if (casterGroup && get()?.picking?.length === 0) {
@@ -298,17 +308,14 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    handRootOfFristHand.getWorldPosition(stick.position)
-                    handRootOfFristHand.getWorldQuaternion(stick.quaternion)
-
                     get().handResult?.landmarks?.forEach((lmk, handIndex) => {
                       //
 
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
-                        let midTip = array[handIndex * eachHandPointCount + 12]
+                        let indexTip = array[handIndex * eachHandPointCount + 8]
 
-                        if (thumbTip.position.distanceTo(midTip.position) > 0.85) {
+                        if (thumbTip.position.distanceTo(indexTip.position) > 0.775) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -316,7 +323,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.6) {
+                        } else if (thumbTip.position.distanceTo(indexTip.position) <= 0.575) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
