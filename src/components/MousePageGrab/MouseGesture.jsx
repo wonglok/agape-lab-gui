@@ -113,7 +113,7 @@ function Hand() {
       {hands.map((r) => {
         return (
           <group key={r.uuid}>
-            <Onehand hand={r}></Onehand>
+            <OneHand hand={r}></OneHand>
           </group>
         )
       })}
@@ -121,7 +121,7 @@ function Hand() {
   )
 }
 
-function Onehand({ hand }) {
+function OneHand({ hand }) {
   let ref = useRef()
   useFrame(() => {
     if (ref.current) {
