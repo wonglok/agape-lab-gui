@@ -60,11 +60,11 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} position={[1, 3, -5]} scale={1}>
+          <group userData={{ dragGroup: true }} position={[1, 3, -2]} scale={1}>
             <Computer></Computer>
           </group>
 
-          <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -5]}>
+          <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -2]}>
             <Sphere args={[1, 32, 32]}>
               <MeshTransmissionMaterial
                 thickness={1.5}
@@ -74,7 +74,7 @@ export function MouseGesture() {
             </Sphere>
           </group>
 
-          <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -5]}>
+          <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -2]}>
             <Sphere args={[1, 32, 32]}>
               <MeshTransmissionMaterial
                 thickness={1.5}
@@ -97,7 +97,7 @@ export function MouseGesture() {
 
         <Suspense fallback={null}>
           <Environment files={`/lok/shanghai.hdr`}></Environment>
-          <group position={[0, -5 * 3, 10 * 0]} scale={5 * 2}>
+          <group position={[0, -1, 10]} scale={2}>
             <BG></BG>
           </group>
         </Suspense>
