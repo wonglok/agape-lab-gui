@@ -97,7 +97,7 @@ export function MouseGesture() {
 
         <Suspense fallback={null}>
           <Environment files={`/lok/shanghai.hdr`}></Environment>
-          <group position={[0, -1, 10]} scale={2}>
+          <group position={[0, -5, 3]} scale={5}>
             <BG></BG>
           </group>
         </Suspense>
