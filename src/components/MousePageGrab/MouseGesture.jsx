@@ -1,4 +1,12 @@
-import { Box, Environment, Icosahedron, MeshTransmissionMaterial, OrbitControls, Sphere } from '@react-three/drei'
+import {
+  Box,
+  Environment,
+  Icosahedron,
+  MeshTransmissionMaterial,
+  OrbitControls,
+  Sphere,
+  Plane,
+} from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
@@ -65,6 +73,10 @@ export function MouseGesture() {
           <Sphere position={[-2, 2, -3]}>
             <meshStandardMaterial color={'blue'}></meshStandardMaterial>
           </Sphere>
+
+          <Box args={[10, 6, 0.1]} position={[0, 2, -6]}>
+            <meshStandardMaterial color={'#bababa'}></meshStandardMaterial>
+          </Box>
         </group>
 
         <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper>
@@ -75,8 +87,8 @@ export function MouseGesture() {
 
         <Hand></Hand>
 
-        <EffectComposer multisampling={4}>
-          <Bloom luminanceThreshold={0.3} intensity={3} mipmapBlur luminanceSmoothing={0.5} height={300} />
+        <EffectComposer multisampling={4} disableNormalPass>
+          <Bloom luminanceThreshold={0.0} intensity={1} mipmapBlur height={300} />
         </EffectComposer>
       </group>
     </>

@@ -161,6 +161,7 @@ export const useMouse = create((set, get) => {
 
       let midThumbIndex = new Object3D()
       let midSegThumbIndex = new Object3D()
+      let pinkyThumbRootMiddle = new Object3D()
 
       set({
         onLoop: () => {
@@ -263,19 +264,24 @@ export const useMouse = create((set, get) => {
 
                   {
                     let rootSeg = array[handIndex * eachHandPointCount + 0]
-                    let indexTipSeg = array[handIndex * eachHandPointCount + 7]
-                    let thumbTipSeg = array[handIndex * eachHandPointCount + 3]
+
+                    // let thumbRoot = array[handIndex * eachHandPointCount + 5]
+                    // let pinkyRoot = array[handIndex * eachHandPointCount + 17]
+                    // pinkyThumbRootMiddle.position.lerpVectors(thumbRoot.position, pinkyRoot.position, 0.5)
+
+                    let indexTipSeg = array[handIndex * eachHandPointCount + 5]
+                    let thumbTipSeg = array[handIndex * eachHandPointCount + 2]
                     midSegThumbIndex.position.lerpVectors(indexTipSeg.position, thumbTipSeg.position, 0.5)
 
                     let indexTip = array[handIndex * eachHandPointCount + 8]
                     let thumbTip = array[handIndex * eachHandPointCount + 4]
                     midThumbIndex.position.lerpVectors(indexTip.position, thumbTip.position, 0.5)
 
-                    rootSeg.lookAt(midThumbIndex.position)
+                    midSegThumbIndex.lookAt(midThumbIndex.position)
 
                     //
-                    rootSeg.getWorldPosition(stick.position)
-                    rootSeg.getWorldQuaternion(stick.quaternion)
+                    midSegThumbIndex.getWorldPosition(stick.position)
+                    midSegThumbIndex.getWorldQuaternion(stick.quaternion)
 
                     //
                     stick.getWorldDirection(dir)
