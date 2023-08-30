@@ -147,10 +147,10 @@ export function LoopThroughHolograms() {
       })
     }
     inter()
-    let tt = setInterval(inter, 10 * 1000)
+    // let tt = setInterval(inter, 10 * 1000)
 
     return () => {
-      clearInterval(tt)
+      // clearInterval(tt)
     }
   }, [])
 
