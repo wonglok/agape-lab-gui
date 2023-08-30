@@ -98,11 +98,10 @@ export function MouseGesture() {
 
         <OrbitControls object-position={[0, 1.6, 10]} target={[0, 1.6, 10 - 1]} makeDefault></OrbitControls>
 
-        <Environment files={`/lok/shanghai.hdr`}></Environment>
-
         <Hand></Hand>
 
         <Suspense fallback={null}>
+          <Environment files={`/lok/shanghai.hdr`}></Environment>
           <group position={[0, -5 * 3, 10 * 0]} scale={5 * 2}>
             <BG></BG>
           </group>
