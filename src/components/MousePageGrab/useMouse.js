@@ -266,7 +266,7 @@ export const useMouse = create((set, get) => {
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
                         let midTip = array[handIndex * eachHandPointCount + 12]
-                        if (thumbTip.position.distanceTo(midTip.position) > 0.6) {
+                        if (thumbTip.position.distanceTo(midTip.position) > 0.7) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -274,7 +274,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.5) {
+                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.55) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
