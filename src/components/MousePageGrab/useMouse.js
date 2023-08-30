@@ -1,5 +1,5 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { Color, CubicBezierCurve3, MathUtils, MeshBasicMaterial } from 'three'
+import { Color, CubicBezierCurve3, DoubleSide, MathUtils, MeshBasicMaterial, Ray } from 'three'
 import { BoxGeometry } from 'three'
 import { CubicBezierCurve, TubeGeometry } from 'three'
 import {
@@ -16,12 +16,15 @@ import {
 // import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
+import { Mini } from './Noodle/Mini'
+import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 
 //
 export const useMouse = create((set, get) => {
   return {
     handID: false,
     //
+    collider: false,
     handResult: false,
     hands: [],
     scene: false,
@@ -39,6 +42,7 @@ export const useMouse = create((set, get) => {
     cleanVideoTexture: () => {},
     runProcessVideoFrame: () => {},
     initVideo: () => {
+      set({ inited: true })
       set({ loading: true })
       let video = document.createElement('video')
       video.playsInline = true
@@ -112,8 +116,8 @@ export const useMouse = create((set, get) => {
         console.log('set to gpu')
       }, 100)
       set({ recogizer: gestureRecognizer })
+
       let handLandmarker = gestureRecognizer
-      // let raycaster = new Raycaster()
       let array = []
       let eachHandPointCount = 21
       let dotCount = handCount * eachHandPointCount // plus 1 for palm
@@ -144,8 +148,48 @@ export const useMouse = create((set, get) => {
       plane.name = 'raycast-plane'
       let targetGoal = new Vector3()
 
+      let cursor = new Object3D()
+      get().scene.add(cursor)
+
+      let tail = new CursorTrackerTail({
+        gl: get().gl,
+        mini: new Mini({}),
+        camera: get().camera,
+        mounter: get().scene,
+        cursor: cursor,
+        color: new Color('#ffffff'),
+      })
+
+      let ray = new Ray()
       set({
-        onLoop: () => {
+        onLoop: (st, dt) => {
+          {
+            tail.mini.work(st, dt)
+            let collider = get().collider
+            let geometry = collider?.geometry
+            let boundsTree = geometry?.boundsTree
+
+            let handIndex = 0
+            let beforeTip = array[handIndex * eachHandPointCount + 6]
+            let indexTip = array[handIndex * eachHandPointCount + 8]
+            beforeTip.lookAt(indexTip.position)
+            beforeTip.getWorldDirection(dir)
+
+            ray.set(beforeTip.position, dir)
+
+            let res = boundsTree.raycastFirst(ray, DoubleSide)
+
+            if (res) {
+              cursor.position.copy(res.point)
+            }
+
+            let activeObjects = get().activeObjects
+            if (activeObjects && activeObjects.length > 0) {
+              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.4)
+            }
+          }
+          // console.log(cursor.position)
+
           //
           {
             let handIndex = 0
@@ -169,7 +213,7 @@ export const useMouse = create((set, get) => {
                       picked.material.transparent = true
                       picked.material.opacity = 0.5
                       targetGoal.set(result.point.x, result.point.y, it.position.z)
-                      it.position.lerp(targetGoal, 0.35)
+                      it.position.lerp(targetGoal, 0.2)
                     }
                   }
                 })
@@ -179,6 +223,9 @@ export const useMouse = create((set, get) => {
 
           ///
         },
+      })
+
+      set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {
           //
@@ -220,42 +267,37 @@ export const useMouse = create((set, get) => {
                     hand.position.z += -vpz
                     hand.position.z += 0
 
-                    hand.visible = false
+                    hand.visible = true
 
-                    if (bone === 5) {
-                      hand.visible = true
-                    }
-                    if (bone === 6) {
-                      hand.visible = true
-                    }
-                    if (bone === 7) {
-                      hand.visible = true
-                    }
-                    if (bone === 8) {
-                      hand.visible = true
-                    }
-                    if (bone === 4) {
-                      hand.visible = true
-                    }
-                    if (bone === 12) {
-                      hand.visible = true
-                    }
+                    // if (bone === 7) {
+                    //   hand.visible = true
+                    // }
+                    // if (bone === 8) {
+                    //   hand.visible = true
+                    // }
+                    // if (bone === 4) {
+                    //   hand.visible = true
+                    // }
+                    // if (bone === 12) {
+                    //   hand.visible = true
+                    // }
 
-                    // if (bone === 1) {
-                    //   hand.visible = false
-                    // }
-                    // if (bone === 2) {
-                    //   hand.visible = false
-                    // }
+                    if (bone === 1) {
+                      hand.visible = false
+                    }
+                    if (bone === 2) {
+                      hand.visible = false
+                    }
                   }
 
                   {
                     let beforeTip = array[handIndex * eachHandPointCount + 7]
                     let indexTip = array[handIndex * eachHandPointCount + 8]
                     beforeTip.lookAt(indexTip.position)
-                    //
+
                     beforeTip.getWorldDirection(dir)
                     raycaster.set(beforeTip.position, dir)
+
                     let casterGroup = get().scene.getObjectByName('raycast-group')
                     if (casterGroup && get()?.picking?.length === 0) {
                       raycaster.firstHitOnly = false
@@ -308,15 +350,8 @@ export const useMouse = create((set, get) => {
                       }
                     })
                   }
-                  // let gestureInfo = result.gestures[handIndex]
-                  // // let floor_ground = get()?.scene?.getObjectByName('floor_ground')
-                  // let rootXYZ = result.worldLandmarks[handIndex][0]
-                  // handRoot.position.set(vpx + rootXYZ, vpy, vpz).multiplyScalar(-1)
-                  // let midFinger1X = (lmk[9].x * 2.0 - 1.0) * vp.width
-                  // let midFinger1Y = (lmk[9].y * 2.0 - 1.0) * vp.height
-                  // let midFinger1Z = lmk[9].z
-                  // midFingerRoot.position.set(midFinger1X, midFinger1Y, midFinger1Z).multiplyScalar(-1)
-                  // handRoot.lookAt(midFingerRoot.position)
+
+                  //
                 })
                 //
               }

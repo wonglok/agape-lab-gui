@@ -12,7 +12,8 @@ import {
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
-import { Vector3 } from 'three'
+import { Scene, Vector3 } from 'three'
+import { sceneToCollider } from './Noodle/sceneToCollider.js'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -27,8 +28,12 @@ export function MouseGesture() {
     useMouse.setState({ scene })
   }, [scene])
 
-  let viewport = useThree((r) => r.viewport)
+  let gl = useThree((r) => r.gl)
+  useEffect(() => {
+    useMouse.setState({ gl })
+  }, [gl])
 
+  let viewport = useThree((r) => r.viewport)
   let controls = useThree((r) => r.controls)
 
   useEffect(() => {
@@ -54,11 +59,11 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} position={[1, 3, -1]} scale={1}>
+          <group userData={{ dragGroup: true }} position={[1, 3, -5]} scale={1}>
             <Computer></Computer>
           </group>
 
-          <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -3]}>
+          <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -5]}>
             <Sphere args={[1, 32, 32]}>
               <MeshTransmissionMaterial
                 thickness={1.5}
@@ -68,7 +73,7 @@ export function MouseGesture() {
             </Sphere>
           </group>
 
-          <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -3]}>
+          <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -5]}>
             <Sphere args={[1, 32, 32]}>
               <MeshTransmissionMaterial
                 thickness={1.5}
@@ -111,12 +116,25 @@ function Computer() {
 }
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
+
+  useEffect(() => {
+    if (!gltf?.scene) {
+      return
+    }
+    sceneToCollider({ scene: gltf.scene }).then((r) => {
+      useMouse.setState({ collider: r })
+    })
+  }, [gltf.scene])
   return <primitive object={gltf.scene} />
 }
 
 function Init() {
   let scene = useMouse((r) => r.scene)
   let camera = useMouse((r) => r.camera)
+  let gl = useMouse((r) => r.gl)
+  let collider = useMouse((r) => r.collider)
+
+  let inited = useMouse((r) => r.inited)
   useEffect(() => {
     if (!scene) {
       return
@@ -124,9 +142,19 @@ function Init() {
     if (!camera) {
       return
     }
+    if (!gl) {
+      return
+    }
+    if (!collider) {
+      return
+    }
+    if (inited) {
+      return
+    }
+
     useMouse.getState().initVideo()
     useMouse.getState().initTask()
-  }, [scene, camera])
+  }, [scene, gl, camera, collider, inited])
 
   return null
 }
