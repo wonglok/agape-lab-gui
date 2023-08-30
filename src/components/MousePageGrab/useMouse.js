@@ -1,5 +1,5 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { Color, CubicBezierCurve3, MeshBasicMaterial } from 'three'
+import { Color, CubicBezierCurve3, MathUtils, MeshBasicMaterial } from 'three'
 import { BoxGeometry } from 'three'
 import { CubicBezierCurve, TubeGeometry } from 'three'
 import {
@@ -13,12 +13,16 @@ import {
   VideoTexture,
   sRGBEncoding,
 } from 'three'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
+
 //
 export const useMouse = create((set, get) => {
   return {
     handID: false,
     //
+    handResult: false,
     hands: [],
     scene: false,
     camera: false,
@@ -137,41 +141,32 @@ export const useMouse = create((set, get) => {
       )
       plane.position.z = -5
       plane.name = 'raycast-plane'
-      let targetGoal = new Vector3()
+
       set({
         onLoop: () => {
           //
-          //
-          //
-          ///!SECTION
-          //
-          //
-          //
-          {
-            let handIndex = 0
-            let beforeTip = array[handIndex * eachHandPointCount + 7]
-            let indexTip = array[handIndex * eachHandPointCount + 8]
-            beforeTip.lookAt(indexTip.position)
-            let picking = get()?.picking || []
-            picking.forEach((it) => {
-              if (it) {
-                it.getWorldPosition(plane.position)
-                plane.lookAt(get().camera.position)
-                let raycaster = new Raycaster()
-                beforeTip.getWorldDirection(dir)
-                raycaster.set(beforeTip.position, dir)
-                raycaster.firstHitOnly = true
-                let results = raycaster.intersectObject(plane)
-                let result = results[0]
-                if (it && it.material && result) {
-                  it.material.transparent = true
-                  it.material.opacity = 0.5
-                  targetGoal.set(result.point.x, result.point.y, it.position.z)
-                  it.position.lerp(targetGoal, 0.35)
-                }
-              }
-            })
-          }
+          // Hand
+          // LeftHand
+          // LeftHandThumb1
+          // LeftHandThumb2
+          // LeftHandThumb3
+          // LeftHandThumb4
+          // LeftHandIndex1
+          // LeftHandIndex2
+          // LeftHandIndex3
+          // LeftHandIndex4
+          // LeftHandMiddle1
+          // LeftHandMiddle2
+          // LeftHandMiddle3
+          // LeftHandMiddle4
+          // LeftHandRing1
+          // LeftHandRing2
+          // LeftHandRing3
+          // LeftHandRing4
+          // LeftHandPinky1
+          // LeftHandPinky2
+          // LeftHandPinky3
+          // LeftHandPinky4
           ///
         },
         hands: array,
@@ -194,7 +189,6 @@ export const useMouse = create((set, get) => {
             let target = get().controlsTarget
             if (cam && target) {
               let vp = get().viewport.getCurrentViewport(cam, target)
-              // console.log(vp.getCurrentViewport())
               if (vp && result && result?.landmarks?.length > 0) {
                 set({ handResult: result })
                 {
@@ -250,6 +244,7 @@ export const useMouse = create((set, get) => {
                       }
                     }
                   }
+
                   {
                     handRootOfFristHand.getWorldPosition(stick.position)
                     handRootOfFristHand.getWorldQuaternion(stick.quaternion)
