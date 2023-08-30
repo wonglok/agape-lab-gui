@@ -238,6 +238,7 @@ export const useMouse = create((set, get) => {
         },
       })
 
+      let goal = new Object3D()
       set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {
@@ -274,12 +275,13 @@ export const useMouse = create((set, get) => {
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
                     let wmk = result.worldLandmarks[handIndex][bone]
-                    hand.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
-                    hand.position.x += -vpx
-                    hand.position.y += -vpy
-                    hand.position.z += -vpz
-                    hand.position.z += 0
+                    goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
+                    goal.position.x += -vpx
+                    goal.position.y += -vpy
+                    goal.position.z += -vpz
+                    goal.position.z += 0
 
+                    hand.position.lerp(goal.position, 0.1)
                     hand.visible = true
 
                     // if (bone === 7) {
