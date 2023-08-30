@@ -135,10 +135,10 @@ export const useMouse = create((set, get) => {
       })
 
       let handRootOfFristHand = array[0 * eachHandPointCount + 7]
-
       handRootOfFristHand.clear()
-      let stick = new Mesh(new BoxGeometry(0.02, 0.02, 5), new MeshBasicMaterial({ color: 0xff0000 }))
-      stick.geometry.translate(0, 0, 5 / 2)
+
+      let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
+      stick.geometry.translate(0, 0, 8 / 2)
       stick.name = 'handFingerStick'
       stick.visible = false
 
@@ -150,7 +150,17 @@ export const useMouse = create((set, get) => {
       let raycaster = new Raycaster()
       let dir = new Vector3()
 
-      let plane = new Mesh(new PlaneGeometry(1000, 1000))
+      let plane = new Mesh(
+        new PlaneGeometry(1000, 1000),
+        new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
+      )
+      plane.position.z = -100
+      plane.name = 'raycast-plane'
+
+      if (get()?.scene?.getObjectByName('raycast-plane')) {
+        get()?.scene?.getObjectByName('raycast-plane').removeFromParent()
+      }
+      get().scene.add(plane)
 
       let targetGoal = new Vector3()
 

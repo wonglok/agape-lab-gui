@@ -1,8 +1,9 @@
-import { Box, Environment, MeshTransmissionMaterial, OrbitControls, Sphere } from '@react-three/drei'
+import { Box, Environment, Icosahedron, MeshTransmissionMaterial, OrbitControls, Sphere } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { DoubleSide, Spherical } from 'three'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 // import { PerspectiveCamera } from 'three'
 
 // import { WorldBirdy } from '../worldbirdy/WorldBirdy'
@@ -66,13 +67,17 @@ export function MouseGesture() {
           </Sphere>
         </group>
 
-        <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xff0000, 0xff0000]}></gridHelper>
+        {/* <gridHelper position={[0, 0.15, 0]} args={[100, 100, 0xff0000, 0xff0000]}></gridHelper> */}
 
         <OrbitControls object-position={[0, 3, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
 
         <Hand></Hand>
+
+        <EffectComposer multisampling={4}>
+          <Bloom luminanceThreshold={0.3} intensity={3} mipmapBlur luminanceSmoothing={0.5} height={300} />
+        </EffectComposer>
       </group>
     </>
   )
@@ -131,9 +136,9 @@ function OneHand({ hand }) {
 
   return (
     <group ref={ref}>
-      <Sphere frustumCulled={false} position={[0, 0, 0]} args={[0.1, 25, 25]}>
+      <Icosahedron frustumCulled={false} position={[0, 0, 0]} args={[0.1, 0]}>
         <meshPhysicalMaterial color={'#0000ff'} metalness={1} roughness={0.0}></meshPhysicalMaterial>
-      </Sphere>
+      </Icosahedron>
     </group>
   )
 }
