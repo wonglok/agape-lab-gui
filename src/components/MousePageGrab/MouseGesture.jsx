@@ -14,6 +14,7 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
 import { Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
+import { Bloom, EffectComposer, N8AO } from '@react-three/postprocessing'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -100,9 +101,10 @@ export function MouseGesture() {
             <BG></BG>
           </group>
         </Suspense>
-        {/* <EffectComposer multisampling={4} disableNormalPass>
-          <Bloom luminanceThreshold={0.0} intensity={1} mipmapBlur height={300} />
-        </EffectComposer> */}
+        <EffectComposer multisampling={4} disableNormalPass>
+          <N8AO intensity={3}></N8AO>
+          <Bloom luminanceThreshold={0.8} intensity={1} mipmapBlur height={300} />
+        </EffectComposer>
 
         <Init></Init>
       </group>
@@ -119,6 +121,9 @@ function BG() {
 
   useEffect(() => {
     if (!gltf?.scene) {
+      return
+    }
+    if (useMouse.getState().collider) {
       return
     }
     sceneToCollider({ scene: gltf.scene }).then((r) => {
