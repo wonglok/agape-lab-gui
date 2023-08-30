@@ -156,6 +156,8 @@ export const useMouse = create((set, get) => {
 
       set({
         onLoop: () => {
+          ///!SECTION
+
           {
             let handIndex = 0
             let beforeTip = array[handIndex * eachHandPointCount + 7]
@@ -187,6 +189,8 @@ export const useMouse = create((set, get) => {
               }
             })
           }
+
+          ///
         },
         hands: array,
         runProcessVideoFrame: ({ video }) => {
