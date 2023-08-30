@@ -193,7 +193,10 @@ export const useMouse = create((set, get) => {
             let cam = get().camera
             let target = get().controlsTarget
             if (cam && target) {
-              let vp = get().viewport.getCurrentViewport(cam, target)
+              let vp = {
+                width: 10,
+                height: 10,
+              }
               if (vp && result && result?.landmarks?.length > 0) {
                 set({ handResult: result })
                 {
@@ -210,6 +213,7 @@ export const useMouse = create((set, get) => {
                     hand.position.x += -vpx
                     hand.position.y += -vpy
                     hand.position.z += -vpz
+                    hand.position.z += 0
 
                     hand.visible = true
 
@@ -258,7 +262,7 @@ export const useMouse = create((set, get) => {
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
                         let midTip = array[handIndex * eachHandPointCount + 12]
-                        if (thumbTip.position.distanceTo(midTip.position) > 0.7) {
+                        if (thumbTip.position.distanceTo(midTip.position) > 0.6) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }

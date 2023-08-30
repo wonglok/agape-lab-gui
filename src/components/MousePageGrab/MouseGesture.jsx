@@ -6,12 +6,14 @@ import {
   OrbitControls,
   Sphere,
   Plane,
+  useGLTF,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
-import { DoubleSide, Spherical } from 'three'
+import { Suspense, useEffect, useRef } from 'react'
+import { DoubleSide, Spherical, Vector3 } from 'three'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { Vector2 } from 'three'
 // import { PerspectiveCamera } from 'three'
 
 // import { WorldBirdy } from '../worldbirdy/WorldBirdy'
@@ -38,7 +40,7 @@ export function MouseGesture() {
 
   useEffect(() => {
     if (controls?.target) {
-      useMouse.setState({ viewport, controlsTarget: controls.target })
+      useMouse.setState({ viewport, controlsTarget: new Vector3(0, controls?.target.y, 0) })
     }
   }, [viewport, controls?.target])
 
@@ -63,39 +65,57 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group name='raycast-group'>
-          <Sphere position={[3, 3, -3]}>
-            <meshStandardMaterial color={'red'}></meshStandardMaterial>
+          <Sphere args={[1, 32, 32]} scale={1} position={[3, 3, -3]}>
+            <MeshTransmissionMaterial
+              thickness={1.5}
+              transmission={1}
+              reflectivity={1}
+              roughness={0.15}></MeshTransmissionMaterial>
           </Sphere>
 
-          <Sphere position={[-3, 4, -3]}>
-            <meshStandardMaterial color={'green'}></meshStandardMaterial>
+          <Sphere args={[1, 32, 32]} scale={1} position={[-3, 4, -3]}>
+            <MeshTransmissionMaterial
+              thickness={1.5}
+              transmission={1}
+              reflectivity={1}
+              roughness={0.15}></MeshTransmissionMaterial>
           </Sphere>
 
-          <Sphere position={[-2, 2, -3]}>
-            <meshStandardMaterial color={'blue'}></meshStandardMaterial>
+          <Sphere args={[1, 32, 32]} scale={1} position={[-2, 2, -3]}>
+            <MeshTransmissionMaterial
+              thickness={1.5}
+              transmission={1}
+              reflectivity={1}
+              roughness={0.15}></MeshTransmissionMaterial>
           </Sphere>
-
-          <Box args={[10, 6, 0.1]} position={[0, 2, -6]}>
-            <meshStandardMaterial color={'#bababa'}></meshStandardMaterial>
-          </Box>
         </group>
 
-        <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper>
+        {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
 
-        <OrbitControls object-position={[0, 3, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
+        <OrbitControls object-position={[0, 1.6, 10]} target={[0, 1.6, 10 - 1]} makeDefault></OrbitControls>
 
         <Environment files={`/lok/shanghai.hdr`}></Environment>
 
         <Hand></Hand>
 
-        <EffectComposer multisampling={4} disableNormalPass>
+        <Suspense fallback={null}>
+          <group position={[0, -5, 10]} scale={5}>
+            <BG></BG>
+          </group>
+        </Suspense>
+        {/* <EffectComposer multisampling={4} disableNormalPass>
           <Bloom luminanceThreshold={0.0} intensity={1} mipmapBlur height={300} />
-        </EffectComposer>
+        </EffectComposer> */}
       </group>
     </>
   )
 }
+function BG() {
+  let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
+  //
 
+  return <primitive object={gltf.scene} />
+}
 // function World() {
 //   let point = new Vector3()
 //   useFrame(() => {

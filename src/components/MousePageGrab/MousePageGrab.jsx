@@ -8,13 +8,13 @@ export function MousePageGrab() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
   let video = useMouse((r) => r.video)
   let loading = useMouse((r) => r.loading)
-
+  let scene = useMouse((r) => r.scene)
   useEffect(() => {
-    if (showStartMenu) {
+    if (showStartMenu && scene) {
       useMouse.getState().initVideo()
       useMouse.getState().initTask()
     }
-  }, [showStartMenu])
+  }, [showStartMenu, scene])
   return (
     <>
       <Canvas
