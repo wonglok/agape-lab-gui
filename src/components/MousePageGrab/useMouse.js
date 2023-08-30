@@ -130,6 +130,7 @@ export const useMouse = create((set, get) => {
       stick.geometry.translate(0, 0, 8 / 2)
       stick.name = 'handFingerStick'
       stick.visible = false
+
       let handFingerStick = get()?.scene?.getObjectByName('handFingerStick')
       handFingerStick?.removeFromParent()
       get().scene.add(stick)
@@ -219,14 +220,33 @@ export const useMouse = create((set, get) => {
                     hand.position.z += -vpz
                     hand.position.z += 0
 
-                    hand.visible = true
+                    hand.visible = false
 
-                    if (bone === 1) {
-                      hand.visible = false
+                    if (bone === 5) {
+                      hand.visible = true
                     }
-                    if (bone === 2) {
-                      hand.visible = false
+                    if (bone === 6) {
+                      hand.visible = true
                     }
+                    if (bone === 7) {
+                      hand.visible = true
+                    }
+                    if (bone === 8) {
+                      hand.visible = true
+                    }
+                    if (bone === 4) {
+                      hand.visible = true
+                    }
+                    if (bone === 12) {
+                      hand.visible = true
+                    }
+
+                    // if (bone === 1) {
+                    //   hand.visible = false
+                    // }
+                    // if (bone === 2) {
+                    //   hand.visible = false
+                    // }
                   }
 
                   {
