@@ -65,6 +65,7 @@ export const useMouse = create((set, get) => {
           width: 512,
           height: 512,
         },
+        audio: false,
       })
       stream.then((r) => {
         video.srcObject = r
