@@ -156,8 +156,6 @@ export const useMouse = create((set, get) => {
               if (picked) {
                 picked.traverseAncestors((it) => {
                   if (it?.userData?.dragGroup) {
-                    console.log(it)
-
                     picked.getWorldPosition(plane.position)
                     plane.lookAt(get().camera.position)
                     let raycaster = new Raycaster()
