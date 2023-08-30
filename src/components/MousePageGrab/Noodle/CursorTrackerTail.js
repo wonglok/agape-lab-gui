@@ -174,11 +174,12 @@ class LokLokWiggleSimulation {
 }
 
 class LokLokWiggleDisplay {
-  constructor({ node, sim, mounter, color }) {
+  constructor({ node, sim, mounter, onInsert, color }) {
     this.mounter = mounter
     this.node = node
     this.sim = sim
     this.color = color
+    this.onInsert = onInsert
     this.wait = this.setup({ node })
   }
 
@@ -507,6 +508,7 @@ class LokLokWiggleDisplay {
     line0.frustumCulled = false
     line0.userData.enableBloom = true
 
+    this.onInsert(line0)
     mounter.add(line0)
     node.onClean(() => {
       mounter.remove(line0)
@@ -637,7 +639,7 @@ class NoodleGeo {
 }
 
 export class CursorTrackerTail {
-  constructor({ gl, camera, mini, mounter, cursor, color = new Color('#ffffff') }) {
+  constructor({ gl, camera, mini, onInsert, mounter, cursor, color = new Color('#ffffff') }) {
     let node = mini
     this.mini = mini
 
@@ -654,7 +656,7 @@ export class CursorTrackerTail {
       trailSize: TAIL_LENGTH,
     })
 
-    let display = new LokLokWiggleDisplay({ node, sim, mounter, color })
+    let display = new LokLokWiggleDisplay({ onInsert, node, sim, mounter, color })
     this.display = display
 
     let trackers = []

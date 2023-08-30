@@ -14,7 +14,7 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
 import { Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
-import { Bloom, EffectComposer, N8AO } from '@react-three/postprocessing'
+import { Bloom, EffectComposer, N8AO, SelectiveBloom } from '@react-three/postprocessing'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -101,13 +101,33 @@ export function MouseGesture() {
             <BG></BG>
           </group>
         </Suspense>
-        <EffectComposer multisampling={4} disableNormalPass>
-          <N8AO intensity={3}></N8AO>
-          <Bloom luminanceThreshold={0.8} intensity={1} mipmapBlur height={300} />
-        </EffectComposer>
 
         <Init></Init>
+
+        <SelectiveBloomRender></SelectiveBloomRender>
       </group>
+    </>
+  )
+}
+
+function SelectiveBloomRender() {
+  let bloomMeshes = useMouse((r) => r.bloomMeshes)
+  let bloomLights = useMouse((r) => r.bloomLights)
+
+  return (
+    <>
+      <EffectComposer multisampling={4} disableNormalPass>
+        <N8AO intensity={5}></N8AO>
+        <SelectiveBloom
+          lights={bloomLights}
+          selection={bloomMeshes}
+          selectionLayer={10}
+          luminanceThreshold={0.5}
+          intensity={3}
+          mipmapBlur
+          height={300}
+        />
+      </EffectComposer>
     </>
   )
 }

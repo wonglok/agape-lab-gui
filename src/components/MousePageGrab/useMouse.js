@@ -22,6 +22,8 @@ import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 //
 export const useMouse = create((set, get) => {
   return {
+    bloomLights: [],
+    bloomMeshes: [],
     handID: false,
     //
     collider: false,
@@ -159,6 +161,11 @@ export const useMouse = create((set, get) => {
         mounter: get().scene,
         cursor: cursor,
         color: new Color('#ffffff'),
+        onInsert: (v) => {
+          set({
+            bloomMeshes: [v],
+          })
+        },
       })
 
       set({
