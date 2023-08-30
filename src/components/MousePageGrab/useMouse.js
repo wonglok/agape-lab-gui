@@ -253,6 +253,13 @@ export const useMouse = create((set, get) => {
                     hand.position.z += -vpz
 
                     hand.visible = true
+
+                    if (bone === 1) {
+                      hand.visible = false
+                    }
+                    if (bone === 2) {
+                      hand.visible = false
+                    }
                   }
 
                   {
