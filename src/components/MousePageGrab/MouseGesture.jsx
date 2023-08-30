@@ -107,7 +107,6 @@ export function MouseGesture() {
 
 function Hand() {
   let hands = useMouse((r) => r.hands)
-
   return (
     <group>
       {hands.map((r) => {
