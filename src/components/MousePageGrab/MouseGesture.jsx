@@ -1,4 +1,14 @@
-import { Environment, Icosahedron, MeshTransmissionMaterial, OrbitControls, Sphere, useGLTF } from '@react-three/drei'
+import {
+  Box,
+  Environment,
+  Icosahedron,
+  MeshTransmissionMaterial,
+  OrbitControls,
+  Sphere,
+  Plane,
+  useGLTF,
+  MeshDiscardMaterial,
+} from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
@@ -30,11 +40,6 @@ export function MouseGesture() {
   useFrame((st, dt) => {
     useMouse.getState().onLoop(st, dt)
   })
-
-  // useEffect(() => {
-  //   useMouse.getState().initVideo()
-  //   useMouse.getState().initTask()
-  // }, [])
 
   return (
     <>
@@ -76,7 +81,11 @@ export function MouseGesture() {
 
         {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
 
-        <OrbitControls object-position={[0, 1.6, 10]} target={[0, 1.6, 10 - 1]} makeDefault></OrbitControls>
+        <OrbitControls
+          rotateSpeed={-1}
+          object-position={[0, 1.6, 10]}
+          target={[0, 1.6, 10 - 1]}
+          makeDefault></OrbitControls>
 
         <Hand></Hand>
 
@@ -89,6 +98,8 @@ export function MouseGesture() {
         {/* <EffectComposer multisampling={4} disableNormalPass>
           <Bloom luminanceThreshold={0.0} intensity={1} mipmapBlur height={300} />
         </EffectComposer> */}
+
+        <Init></Init>
       </group>
     </>
   )
@@ -98,12 +109,27 @@ function Computer() {
   let gltf = useGLTF(`/mini-homes/computer.glb`)
   return <primitive object={gltf.scene} />
 }
-
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
   return <primitive object={gltf.scene} />
 }
 
+function Init() {
+  let scene = useMouse((r) => r.scene)
+  let camera = useMouse((r) => r.camera)
+  useEffect(() => {
+    if (!scene) {
+      return
+    }
+    if (!camera) {
+      return
+    }
+    useMouse.getState().initVideo()
+    useMouse.getState().initTask()
+  }, [scene, camera])
+
+  return null
+}
 function Hand() {
   let hands = useMouse((r) => r.hands)
   return (

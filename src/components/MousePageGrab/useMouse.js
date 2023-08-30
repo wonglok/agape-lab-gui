@@ -259,6 +259,7 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
+                    //
                     handRootOfFristHand.getWorldPosition(stick.position)
                     handRootOfFristHand.getWorldQuaternion(stick.quaternion)
                     get().handResult?.landmarks?.forEach((lmk, handIndex) => {

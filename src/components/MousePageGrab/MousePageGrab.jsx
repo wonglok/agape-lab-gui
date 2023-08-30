@@ -18,10 +18,6 @@ export function MousePageGrab() {
   //   }
   // }, [showStartMenu, scene, camera, controls])
 
-  useEffect(() => {
-    useMouse.getState().initVideo()
-    useMouse.getState().initTask()
-  }, [])
   return (
     <>
       <Canvas
