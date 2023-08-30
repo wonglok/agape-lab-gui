@@ -194,7 +194,7 @@ export const useMouse = create((set, get) => {
 
             let activeObjects = get().activeObjects
             if (activeObjects && activeObjects.length > 0) {
-              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.4)
+              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.1)
             } else {
               if (res) {
                 cursor.position.lerp(res.point, 0.1)
