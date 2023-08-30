@@ -15,7 +15,6 @@ import {
 } from 'three'
 import { create } from 'zustand'
 //
-
 export const useMouse = create((set, get) => {
   return {
     handID: false,
@@ -23,11 +22,9 @@ export const useMouse = create((set, get) => {
     hands: [],
     scene: false,
     camera: false,
-
     picking: [],
     activeObjects: [],
     activeUUID: false,
-
     viewport: false,
     loading: false,
     showStartMenu: true,
@@ -41,10 +38,8 @@ export const useMouse = create((set, get) => {
       set({ loading: true })
       let video = document.createElement('video')
       video.playsInline = true
-
       let width = window.innerWidth
       let height = window.innerHeight
-
       if (width >= height) {
         video.width = 512
         video.height = 512 * (height / width)
@@ -59,7 +54,6 @@ export const useMouse = create((set, get) => {
           height: height,
         },
       })
-
       stream.then((r) => {
         video.srcObject = r
         video.onloadeddata = () => {
@@ -76,12 +70,10 @@ export const useMouse = create((set, get) => {
             get().runProcessVideoFrame({ video })
           }
           id = video.requestVideoFrameCallback(func)
-
           get().cancel()
           set({
             cancel: () => {
               let recogizer = get().recogizer
-
               if (recogizer?.close) {
                 recogizer.close()
               }
@@ -103,7 +95,6 @@ export const useMouse = create((set, get) => {
         // path/to/wasm/root
         '/gesture-vision_wasm-v-0.10.4',
       )
-
       const gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
         baseOptions: {
           modelAssetPath: '/gesture-vision_wasm-v-0.10.4/gesture_recognizer.task',
@@ -112,16 +103,12 @@ export const useMouse = create((set, get) => {
         numHands: handCount,
         runningMode: 'VIDEO',
       })
-
       setTimeout(() => {
         handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount, runningMode: 'VIDEO' })
         console.log('set to gpu')
       }, 100)
-
       set({ recogizer: gestureRecognizer })
-
       let handLandmarker = gestureRecognizer
-
       // let raycaster = new Raycaster()
       let array = []
       let eachHandPointCount = 21
@@ -133,36 +120,24 @@ export const useMouse = create((set, get) => {
         r.visible = true
         return r
       })
-
-      let handRootOfFristHand = array[0 * eachHandPointCount + 0]
+      let handRootOfFristHand = array[0 * eachHandPointCount + 7]
       handRootOfFristHand.clear()
-
       let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
       stick.geometry.translate(0, 0, 8 / 2)
       stick.name = 'handFingerStick'
       stick.visible = false
-
       let handFingerStick = get()?.scene?.getObjectByName('handFingerStick')
       handFingerStick?.removeFromParent()
-
       get().scene.add(stick)
-
       let raycaster = new Raycaster()
       let dir = new Vector3()
-
       let plane = new Mesh(
         new PlaneGeometry(1000, 1000, 100, 100),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
       plane.position.z = -5
       plane.name = 'raycast-plane'
-
       let targetGoal = new Vector3()
-
-      let midThumbIndex = new Object3D()
-      let midSegThumbIndex = new Object3D()
-      let pinkyThumbRootMiddle = new Object3D()
-
       set({
         onLoop: () => {
           //
@@ -172,49 +147,42 @@ export const useMouse = create((set, get) => {
           //
           //
           //
-
           {
+            let handIndex = 0
+            let beforeTip = array[handIndex * eachHandPointCount + 7]
+            let indexTip = array[handIndex * eachHandPointCount + 8]
+            beforeTip.lookAt(indexTip.position)
             let picking = get()?.picking || []
-
             picking.forEach((it) => {
               if (it) {
                 it.getWorldPosition(plane.position)
-
                 plane.lookAt(get().camera.position)
-
                 let raycaster = new Raycaster()
-                stick.getWorldDirection(dir)
-                raycaster.set(stick.position, dir)
-
+                beforeTip.getWorldDirection(dir)
+                raycaster.set(beforeTip.position, dir)
                 raycaster.firstHitOnly = true
                 let results = raycaster.intersectObject(plane)
                 let result = results[0]
-
                 if (it && it.material && result) {
                   it.material.transparent = true
                   it.material.opacity = 0.5
                   targetGoal.set(result.point.x, result.point.y, it.position.z)
-
                   it.position.lerp(targetGoal, 0.35)
                 }
               }
             })
           }
-
           ///
         },
         hands: array,
         runProcessVideoFrame: ({ video }) => {
           //
-
           if (video) {
             let nowInMs = Date.now()
             let result = handLandmarker.recognizeForVideo(video, nowInMs, {
               rotationDegrees: 0,
             })
-
             // console.log(result)
-
             array.map((r) => {
               r.visible = false
               return r
@@ -222,32 +190,24 @@ export const useMouse = create((set, get) => {
             {
               stick.visible = false
             }
-
             let cam = get().camera
             let target = get().controlsTarget
             if (cam && target) {
               let vp = get().viewport.getCurrentViewport(cam, target)
               // console.log(vp.getCurrentViewport())
-
               if (vp && result && result?.landmarks?.length > 0) {
                 set({ handResult: result })
-
                 {
                   stick.visible = true
                 }
-
                 result.landmarks.forEach((lmk, handIndex) => {
                   let vpx = (lmk[0].x * 2.0 - 1.0) * 0.75 * vp.width
                   let vpy = (lmk[0].y * 2.0 - 1.0) * 0.75 * vp.height
                   let vpz = lmk[0].z
-
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
-
                     let wmk = result.worldLandmarks[handIndex][bone]
-
                     hand.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
-
                     hand.position.x += -vpx
                     hand.position.y += -vpy
                     hand.position.z += -vpz
@@ -263,35 +223,16 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    let rootSeg = array[handIndex * eachHandPointCount + 0]
-
-                    // let thumbRoot = array[handIndex * eachHandPointCount + 5]
-                    // let pinkyRoot = array[handIndex * eachHandPointCount + 17]
-                    // pinkyThumbRootMiddle.position.lerpVectors(thumbRoot.position, pinkyRoot.position, 0.5)
-
-                    let indexTipSeg = array[handIndex * eachHandPointCount + 5]
-                    let thumbTipSeg = array[handIndex * eachHandPointCount + 2]
-                    midSegThumbIndex.position.lerpVectors(indexTipSeg.position, thumbTipSeg.position, 0.5)
-
+                    let beforeTip = array[handIndex * eachHandPointCount + 7]
                     let indexTip = array[handIndex * eachHandPointCount + 8]
-                    let thumbTip = array[handIndex * eachHandPointCount + 4]
-                    midThumbIndex.position.lerpVectors(indexTip.position, thumbTip.position, 0.5)
-
-                    midSegThumbIndex.lookAt(midThumbIndex.position)
-
+                    beforeTip.lookAt(indexTip.position)
                     //
-                    midSegThumbIndex.getWorldPosition(stick.position)
-                    midSegThumbIndex.getWorldQuaternion(stick.quaternion)
-
-                    //
-                    stick.getWorldDirection(dir)
-                    raycaster.set(stick.position, dir)
-
+                    beforeTip.getWorldDirection(dir)
+                    raycaster.set(beforeTip.position, dir)
                     let casterGroup = get().scene.getObjectByName('raycast-group')
                     if (casterGroup && get()?.picking?.length === 0) {
                       raycaster.firstHitOnly = false
                       let res = raycaster.intersectObject(casterGroup, true)
-
                       if (res) {
                         get().activeObjects?.forEach((it) => {
                           if (it) {
@@ -301,27 +242,23 @@ export const useMouse = create((set, get) => {
                         set({
                           activeObjects: res.map((r) => {
                             let it = r.object
-
                             it.userData.raycastPoint = r.point
-
                             it.material.emissive = new Color(0x555555)
-
                             return it
                           }),
                         })
                       }
                     }
                   }
-
                   {
+                    handRootOfFristHand.getWorldPosition(stick.position)
+                    handRootOfFristHand.getWorldQuaternion(stick.quaternion)
                     get().handResult?.landmarks?.forEach((lmk, handIndex) => {
                       //
-
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
-                        let indexTip = array[handIndex * eachHandPointCount + 8]
-
-                        if (thumbTip.position.distanceTo(indexTip.position) > 0.775) {
+                        let midTip = array[handIndex * eachHandPointCount + 12]
+                        if (thumbTip.position.distanceTo(midTip.position) > 0.85) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -329,7 +266,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(indexTip.position) <= 0.575) {
+                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.6) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
@@ -342,24 +279,16 @@ export const useMouse = create((set, get) => {
                       }
                     })
                   }
-
                   // let gestureInfo = result.gestures[handIndex]
-
                   // // let floor_ground = get()?.scene?.getObjectByName('floor_ground')
-
                   // let rootXYZ = result.worldLandmarks[handIndex][0]
-
                   // handRoot.position.set(vpx + rootXYZ, vpy, vpz).multiplyScalar(-1)
-
                   // let midFinger1X = (lmk[9].x * 2.0 - 1.0) * vp.width
                   // let midFinger1Y = (lmk[9].y * 2.0 - 1.0) * vp.height
                   // let midFinger1Z = lmk[9].z
-
                   // midFingerRoot.position.set(midFinger1X, midFinger1Y, midFinger1Z).multiplyScalar(-1)
-
                   // handRoot.lookAt(midFingerRoot.position)
                 })
-
                 //
               }
             }
