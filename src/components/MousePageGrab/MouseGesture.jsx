@@ -184,7 +184,7 @@ function meshBounds(raycaster, intersects) {
   // Checking boundingSphere distance to ray
   if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
   _sphere.copy(geometry.boundingSphere)
-  _sphere.radius = _sphere.radius * 1.5
+  _sphere.radius = _sphere.radius * 1.25
   _sphere.applyMatrix4(matrixWorld)
   if (raycaster.ray.intersectsSphere(_sphere) === false) return
   _inverseMatrix.copy(matrixWorld).invert()
@@ -426,6 +426,10 @@ function Hand() {
       })}
     </group>
   )
+}
+
+function EventPop({ onChangeActiveObjects = () => {} }) {
+  return null
 }
 
 function OneHand({ hand }) {

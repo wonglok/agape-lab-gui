@@ -228,29 +228,15 @@ export const useMouse = create((set, get) => {
                 }
               })
             }
-            {
-              //
-              get().activeObjects?.forEach((picked, idx) => {
-                if (picked && idx === 0) {
-                  picked.traverse((ob) => {
-                    if (ob.material) {
-                      ob.material.emissive = new Color('#ffffff')
-                    }
-                  })
-                }
-              })
-            }
 
             let picking = get()?.picking || []
             picking.forEach((picked) => {
               if (picked) {
-                if (picked) {
-                  picked.traverse((ob) => {
-                    if (ob.material) {
-                      ob.material.emissive = new Color('#ffffff')
-                    }
-                  })
-                }
+                picked.traverse((ob) => {
+                  if (ob.material) {
+                    ob.material.emissive = new Color('#ffffff')
+                  }
+                })
 
                 picked.traverseAncestors((it) => {
                   if (it?.userData?.dragGroup) {
@@ -419,6 +405,7 @@ export const useMouse = create((set, get) => {
                       let res = raycaster.intersectObject(casterGroup, true)
                       if (res && res[0]) {
                         res[0].object.userData.raycastPoint = res[0].point
+
                         set({
                           activeObjects: [res[0].object],
                         })
