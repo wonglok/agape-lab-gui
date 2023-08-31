@@ -130,9 +130,6 @@ function Insert() {
 }
 
 function SelectiveBloomRender() {
-  // let bloomMeshes = useMouse((r) => r.bloomMeshes)
-  // let bloomLights = useMouse((r) => r.bloomLights)
-
   let useStore = useMemo(() => {
     return create((set, get) => {
       return {
@@ -217,9 +214,6 @@ function SelectiveBloomRender() {
   return (
     <>
       <EnvSSRWorks isGame={true} useStore={useStore}></EnvSSRWorks>
-      {/* <EffectComposer multisampling={4} disableNormalPass>
-        <N8AO intensity={5} aoRadius={3}></N8AO>
-      </EffectComposer> */}
     </>
   )
 }
@@ -228,6 +222,7 @@ function Computer() {
   let gltf = useGLTF(`/mini-homes/computer.glb`)
   return <primitive object={gltf.scene} />
 }
+
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
 
