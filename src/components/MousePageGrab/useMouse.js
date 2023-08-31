@@ -309,34 +309,36 @@ export const useMouse = create((set, get) => {
                     }
                   }
 
+                  b4midOfAB2C.position.lerpVectors(
+                    array[handIndex * eachHandPointCount + 3].position,
+                    array[handIndex * eachHandPointCount + 7].position,
+                    0.5,
+                  )
+
+                  b4midOfCD2E.position.lerpVectors(
+                    b4midOfAB2C.position,
+                    array[handIndex * eachHandPointCount + 11].position,
+                    0.5,
+                  )
+
+                  midOfAB2C.position.lerpVectors(
+                    array[handIndex * eachHandPointCount + 4].position,
+                    array[handIndex * eachHandPointCount + 8].position,
+                    0.5,
+                  )
+
+                  midOfCD2E.position.lerpVectors(
+                    midOfAB2C.position,
+                    array[handIndex * eachHandPointCount + 12].position,
+                    0.5,
+                  )
+
+                  let grabDist = midOfAB2C.position.distanceTo(array[handIndex * eachHandPointCount + 12].position)
+
+                  let topTip = midOfCD2E
+                  let beforeTip = b4midOfCD2E
+
                   {
-                    b4midOfAB2C.position.lerpVectors(
-                      array[handIndex * eachHandPointCount + 3].position,
-                      array[handIndex * eachHandPointCount + 7].position,
-                      0.5,
-                    )
-
-                    b4midOfCD2E.position.lerpVectors(
-                      b4midOfAB2C.position,
-                      array[handIndex * eachHandPointCount + 11].position,
-                      0.5,
-                    )
-
-                    midOfAB2C.position.lerpVectors(
-                      array[handIndex * eachHandPointCount + 4].position,
-                      array[handIndex * eachHandPointCount + 8].position,
-                      0.5,
-                    )
-
-                    midOfCD2E.position.lerpVectors(
-                      midOfAB2C.position,
-                      array[handIndex * eachHandPointCount + 12].position,
-                      0.5,
-                    )
-
-                    let topTip = midOfCD2E
-                    let beforeTip = b4midOfCD2E
-
                     beforeTip.lookAt(topTip.position)
                     beforeTip.getWorldDirection(dir)
                     raycaster.set(beforeTip.position, dir)
@@ -392,14 +394,11 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    //
-
                     get().handResult?.landmarks?.forEach((lmk, handIndex) => {
                       //
                       {
-                        let thumbTip = array[handIndex * eachHandPointCount + 4]
-                        let indexTip = array[handIndex * eachHandPointCount + 8]
-                        if (thumbTip.position.distanceTo(indexTip.position) > 0.8) {
+                        //
+                        if (grabDist > 0.85) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -407,7 +406,9 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(indexTip.position) <= 0.75) {
+
+                          //
+                        } else if (grabDist <= 0.8) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
