@@ -256,6 +256,7 @@ export function EnvSSRWorks({ isGame = false, useStore }) {
     usePostProcessors,
     postProcessingConfig?.bloomPass,
     postProcessingConfig?.bloomPass?.luminanceThreshold,
+    postProcessingConfig?.bloomPass?.luminanceSmoothing,
     postProcessingConfig?.bloomPass?.mipmapBlur,
     postProcessingConfig?.bloomPass?.useThisOne,
     bloomSettings,

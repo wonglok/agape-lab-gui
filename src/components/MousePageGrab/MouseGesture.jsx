@@ -168,9 +168,10 @@ function SelectiveBloomRender() {
             velocityResolutionScale: 0.1,
           },
           bloomPass: {
-            useThisOne: false,
+            useThisOne: true,
             mipmapBlur: true,
             luminanceThreshold: 0.9,
+            luminanceSmoothing: 0.5,
             intensity: 1,
             resolutionScale: 0.3,
           },
