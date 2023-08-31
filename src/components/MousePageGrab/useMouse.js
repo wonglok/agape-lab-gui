@@ -196,10 +196,10 @@ export const useMouse = create((set, get) => {
 
             let activeObjects = get().activeObjects
             if (activeObjects && activeObjects.length > 0) {
-              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.5)
+              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
             } else {
               if (res) {
-                cursor.position.lerp(res.point, 0.5)
+                cursor.position.lerp(res.point, 1)
               }
             }
           }
@@ -225,10 +225,8 @@ export const useMouse = create((set, get) => {
                     let results = raycaster.intersectObject(plane)
                     let result = results[0]
                     if (picked && picked.material && result) {
-                      picked.material.transparent = true
-                      picked.material.opacity = 0.5
                       targetGoal.set(result.point.x, result.point.y, it.position.z)
-                      it.position.lerp(targetGoal, 0.2)
+                      it.position.lerp(targetGoal, 1)
                     }
                   }
                 })
@@ -283,7 +281,7 @@ export const useMouse = create((set, get) => {
                     goal.position.z += -vpz
                     goal.position.z += 0
 
-                    hand.position.lerp(goal.position, 0.5)
+                    hand.position.lerp(goal.position, 1)
                     hand.visible = true
 
                     // if (bone === 7) {
@@ -329,7 +327,7 @@ export const useMouse = create((set, get) => {
                           activeObjects: res.map((r) => {
                             let it = r.object
                             it.userData.raycastPoint = r.point
-                            it.material.emissive = new Color(0x555555)
+                            it.material.emissive = new Color(0xffffff)
                             return it
                           }),
                         })
