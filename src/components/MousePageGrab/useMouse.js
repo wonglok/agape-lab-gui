@@ -135,13 +135,11 @@ export const useMouse = create((set, get) => {
         r.visible = true
         return r
       })
-      let handRootOfFristHand = array[0 * eachHandPointCount + 7]
-      handRootOfFristHand.clear()
+
       let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
       stick.geometry.translate(0, 0, 8 / 2)
-      stick.name = 'handFingerStick'
       stick.visible = false
-
+      stick.direction = new Vector3()
       set({ stick: <primitive object={stick}></primitive> })
 
       let raycaster = new Raycaster()
@@ -150,8 +148,10 @@ export const useMouse = create((set, get) => {
         new PlaneGeometry(1000, 1000, 100, 100),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
-      plane.position.z = -5
       plane.name = 'raycast-plane'
+      plane.visible = false
+
+      set({ hoverPlane: <primitive object={plane}></primitive> })
       let targetGoal = new Vector3()
 
       let cursor = new Object3D()
@@ -182,7 +182,6 @@ export const useMouse = create((set, get) => {
       // })
 
       //
-
       // let ray = new Ray()
       set({
         onLoop: (st, dt) => {
@@ -253,16 +252,13 @@ export const useMouse = create((set, get) => {
 
                 picked.traverseAncestors((it) => {
                   if (it?.userData?.dragGroup) {
-                    picked.getWorldPosition(plane.position)
-                    plane.lookAt(get().camera.position)
+                    stick.getWorldDirection(stick.direction)
+                    raycaster.set(stick.position, stick.direction)
 
-                    let raycaster = new Raycaster()
-                    stick.getWorldDirection(dir)
-                    raycaster.set(stick.position, dir)
-                    raycaster.firstHitOnly = true
                     let results = raycaster.intersectObject(plane)
                     let result = results[0]
-                    if (picked && picked.material && result) {
+
+                    if (it && result) {
                       targetGoal.set(result.point.x, result.point.y, it.position.z)
                       it.position.lerp(targetGoal, 0.25)
                     }
@@ -421,10 +417,12 @@ export const useMouse = create((set, get) => {
                       let res = raycaster.intersectObject(casterGroup, true)
                       if (res) {
                         set({
-                          activeObjects: res.map((r) => {
-                            r.object.userData.raycastPoint = r.point
-                            return r.object
-                          }),
+                          activeObjects: [
+                            res.map((r) => {
+                              r.object.userData.raycastPoint = r.point
+                              return r.object
+                            })[0],
+                          ],
                         })
                       }
                     }
@@ -437,7 +435,13 @@ export const useMouse = create((set, get) => {
                       if (latestGesture === 'Closed_Fist') {
                         set((b4) => {
                           if (b4.picking && b4.picking?.length === 0 && get()?.activeObjects[0]) {
-                            return { ...b4, picking: [get()?.activeObjects[0]] }
+                            let first = get()?.activeObjects[0]
+
+                            if (plane) {
+                              first.getWorldPosition(plane.position)
+                            }
+
+                            return { ...b4, picking: [first] }
                           } else {
                             return { ...b4 }
                           }

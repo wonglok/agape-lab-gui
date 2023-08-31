@@ -256,9 +256,11 @@ function MathSymbol({ position, left = '', right = '' }) {
 function Insert() {
   let stick = useMouse((r) => r.stick)
   let cursor = useMouse((r) => r.cursor)
+  let hoverPlane = useMouse((r) => r.hoverPlane)
   // let ribbons = useMouse((r) => r.ribbons)
   return (
     <>
+      {hoverPlane}
       {stick}
       {cursor}
       {/* {ribbons} */}
