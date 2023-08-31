@@ -417,14 +417,10 @@ export const useMouse = create((set, get) => {
                     if (casterGroup) {
                       //
                       let res = raycaster.intersectObject(casterGroup, true)
-                      if (res) {
+                      if (res && res[0]) {
+                        res[0].object.userData.raycastPoint = res[0].point
                         set({
-                          activeObjects: [
-                            res.map((r) => {
-                              r.object.userData.raycastPoint = r.point
-                              return r.object
-                            })[0],
-                          ],
+                          activeObjects: [res[0].object],
                         })
                       }
                     }
