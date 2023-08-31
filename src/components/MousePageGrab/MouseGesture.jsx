@@ -73,10 +73,12 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
-            {`=`}
-            <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
-          </Text3D>
+          <Center>
+            <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
+              {`=`}
+              <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
+            </Text3D>
+          </Center>
         </group>
 
         <group name='raycast-group'>
@@ -195,23 +197,25 @@ function MathSymbol({ position, left = '', right = '' }) {
   return (
     <>
       <group position={position} userData={{ dragGroup: true }}>
-        <Text3D
-          anchorX={'center'}
-          anchorY={'middle'}
-          ref={ref}
-          size={1.5}
-          textAlign='center'
-          raycast={meshBounds}
-          font={`/font/days_regular_macroman/Days_Regular.json`}>
-          {side === 'left' && left}
-          {side === 'right' && right}
-          <meshPhysicalMaterial
-            side={DoubleSide}
-            transmission={1}
-            roughness={0.5}
-            thickness={2}
-            color={'blue'}></meshPhysicalMaterial>
-        </Text3D>
+        <Center>
+          <Text3D
+            anchorX={'center'}
+            anchorY={'middle'}
+            ref={ref}
+            size={1.5}
+            textAlign='center'
+            raycast={meshBounds}
+            font={`/font/days_regular_macroman/Days_Regular.json`}>
+            {side === 'left' && left}
+            {side === 'right' && right}
+            <meshPhysicalMaterial
+              side={DoubleSide}
+              transmission={1}
+              roughness={0.5}
+              thickness={2}
+              color={'blue'}></meshPhysicalMaterial>
+          </Text3D>
+        </Center>
       </group>
     </>
   )
