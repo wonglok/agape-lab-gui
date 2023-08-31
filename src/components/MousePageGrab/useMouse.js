@@ -391,31 +391,26 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    get().handResult?.landmarks?.forEach((lmk, handIndex) => {
+                    {
                       //
-                      {
-                        //
-                        if (grabDist > 0.75) {
-                          set((b4) => {
-                            if (b4.picking && b4.picking.length > 0) {
-                              return { ...b4, picking: [] }
-                            } else {
-                              return { ...b4 }
-                            }
-                          })
-
-                          //
-                        } else if (grabDist <= 0.7) {
-                          set((b4) => {
-                            if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
-                              return { ...b4, picking: [get()?.activeObjects[0]] }
-                            } else {
-                              return b4
-                            }
-                          })
-                        }
+                      if (result.gestures[0][0].categoryName === 'Closed_Fist') {
+                        set((b4) => {
+                          if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
+                            return { ...b4, picking: [get()?.activeObjects[0]] }
+                          } else {
+                            return b4
+                          }
+                        })
+                      } else if (result.gestures[0][0].categoryName === 'Open_Palm') {
+                        set((b4) => {
+                          if (b4.picking && b4.picking.length > 0) {
+                            return { ...b4, picking: [] }
+                          } else {
+                            return { ...b4 }
+                          }
+                        })
                       }
-                    })
+                    }
                   }
 
                   //

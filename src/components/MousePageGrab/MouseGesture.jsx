@@ -209,7 +209,12 @@ function MathSymbol({ position, left = '', right = '' }) {
           font={`/font/days_regular_macroman/Days_Regular.json`}>
           {side === 'left' && left}
           {side === 'right' && right}
-          <meshStandardMaterial side={DoubleSide} color={'blue'}></meshStandardMaterial>
+          <meshPhysicalMaterial
+            side={DoubleSide}
+            transmission={1}
+            roughness={0.5}
+            thickness={2}
+            color={'blue'}></meshPhysicalMaterial>
         </Text3D>
       </group>
     </>
