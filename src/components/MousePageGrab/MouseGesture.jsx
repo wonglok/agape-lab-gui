@@ -211,11 +211,11 @@ function MathSymbol({ position, left = '', right = '' }) {
       let shouldBeSide = v3.x >= 0 ? 'right' : 'left'
 
       if (side !== shouldBeSide) {
-        ref.current.rotation.y = 0
+        ref.current.rotation.x = 0
         anime({
           duration: 1000,
           targets: [ref.current.rotation],
-          y: Math.PI * 2,
+          x: Math.PI * 2,
           easing: 'easeInOutQuad',
         })
         setSide(shouldBeSide)
