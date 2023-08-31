@@ -73,11 +73,7 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Text3D
-            raycast={meshBounds}
-            size={1.5}
-            textAlign='center'
-            font={`/font/days_regular_macroman/Days_Regular.json`}>
+          <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
             {`=`}
             <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
           </Text3D>
@@ -125,7 +121,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
+        <SelectiveBloomRender></SelectiveBloomRender>
 
         <Insert></Insert>
 
@@ -203,9 +199,9 @@ function MathSymbol({ position, left = '', right = '' }) {
           anchorX={'center'}
           anchorY={'middle'}
           ref={ref}
-          raycast={meshBounds}
           size={1.5}
           textAlign='center'
+          raycast={meshBounds}
           font={`/font/days_regular_macroman/Days_Regular.json`}>
           {side === 'left' && left}
           {side === 'right' && right}
