@@ -183,49 +183,79 @@ export const useMouse = create((set, get) => {
 
       //
 
-      let ray = new Ray()
+      // let ray = new Ray()
       set({
         onLoop: (st, dt) => {
-          {
-            // tail.mini.work(st, dt)
-            let collider = get().collider
-            let geometry = collider?.geometry
-            let boundsTree = geometry?.boundsTree
+          // {
+          //   // tail.mini.work(st, dt)
+          //   let collider = get().collider
+          //   let geometry = collider?.geometry
+          //   let boundsTree = geometry?.boundsTree
 
-            let handIndex = 0
-            let beforeTip = array[handIndex * eachHandPointCount + 6]
-            let indexTip = array[handIndex * eachHandPointCount + 8]
-            beforeTip.lookAt(indexTip.position)
-            beforeTip.getWorldDirection(dir)
+          //   let handIndex = 0
+          //   let beforeTip = array[handIndex * eachHandPointCount + 6]
+          //   let indexTip = array[handIndex * eachHandPointCount + 8]
+          //   beforeTip.lookAt(indexTip.position)
+          //   beforeTip.getWorldDirection(dir)
 
-            ray.set(beforeTip.position, dir)
+          //   ray.set(beforeTip.position, dir)
 
-            let res = boundsTree.raycastFirst(ray, DoubleSide)
+          //   let res = boundsTree.raycastFirst(ray, DoubleSide)
 
-            let activeObjects = get().activeObjects
-            let picking = get().picking
+          //   let activeObjects = get().activeObjects
+          //   let picking = get().picking
 
-            let mouse = get().mouse
+          //   let mouse = get().mouse
 
-            if (picking && picking.length > 0) {
-              picking[0].getWorldPosition(cursor.position)
-            } else if (activeObjects && activeObjects.length > 0) {
-              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
-            } else if (res) {
-              cursor.position.lerp(res.point, 1)
-            }
-          }
+          //   if (picking && picking.length > 0) {
+          //     picking[0].getWorldPosition(cursor.position)
+          //   } else if (activeObjects && activeObjects.length > 0) {
+          //     cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
+          //   } else if (res) {
+          //     cursor.position.lerp(res.point, 1)
+          //   }
+          // }
           // console.log(cursor.position)
 
           //
           {
+            {
+              let casterGroup = get().scene.getObjectByName('raycast-group')
+              casterGroup.traverse((ob) => {
+                if (ob.material) {
+                  ob.material.emissive = new Color('#000000')
+                }
+              })
+            }
+
+            {
+              get().activeObjects?.forEach((picked) => {
+                if (picked) {
+                  picked.traverse((ob) => {
+                    if (ob.material) {
+                      ob.material.emissive = new Color('#ffffff')
+                    }
+                  })
+                }
+              })
+            }
+
             let picking = get()?.picking || []
             picking.forEach((picked) => {
               if (picked) {
+                if (picked) {
+                  picked.traverse((ob) => {
+                    if (ob.material) {
+                      ob.material.emissive = new Color('#ffffff')
+                    }
+                  })
+                }
+
                 picked.traverseAncestors((it) => {
                   if (it?.userData?.dragGroup) {
                     picked.getWorldPosition(plane.position)
                     plane.lookAt(get().camera.position)
+
                     let raycaster = new Raycaster()
                     stick.getWorldDirection(dir)
                     raycaster.set(stick.position, dir)
@@ -242,7 +272,42 @@ export const useMouse = create((set, get) => {
             })
           }
 
-          ///
+          // {
+          //
+          //   let res = raycaster.intersectObject(casterGroup, true)
+          //   get().activeObjects?.forEach((it) => {
+          //     if (it) {
+          //       let ancestor = it
+          //       it.traverseAncestors((an) => {
+          //         if (an?.userData?.dragGroup) {
+          //           ancestor = an
+          //         }
+          //       })
+
+          //       ancestor.traverse((ob) => {
+          //         if (ob.material) {
+          //           ob.material.emissive = new Color('#000000')
+          //         }
+          //       })
+          //     }
+          //   })
+          //   if (res) {
+          //     res.map((r) => {
+          //       let it = r.object
+          //       let ancestor = it
+          //       it.traverseAncestors((an) => {
+          //         if (an?.userData?.dragGroup) {
+          //           ancestor = an
+          //         }
+          //       })
+          //       ancestor.traverse((ob) => {
+          //         if (ob.material) {
+          //           ob.material.emissive = new Color('#ffffff')
+          //         }
+          //       })
+          //     })
+          //   }
+          // }
         },
       })
 
@@ -354,43 +419,11 @@ export const useMouse = create((set, get) => {
                     if (casterGroup) {
                       //
                       let res = raycaster.intersectObject(casterGroup, true)
-                      console.log(res)
                       if (res) {
-                        get().activeObjects?.forEach((it) => {
-                          if (it) {
-                            let ancestor = it
-                            it.traverseAncestors((an) => {
-                              if (an?.userData?.dragGroup) {
-                                ancestor = an
-                              }
-                            })
-
-                            ancestor.traverse((ob) => {
-                              if (ob.material) {
-                                ob.material.emissive = new Color('#000000')
-                              }
-                            })
-                          }
-                        })
-
                         set({
                           activeObjects: res.map((r) => {
-                            let it = r.object
-                            it.userData.raycastPoint = r.point
-
-                            let ancestor = it
-                            it.traverseAncestors((an) => {
-                              if (an?.userData?.dragGroup) {
-                                ancestor = an
-                              }
-                            })
-
-                            ancestor.traverse((ob) => {
-                              if (ob.material) {
-                                ob.material.emissive = new Color('#ffffff')
-                              }
-                            })
-                            return it
+                            r.object.userData.raycastPoint = r.point
+                            return r.object
                           }),
                         })
                       }
