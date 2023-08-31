@@ -202,9 +202,9 @@ function SelectiveBloomRender() {
     return create((set, get) => {
       return {
         postProcessingConfig: {
-          multisampling: 0,
+          multisampling: 4,
           emissiveIntensity: 4.89,
-          envMapIntensity: 0.3,
+          envMapIntensity: 0.2,
           ssrPass: {
             useThisOne: true,
             intensity: 0.3,
