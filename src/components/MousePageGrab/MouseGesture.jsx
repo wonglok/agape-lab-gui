@@ -117,7 +117,7 @@ export function MouseGesture() {
 
         <Suspense fallback={null}>
           <Environment background files={`/hdr/grass.hdr`}></Environment>
-          <group position={[0, -5, 4]} scale={5}>
+          <group position={[0, -5, 3]} scale={5}>
             <BG></BG>
           </group>
         </Suspense>
