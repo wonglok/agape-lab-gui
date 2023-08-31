@@ -16,8 +16,8 @@ import {
 // import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
-import { Mini } from './Noodle/Mini'
-import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
+// import { Mini } from './Noodle/Mini'
+// import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 
 //
 export const useMouse = create((set, get) => {
