@@ -73,14 +73,14 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Text
+          <Text3D
             raycast={meshBounds}
             fontSize={2}
             textAlign='center'
-            font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+            font={`/font/days_regular_macroman/Days_Regular.json`}>
             {`=`}
             <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
-          </Text>
+          </Text3D>
         </group>
 
         <group name='raycast-group'>
@@ -90,7 +90,6 @@ export function MouseGesture() {
 
           <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
 
-          {/*  */}
           {/*
           <group userData={{ dragGroup: true }} scale={2} position={[0, 0, -4]}>
             <Sphere args={[1, 32, 32]}>
@@ -200,18 +199,18 @@ function MathSymbol({ position, left = '', right = '' }) {
   return (
     <>
       <group position={position} userData={{ dragGroup: true }}>
-        <Text
+        <Text3D
           anchorX={'center'}
           anchorY={'middle'}
           ref={ref}
           raycast={meshBounds}
           fontSize={2}
           textAlign='center'
-          font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+          font={`/font/days_regular_macroman/Days_Regular.json`}>
           {side === 'left' && left}
           {side === 'right' && right}
           <meshStandardMaterial side={DoubleSide} color={'blue'}></meshStandardMaterial>
-        </Text>
+        </Text3D>
       </group>
     </>
   )

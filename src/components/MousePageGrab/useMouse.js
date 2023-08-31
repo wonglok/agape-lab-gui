@@ -288,8 +288,6 @@ export const useMouse = create((set, get) => {
                   let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height
                   let vpz = lmk[0].z
 
-                  //
-
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
                     let wmk = result.worldLandmarks[handIndex][bone]
@@ -334,7 +332,6 @@ export const useMouse = create((set, get) => {
                   )
 
                   let grabDist = midOfAB2C.position.distanceTo(array[handIndex * eachHandPointCount + 12].position)
-
                   let topTip = midOfCD2E
                   let beforeTip = b4midOfCD2E
 
@@ -398,7 +395,7 @@ export const useMouse = create((set, get) => {
                       //
                       {
                         //
-                        if (grabDist > 0.85) {
+                        if (grabDist > 0.75) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -408,7 +405,7 @@ export const useMouse = create((set, get) => {
                           })
 
                           //
-                        } else if (grabDist <= 0.8) {
+                        } else if (grabDist <= 0.7) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
@@ -416,7 +413,6 @@ export const useMouse = create((set, get) => {
                               return b4
                             }
                           })
-                        } else {
                         }
                       }
                     })
