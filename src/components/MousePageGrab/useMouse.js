@@ -196,10 +196,10 @@ export const useMouse = create((set, get) => {
 
             let activeObjects = get().activeObjects
             if (activeObjects && activeObjects.length > 0) {
-              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.1)
+              cursor.position.lerp(activeObjects[0].userData.raycastPoint, 0.5)
             } else {
               if (res) {
-                cursor.position.lerp(res.point, 0.1)
+                cursor.position.lerp(res.point, 0.5)
               }
             }
           }
@@ -283,7 +283,7 @@ export const useMouse = create((set, get) => {
                     goal.position.z += -vpz
                     goal.position.z += 0
 
-                    hand.position.lerp(goal.position, 0.3)
+                    hand.position.lerp(goal.position, 1.0)
                     hand.visible = true
 
                     // if (bone === 7) {
