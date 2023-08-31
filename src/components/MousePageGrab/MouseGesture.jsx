@@ -8,10 +8,14 @@ import {
   Plane,
   useGLTF,
   MeshDiscardMaterial,
+  Text3D,
+  Center,
+  meshBounds,
+  Text,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, use, useEffect, useMemo, useRef } from 'react'
+import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react'
 import { Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EffectComposer, N8AO, SSR } from '@react-three/postprocessing'
@@ -61,22 +65,34 @@ export function MouseGesture() {
 
         <primitive object={camera}></primitive>
 
+        <group userData={{ dragGroup: false }} position={[0, 1, -4]}>
+          <Text3D size={3} font={`/font/days_regular_macroman/Days_Regular.json`}>
+            {`=`}
+            <meshPhysicalMaterial
+              thickness={0.5}
+              transmission={1}
+              metalness={0}
+              reflectivity={0.1}
+              color={'blue'}
+              roughness={0.3}></meshPhysicalMaterial>
+          </Text3D>
+        </group>
+
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} scale={2} position={[2, 3, -4]}>
-            <Computer></Computer>
+          <group userData={{ dragGroup: true }} position={[-3, 2, -4]}>
+            <MathSymbol left={'+ 1'} right='- 1'></MathSymbol>
           </group>
 
-          <group userData={{ dragGroup: true }} scale={2} position={[-3, 5, -4]}>
-            <Sphere args={[1, 32, 32]}>
-              <meshPhysicalMaterial
-                thickness={0.5}
-                transmission={1}
-                metalness={0}
-                reflectivity={0.1}
-                roughness={0.3}></meshPhysicalMaterial>
-            </Sphere>
+          <group userData={{ dragGroup: true }} position={[-10, 2, -4]}>
+            <MathSymbol left={'+ 2x'} right='- 2x'></MathSymbol>
           </group>
 
+          <group userData={{ dragGroup: true }} position={[6, 2, -4]}>
+            <MathSymbol left={'+ 3'} right='- 3'></MathSymbol>
+          </group>
+
+          {/*  */}
+          {/*
           <group userData={{ dragGroup: true }} scale={2} position={[0, 0, -4]}>
             <Sphere args={[1, 32, 32]}>
               <meshPhysicalMaterial
@@ -86,7 +102,7 @@ export function MouseGesture() {
                 reflectivity={0.1}
                 roughness={0.3}></meshPhysicalMaterial>
             </Sphere>
-          </group>
+          </group> */}
         </group>
 
         {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
@@ -111,6 +127,53 @@ export function MouseGesture() {
         <SelectiveBloomRender></SelectiveBloomRender>
 
         <Insert></Insert>
+      </group>
+    </>
+  )
+}
+
+function MathSymbol({ left = '', right = '' }) {
+  let ref = useRef()
+
+  let [side, setSide] = useState('')
+
+  let v3 = useMemo(() => {
+    return new Vector3(0, 0, 0)
+  }, [])
+
+  useFrame(() => {
+    if (ref.current) {
+      ref.current.getWorldPosition(v3)
+
+      let shouldBeSide = v3.x >= 0 ? 'right' : 'left'
+
+      if (side !== 'left') {
+        setSide(shouldBeSide)
+      }
+      if (side !== 'right') {
+        setSide(shouldBeSide)
+      }
+    }
+  })
+
+  return (
+    <>
+      <group ref={ref}>
+        <Text fontSize={3} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+          {side === 'left' && left}
+          {side === 'right' && right}
+          <meshPhysicalMaterial
+            thickness={0.5}
+            transmission={1}
+            metalness={0}
+            reflectivity={0.1}
+            color={'blue'}
+            roughness={0.3}></meshPhysicalMaterial>
+
+          <Sphere args={[3.5, 8, 8]}>
+            <MeshDiscardMaterial></MeshDiscardMaterial>
+          </Sphere>
+        </Text>
       </group>
     </>
   )
@@ -169,7 +232,7 @@ function SelectiveBloomRender() {
             mipmapBlur: true,
             luminanceThreshold: 0.9,
             luminanceSmoothing: 0.5,
-            intensity: 1,
+            intensity: 0.3,
             resolutionScale: 0.3,
           },
           wavePass: {
@@ -182,7 +245,7 @@ function SelectiveBloomRender() {
           },
           chromePass: {
             useThisOne: false,
-            offsetX: 0.008000000000000018,
+            offsetX: 0.008,
             offsetY: 0.008,
             radialModulation: true,
             modulationOffset: 0.5,
