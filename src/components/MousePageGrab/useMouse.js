@@ -278,8 +278,8 @@ export const useMouse = create((set, get) => {
                   stick.visible = true
                 }
                 result.landmarks.forEach((lmk, handIndex) => {
-                  let vpx = (lmk[0].x * 2.0 - 1.0) * 0.75 * vp.width
-                  let vpy = (lmk[0].y * 2.0 - 1.0) * 0.75 * vp.height
+                  let vpx = (lmk[0].x * 2.0 - 1.0) * 1.0 * vp.width
+                  let vpy = (lmk[0].y * 2.0 - 1.0) * 1.0 * vp.height
                   let vpz = lmk[0].z
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
@@ -288,7 +288,6 @@ export const useMouse = create((set, get) => {
                     goal.position.x += -vpx
                     goal.position.y += -vpy
                     goal.position.z += -vpz
-                    goal.position.z += 0
 
                     hand.position.lerp(goal.position, 0.9)
                     hand.visible = true
