@@ -331,23 +331,30 @@ export const useMouse = create((set, get) => {
                     0.5,
                   )
 
-                  let grabDist = midOfAB2C.position.distanceTo(array[handIndex * eachHandPointCount + 12].position)
-                  let topTip = midOfCD2E
-                  let beforeTip = b4midOfCD2E
-
                   {
-                    beforeTip.lookAt(topTip.position)
-                    beforeTip.getWorldDirection(dir)
-                    raycaster.set(beforeTip.position, dir)
+                    let camera = get().camera
+
+                    raycaster.setFromCamera(
+                      {
+                        x: -(lmk[0].x * 2.0 - 1.0),
+                        y: -(lmk[1].y * 2.0 - 1.0),
+                      },
+                      camera,
+                    )
 
                     stick.scale.setScalar(1)
-                    stick.position.copy(beforeTip.position)
-                    stick.quaternion.copy(beforeTip.quaternion)
+                    stick.position.copy(array[handIndex * eachHandPointCount + 9].position)
+                    stick.lookAt(
+                      array[handIndex * eachHandPointCount + 9].position.x,
+                      array[handIndex * eachHandPointCount + 9].position.y,
+                      array[handIndex * eachHandPointCount + 9].position.z - 1,
+                    )
 
                     let casterGroup = get().scene.getObjectByName('raycast-group')
-                    if (casterGroup && get()?.picking?.length === 0) {
-                      raycaster.firstHitOnly = false
+                    if (casterGroup) {
+                      //
                       let res = raycaster.intersectObject(casterGroup, true)
+                      console.log(res)
                       if (res) {
                         get().activeObjects?.forEach((it) => {
                           if (it) {
@@ -395,13 +402,13 @@ export const useMouse = create((set, get) => {
                       //
                       if (result.gestures[0][0].categoryName === 'Closed_Fist') {
                         set((b4) => {
-                          if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
-                            return { ...b4, picking: [get()?.activeObjects[0]] }
+                          if (b4.picking && b4.picking?.length === 0 && get()?.activeObjects[0]) {
+                            return { ...b4, picking: get()?.activeObjects }
                           } else {
-                            return b4
+                            return { ...b4 }
                           }
                         })
-                      } else if (result.gestures[0][0].categoryName === 'Open_Palm') {
+                      } else {
                         set((b4) => {
                           if (b4.picking && b4.picking.length > 0) {
                             return { ...b4, picking: [] }
