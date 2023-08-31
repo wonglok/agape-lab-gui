@@ -398,11 +398,10 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    let lastGesture = get().lastGesture
                     {
                       //\
                       let latestGesture = result.gestures[0][0].categoryName
-                      if (latestGesture === 'Closed_Fist' && lastGesture !== latestGesture) {
+                      if (latestGesture === 'Closed_Fist') {
                         set((b4) => {
                           if (b4.picking && b4.picking?.length === 0 && get()?.activeObjects[0]) {
                             return { ...b4, picking: get()?.activeObjects }
@@ -420,10 +419,6 @@ export const useMouse = create((set, get) => {
                         })
                       }
                     }
-
-                    set({
-                      lastGesture: result.gestures[0][0].categoryName,
-                    })
                   }
 
                   //
