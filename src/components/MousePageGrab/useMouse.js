@@ -230,6 +230,8 @@ export const useMouse = create((set, get) => {
             }
 
             {
+              //
+
               get().activeObjects?.forEach((picked, idx) => {
                 if (picked && idx === 0) {
                   picked.traverse((ob) => {
@@ -239,6 +241,8 @@ export const useMouse = create((set, get) => {
                   })
                 }
               })
+
+              //
             }
 
             let picking = get()?.picking || []
