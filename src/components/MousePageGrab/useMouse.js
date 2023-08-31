@@ -136,6 +136,8 @@ export const useMouse = create((set, get) => {
         return r
       })
 
+      //
+
       let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
       stick.geometry.translate(0, 0, 8 / 2)
       stick.visible = false
