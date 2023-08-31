@@ -64,7 +64,7 @@ export const useMouse = create((set, get) => {
 
       let stream = navigator.mediaDevices.getUserMedia({
         video: {
-          width: 512,
+          width: 256,
           height: 256,
         },
         audio: false,
@@ -272,8 +272,8 @@ export const useMouse = create((set, get) => {
             let target = get().controlsTarget
             if (cam && target) {
               let vp = {
-                width: 20,
-                height: 10,
+                width: 25,
+                height: 25,
               }
               set({ handResult: result || [] })
               if (vp && result && result?.landmarks?.length > 0) {
@@ -281,9 +281,10 @@ export const useMouse = create((set, get) => {
                   stick.visible = true
                 }
                 result.landmarks.forEach((lmk, handIndex) => {
-                  let vpx = (lmk[0].x * 2.0 - 1.0) * vp.width * 1
-                  let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height * 1
+                  let vpx = (lmk[0].x * 2.0 - 1.0) * vp.width
+                  let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height
                   let vpz = lmk[0].z
+
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
                     let wmk = result.worldLandmarks[handIndex][bone]
@@ -364,8 +365,8 @@ export const useMouse = create((set, get) => {
                       //
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
-                        let midTip = array[handIndex * eachHandPointCount + 12]
-                        if (thumbTip.position.distanceTo(midTip.position) > 0.8) {
+                        let indexTip = array[handIndex * eachHandPointCount + 8]
+                        if (thumbTip.position.distanceTo(indexTip.position) > 0.8) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -373,7 +374,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.75) {
+                        } else if (thumbTip.position.distanceTo(indexTip.position) <= 0.75) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
