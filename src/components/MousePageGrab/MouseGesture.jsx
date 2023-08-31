@@ -67,20 +67,22 @@ export function MouseGesture() {
           <group userData={{ dragGroup: true }} scale={1} position={[-3, 4, -2]}>
             <Sphere args={[1, 32, 32]}>
               <meshPhysicalMaterial
-                thickness={1.5}
+                thickness={0.5}
                 transmission={1}
-                reflectivity={1}
-                roughness={0.15}></meshPhysicalMaterial>
+                metalness={0}
+                reflectivity={0.1}
+                roughness={0.3}></meshPhysicalMaterial>
             </Sphere>
           </group>
 
           <group userData={{ dragGroup: true }} scale={1} position={[-2, 2, -2]}>
             <Sphere args={[1, 32, 32]}>
               <meshPhysicalMaterial
-                thickness={1.5}
+                thickness={0.5}
                 transmission={1}
-                reflectivity={1}
-                roughness={0.15}></meshPhysicalMaterial>
+                metalness={0}
+                reflectivity={0.1}
+                roughness={0.3}></meshPhysicalMaterial>
             </Sphere>
           </group>
         </group>
