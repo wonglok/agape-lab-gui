@@ -18,10 +18,11 @@ import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react'
 import { DoubleSide, Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
-import { EffectComposer, N8AO, SSR } from '@react-three/postprocessing'
 import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
 import anime from 'animejs'
+import { DragControls } from 'three/addons/controls/DragControls.js'
+
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
 
@@ -127,7 +128,42 @@ export function MouseGesture() {
         <SelectiveBloomRender></SelectiveBloomRender>
 
         <Insert></Insert>
+
+        <DragGUI></DragGUI>
       </group>
+    </>
+  )
+}
+
+function DragGUI() {
+  let gl = useThree((r) => r.gl)
+  let scene = useThree((r) => r.scene)
+  let camera = useThree((r) => r.camera)
+  let controls = useThree((r) => r.controls)
+  useEffect(() => {
+    let dragMeshes = []
+
+    scene.traverse((r) => {
+      if (r.userData.dragGroup) {
+        dragMeshes.push(r)
+      }
+    })
+
+    let dc = new DragControls(dragMeshes, camera, gl.domElement)
+    dc.addEventListener('dragstart', (event) => {
+      controls.enabled = false
+    })
+    dc.addEventListener('dragend', (event) => {
+      controls.enabled = true
+    })
+    return () => {
+      dc.dispose()
+    }
+  }, [gl, camera, scene, controls])
+  return (
+    <>
+      {/* <></DragControls> */}
+      {/*  */}
     </>
   )
 }
