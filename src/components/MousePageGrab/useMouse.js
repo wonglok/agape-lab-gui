@@ -202,14 +202,15 @@ export const useMouse = create((set, get) => {
 
             let activeObjects = get().activeObjects
             let picking = get().picking
+
+            let mouse = get().mouse
+
             if (picking && picking.length > 0) {
               picking[0].getWorldPosition(cursor.position)
             } else if (activeObjects && activeObjects.length > 0) {
               cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
-            } else {
-              if (res) {
-                cursor.position.lerp(res.point, 1)
-              }
+            } else if (res) {
+              cursor.position.lerp(res.point, 1)
             }
           }
           // console.log(cursor.position)
@@ -269,16 +270,16 @@ export const useMouse = create((set, get) => {
             let target = get().controlsTarget
             if (cam && target) {
               let vp = {
-                width: 10,
+                width: 20,
                 height: 10,
               }
+              set({ handResult: result || [] })
               if (vp && result && result?.landmarks?.length > 0) {
-                set({ handResult: result })
                 {
                   stick.visible = true
                 }
                 result.landmarks.forEach((lmk, handIndex) => {
-                  let vpx = (lmk[0].x * 2.0 - 1.0) * vp.width * 2
+                  let vpx = (lmk[0].x * 2.0 - 1.0) * vp.width * 1
                   let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height * 1
                   let vpz = lmk[0].z
                   for (let bone = 0; bone < eachHandPointCount; bone++) {

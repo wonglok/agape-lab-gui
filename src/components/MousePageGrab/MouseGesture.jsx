@@ -41,6 +41,11 @@ export function MouseGesture() {
     useMouse.setState({ gl })
   }, [gl])
 
+  let mouse = useThree((r) => r.mouse)
+  useEffect(() => {
+    useMouse.setState({ mouse })
+  }, [mouse])
+
   let viewport = useThree((r) => r.viewport)
   let controls = useThree((r) => r.controls)
 
@@ -198,8 +203,8 @@ function MathSymbol({ left = '', right = '' }) {
 
   return (
     <>
-      <group ref={ref}>
-        <Sphere args={[2.3, 16, 16]}>
+      <group>
+        <Sphere ref={ref} args={[2.3, 16, 16]}>
           <MeshDiscardMaterial></MeshDiscardMaterial>
 
           <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
