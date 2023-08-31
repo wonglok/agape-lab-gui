@@ -11,10 +11,12 @@ import {
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
-import { Bloom, EffectComposer, N8AO, SelectiveBloom } from '@react-three/postprocessing'
+import { EffectComposer, N8AO, SSR } from '@react-three/postprocessing'
+import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
+import { create } from 'zustand'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -131,11 +133,87 @@ function SelectiveBloomRender() {
   // let bloomMeshes = useMouse((r) => r.bloomMeshes)
   // let bloomLights = useMouse((r) => r.bloomLights)
 
+  let useStore = useMemo(() => {
+    return create((set, get) => {
+      return {
+        postProcessingConfig: {
+          multisampling: 0,
+          emissiveIntensity: 4.89,
+          envMapIntensity: 0.3,
+          ssrPass: {
+            useThisOne: true,
+            intensity: 1,
+            exponent: 1,
+            distance: 10,
+            fade: 0,
+            roughnessFade: 1,
+            thickness: 10,
+            ior: 1.45,
+            maxRoughness: 1,
+            maxDepthDifference: 10,
+            blend: 0.9,
+            correction: 1,
+            correctionRadius: 1,
+            blur: 0,
+            blurKernel: 1,
+            blurSharpness: 10,
+            jitter: 0.025,
+            jitterRoughness: 0.025,
+            steps: 8,
+            refineSteps: 8,
+            missedRays: true,
+            useNormalMap: true,
+            useRoughnessMap: true,
+            resolutionScale: 1,
+            velocityResolutionScale: 0.1,
+          },
+          bloomPass: {
+            useThisOne: true,
+            mipmapBlur: true,
+            luminanceThreshold: 0.6700000000000003,
+            intensity: 4.89,
+            resolutionScale: 1,
+          },
+          wavePass: {
+            useThisOne: false,
+            speed: 1.0900000000000003,
+            maxRadius: 1.07,
+            waveSize: 1.09,
+            amplitude: 0.29999999999999993,
+            intensity: 0.5,
+          },
+          chromePass: {
+            useThisOne: false,
+            offsetX: 0.008000000000000018,
+            offsetY: 0.008,
+            radialModulation: true,
+            modulationOffset: 0.5,
+          },
+          colorPass: {
+            useThisOne: true,
+            hue: 0,
+            satuation: 0,
+            brightness: 0,
+            contrast: 0,
+            saturation: 0,
+          },
+          aoPass: {
+            useThisOne: true,
+            intensity: 2,
+            aoRadius: 1.9020000000000001,
+            distanceFalloff: 2.5540000000000003,
+            color: '#000000',
+          },
+        },
+      }
+    })
+  }, [])
   return (
     <>
-      <EffectComposer multisampling={4} disableNormalPass>
+      <EnvSSRWorks isGame={true} useStore={useStore}></EnvSSRWorks>
+      {/* <EffectComposer multisampling={4} disableNormalPass>
         <N8AO intensity={5} aoRadius={3}></N8AO>
-      </EffectComposer>
+      </EffectComposer> */}
     </>
   )
 }
