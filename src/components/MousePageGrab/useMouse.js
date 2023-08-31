@@ -283,7 +283,7 @@ export const useMouse = create((set, get) => {
                     goal.position.z += -vpz
                     goal.position.z += 0
 
-                    hand.position.lerp(goal.position, 1.0)
+                    hand.position.lerp(goal.position, 0.5)
                     hand.visible = true
 
                     // if (bone === 7) {
