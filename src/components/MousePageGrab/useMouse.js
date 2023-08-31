@@ -234,7 +234,7 @@ export const useMouse = create((set, get) => {
                     let result = results[0]
                     if (picked && picked.material && result) {
                       targetGoal.set(result.point.x, result.point.y, it.position.z)
-                      it.position.lerp(targetGoal, 0.5)
+                      it.position.lerp(targetGoal, 0.25)
                     }
                   }
                 })

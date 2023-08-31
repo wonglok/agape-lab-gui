@@ -73,12 +73,14 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Center>
-            <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
-              {`=`}
-              <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
-            </Text3D>
-          </Center>
+          <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
+            {`=`}
+            <meshPhysicalMaterial
+              side={DoubleSide}
+              transmission={1}
+              roughness={0.5}
+              color={'blue'}></meshPhysicalMaterial>
+          </Text3D>
         </group>
 
         <group name='raycast-group'>
