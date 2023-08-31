@@ -51,8 +51,8 @@ export const useMouse = create((set, get) => {
       set({ loading: true })
       let video = document.createElement('video')
       video.playsInline = true
-      let width = window.innerWidth
-      let height = window.innerHeight
+      // let width = window.innerWidth
+      // let height = window.innerHeight
       // if (width >= height) {
       //   video.width = 512
       //   video.height = 512 * (height / width)
@@ -219,10 +219,6 @@ export const useMouse = create((set, get) => {
 
           //
           {
-            let handIndex = 0
-            let beforeTip = array[handIndex * eachHandPointCount + 6]
-            let indexTip = array[handIndex * eachHandPointCount + 8]
-            beforeTip.lookAt(indexTip.position)
             let picking = get()?.picking || []
             picking.forEach((picked) => {
               if (picked) {
@@ -231,8 +227,8 @@ export const useMouse = create((set, get) => {
                     picked.getWorldPosition(plane.position)
                     plane.lookAt(get().camera.position)
                     let raycaster = new Raycaster()
-                    beforeTip.getWorldDirection(dir)
-                    raycaster.set(beforeTip.position, dir)
+                    stick.getWorldDirection(dir)
+                    raycaster.set(stick.position, dir)
                     raycaster.firstHitOnly = true
                     let results = raycaster.intersectObject(plane)
                     let result = results[0]
@@ -251,6 +247,13 @@ export const useMouse = create((set, get) => {
       })
 
       let goal = new Object3D()
+
+      let midOfAB2C = new Object3D()
+      let midOfCD2E = new Object3D()
+
+      let b4midOfAB2C = new Object3D()
+      let b4midOfCD2E = new Object3D()
+
       set({
         hands: array,
         runProcessVideoFrame: ({ video }) => {
@@ -285,6 +288,8 @@ export const useMouse = create((set, get) => {
                   let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height
                   let vpz = lmk[0].z
 
+                  //
+
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
                     let wmk = result.worldLandmarks[handIndex][bone]
@@ -305,12 +310,40 @@ export const useMouse = create((set, get) => {
                   }
 
                   {
-                    let beforeTip = array[handIndex * eachHandPointCount + 7]
-                    let indexTip = array[handIndex * eachHandPointCount + 8]
-                    beforeTip.lookAt(indexTip.position)
+                    b4midOfAB2C.position.lerpVectors(
+                      array[handIndex * eachHandPointCount + 3].position,
+                      array[handIndex * eachHandPointCount + 7].position,
+                      0.5,
+                    )
 
+                    b4midOfCD2E.position.lerpVectors(
+                      b4midOfAB2C.position,
+                      array[handIndex * eachHandPointCount + 11].position,
+                      0.5,
+                    )
+
+                    midOfAB2C.position.lerpVectors(
+                      array[handIndex * eachHandPointCount + 4].position,
+                      array[handIndex * eachHandPointCount + 8].position,
+                      0.5,
+                    )
+
+                    midOfCD2E.position.lerpVectors(
+                      midOfAB2C.position,
+                      array[handIndex * eachHandPointCount + 12].position,
+                      0.5,
+                    )
+
+                    let topTip = midOfCD2E
+                    let beforeTip = b4midOfCD2E
+
+                    beforeTip.lookAt(topTip.position)
                     beforeTip.getWorldDirection(dir)
                     raycaster.set(beforeTip.position, dir)
+
+                    stick.scale.setScalar(1)
+                    stick.position.copy(beforeTip.position)
+                    stick.quaternion.copy(beforeTip.quaternion)
 
                     let casterGroup = get().scene.getObjectByName('raycast-group')
                     if (casterGroup && get()?.picking?.length === 0) {
@@ -333,6 +366,7 @@ export const useMouse = create((set, get) => {
                             })
                           }
                         })
+
                         set({
                           activeObjects: res.map((r) => {
                             let it = r.object
@@ -359,8 +393,7 @@ export const useMouse = create((set, get) => {
 
                   {
                     //
-                    handRootOfFristHand.getWorldPosition(stick.position)
-                    handRootOfFristHand.getWorldQuaternion(stick.quaternion)
+
                     get().handResult?.landmarks?.forEach((lmk, handIndex) => {
                       //
                       {
