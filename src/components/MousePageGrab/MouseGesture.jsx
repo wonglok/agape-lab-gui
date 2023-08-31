@@ -10,7 +10,6 @@ import {
   MeshDiscardMaterial,
   Text3D,
   Center,
-  meshBounds,
   Text,
   PerspectiveCamera,
 } from '@react-three/drei'
@@ -23,6 +22,7 @@ import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
 import anime from 'animejs'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js'
+import { Ray, Matrix4, Sphere as Sphere3JS } from 'three'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -166,6 +166,33 @@ function DragGUI() {
       {/*  */}
     </>
   )
+}
+
+const _inverseMatrix = new Matrix4()
+const _ray = new Ray()
+const _sphere = new Sphere3JS()
+const _vA = new Vector3()
+
+function meshBounds(raycaster, intersects) {
+  const geometry = this.geometry
+  const material = this.material
+  const matrixWorld = this.matrixWorld
+  if (material === undefined) return
+  // Checking boundingSphere distance to ray
+  if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
+  _sphere.copy(geometry.boundingSphere)
+  _sphere.radius = _sphere.radius * 1.5
+  _sphere.applyMatrix4(matrixWorld)
+  if (raycaster.ray.intersectsSphere(_sphere) === false) return
+  _inverseMatrix.copy(matrixWorld).invert()
+  _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix)
+  // Check boundingBox before continuing
+  if (geometry.boundingBox !== null && _ray.intersectBox(geometry.boundingBox, _vA) === null) return
+  intersects.push({
+    distance: _vA.distanceTo(raycaster.ray.origin),
+    point: _vA.clone(),
+    object: this,
+  })
 }
 
 function MathSymbol({ position, left = '', right = '' }) {
