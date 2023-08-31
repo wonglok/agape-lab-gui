@@ -284,13 +284,13 @@ export const useMouse = create((set, get) => {
                   for (let bone = 0; bone < eachHandPointCount; bone++) {
                     let hand = array[handIndex * eachHandPointCount + bone]
                     let wmk = result.worldLandmarks[handIndex][bone]
-                    goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
+                    goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(23)
                     goal.position.x += -vpx
                     goal.position.y += -vpy
                     goal.position.z += -vpz
                     goal.position.z += 0
 
-                    hand.position.lerp(goal.position, 1)
+                    hand.position.lerp(goal.position, 0.9)
                     hand.visible = true
 
                     if (bone === 1) {
@@ -348,7 +348,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.55) {
+                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.6) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
