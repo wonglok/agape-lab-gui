@@ -108,6 +108,7 @@ export function MouseGesture() {
         {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
 
         <PerspectiveCamera near={0.5} far={300} fov={76} makeDefault></PerspectiveCamera>
+
         <OrbitControls
           rotateSpeed={-1}
           object-position={[0, 1.6, 10]}
@@ -178,6 +179,8 @@ function meshBounds(raycaster, intersects) {
   const material = this.material
   const matrixWorld = this.matrixWorld
   if (material === undefined) return
+
+  //
   // Checking boundingSphere distance to ray
   if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
   _sphere.copy(geometry.boundingSphere)
