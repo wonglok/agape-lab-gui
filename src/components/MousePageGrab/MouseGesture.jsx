@@ -12,6 +12,7 @@ import {
   Center,
   meshBounds,
   Text,
+  PerspectiveCamera,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
@@ -21,7 +22,7 @@ import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
 import anime from 'animejs'
-import { DragControls } from 'three/addons/controls/DragControls.js'
+import { DragControls } from 'three/examples/jsm/controls/DragControls.js'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -72,30 +73,22 @@ export function MouseGesture() {
         <primitive object={camera}></primitive>
 
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+          <Text
+            raycast={meshBounds}
+            fontSize={2}
+            textAlign='center'
+            font={`/font/days_regular_macroman/Days-webfont.ttf`}>
             {`=`}
-            <meshPhysicalMaterial
-              thickness={0.5}
-              transmission={1}
-              metalness={0}
-              reflectivity={0.1}
-              color={'blue'}
-              roughness={0.3}></meshPhysicalMaterial>
+            <meshBasicMaterial side={DoubleSide} color={'blue'}></meshBasicMaterial>
           </Text>
         </group>
 
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} position={[-3, 2, -4]}>
-            <MathSymbol left={'+ 1'} right='- 1'></MathSymbol>
-          </group>
+          <MathSymbol position={[-3, 2, -4]} left={'+ 1'} right='- 1'></MathSymbol>
 
-          <group userData={{ dragGroup: true }} position={[-8, 2, -4]}>
-            <MathSymbol left={'+ 2x'} right='- 2x'></MathSymbol>
-          </group>
+          <MathSymbol position={[-8, 2, -4]} left={'+ 2x'} right='- 2x'></MathSymbol>
 
-          <group userData={{ dragGroup: true }} position={[3, 2, -4]}>
-            <MathSymbol left={'+ 3'} right='- 3'></MathSymbol>
-          </group>
+          <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
 
           {/*  */}
           {/*
@@ -109,10 +102,13 @@ export function MouseGesture() {
                 roughness={0.3}></meshPhysicalMaterial>
             </Sphere>
           </group> */}
+
+          {/*  */}
         </group>
 
         {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
 
+        <PerspectiveCamera near={0.5} far={300} fov={76} makeDefault></PerspectiveCamera>
         <OrbitControls
           rotateSpeed={-1}
           object-position={[0, 1.6, 10]}
@@ -130,7 +126,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        <SelectiveBloomRender></SelectiveBloomRender>
+        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
 
         <Insert></Insert>
 
@@ -149,7 +145,7 @@ function DragGUI() {
     let dragMeshes = []
 
     scene.traverse((r) => {
-      if (r.userData.dragGroup) {
+      if (r.userData.dragGroup && !r.geometry) {
         dragMeshes.push(r)
       }
     })
@@ -173,7 +169,7 @@ function DragGUI() {
   )
 }
 
-function MathSymbol({ left = '', right = '' }) {
+function MathSymbol({ position, left = '', right = '' }) {
   let ref = useRef()
 
   let [side, setSide] = useState('')
@@ -203,23 +199,19 @@ function MathSymbol({ left = '', right = '' }) {
 
   return (
     <>
-      <group>
-        <Sphere ref={ref} args={[2.3, 16, 16]}>
-          <MeshDiscardMaterial></MeshDiscardMaterial>
-
-          <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
-            {side === 'left' && left}
-            {side === 'right' && right}
-            <meshPhysicalMaterial
-              thickness={0.5}
-              transmission={1}
-              metalness={0}
-              reflectivity={0.1}
-              color={'blue'}
-              side={DoubleSide}
-              roughness={0.3}></meshPhysicalMaterial>
-          </Text>
-        </Sphere>
+      <group position={position} userData={{ dragGroup: true }}>
+        <Text
+          anchorX={'center'}
+          anchorY={'middle'}
+          ref={ref}
+          raycast={meshBounds}
+          fontSize={2}
+          textAlign='center'
+          font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+          {side === 'left' && left}
+          {side === 'right' && right}
+          <meshStandardMaterial side={DoubleSide} color={'blue'}></meshStandardMaterial>
+        </Text>
       </group>
     </>
   )
@@ -228,12 +220,12 @@ function MathSymbol({ left = '', right = '' }) {
 function Insert() {
   let stick = useMouse((r) => r.stick)
   let cursor = useMouse((r) => r.cursor)
-  let ribbons = useMouse((r) => r.ribbons)
+  // let ribbons = useMouse((r) => r.ribbons)
   return (
     <>
       {stick}
       {cursor}
-      {ribbons}
+      {/* {ribbons} */}
     </>
   )
 }

@@ -157,35 +157,37 @@ export const useMouse = create((set, get) => {
       let cursor = new Object3D()
       set({ cursor: <primitive object={cursor}></primitive> })
 
-      let o3 = new Object3D()
+      // let o3 = new Object3D()
 
-      set({ ribbons: <primitive object={o3}></primitive> })
+      // set({ ribbons: <primitive object={o3}></primitive> })
 
-      let tail = new CursorTrackerTail({
-        gl: get().gl,
-        mini: new Mini({}),
-        camera: get().camera,
-        mounter: o3,
-        cursor: cursor,
-        color: new Color('#ffffff'),
-        onInsert: (v) => {
-          // set({
-          //   bloomMeshes: [v],
-          // })
-        },
-      })
+      // let tail = new CursorTrackerTail({
+      //   gl: get().gl,
+      //   mini: new Mini({}),
+      //   camera: get().camera,
+      //   mounter: o3,
+      //   cursor: cursor,
+      //   color: new Color('#ffffff'),
+      //   onInsert: (v) => {
+      //     // set({
+      //     //   bloomMeshes: [v],
+      //     // })
+      //   },
+      // })
 
-      set({
-        cleanMini: () => {
-          tail.mini.clean()
-        },
-      })
+      // set({
+      //   cleanMini: () => {
+      //     tail.mini.clean()
+      //   },
+      // })
+
+      //
 
       let ray = new Ray()
       set({
         onLoop: (st, dt) => {
           {
-            tail.mini.work(st, dt)
+            // tail.mini.work(st, dt)
             let collider = get().collider
             let geometry = collider?.geometry
             let boundsTree = geometry?.boundsTree
