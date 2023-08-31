@@ -75,7 +75,7 @@ export function MouseGesture() {
         <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
           <Text3D
             raycast={meshBounds}
-            fontSize={2}
+            size={1.5}
             textAlign='center'
             font={`/font/days_regular_macroman/Days_Regular.json`}>
             {`=`}
@@ -204,7 +204,7 @@ function MathSymbol({ position, left = '', right = '' }) {
           anchorY={'middle'}
           ref={ref}
           raycast={meshBounds}
-          fontSize={2}
+          size={1.5}
           textAlign='center'
           font={`/font/days_regular_macroman/Days_Regular.json`}>
           {side === 'left' && left}
