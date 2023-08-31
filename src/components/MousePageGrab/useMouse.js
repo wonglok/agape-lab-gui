@@ -33,7 +33,7 @@ export const useMouse = create((set, get) => {
     hands: [],
     scene: false,
     camera: false,
-    picking: [],
+    picking: false,
     activeObjects: [],
     activeUUID: false,
     viewport: false,
@@ -436,7 +436,7 @@ export const useMouse = create((set, get) => {
                       let latestGesture = result.gestures[0][0].categoryName
                       if (latestGesture === 'Closed_Fist') {
                         set((b4) => {
-                          if (b4.picking && b4.picking?.length === 0 && get()?.activeObjects[0]) {
+                          if (!b4.picking && get()?.activeObjects[0]) {
                             let first = get()?.activeObjects[0]
 
                             if (plane) {
@@ -451,7 +451,7 @@ export const useMouse = create((set, get) => {
                       } else {
                         set((b4) => {
                           if (b4.picking && b4.picking.length > 0) {
-                            return { ...b4, picking: [] }
+                            return { ...b4, picking: false }
                           } else {
                             return { ...b4 }
                           }
