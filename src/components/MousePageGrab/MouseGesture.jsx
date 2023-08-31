@@ -65,8 +65,8 @@ export function MouseGesture() {
 
         <primitive object={camera}></primitive>
 
-        <group userData={{ dragGroup: false }} position={[0, 1, -4]}>
-          <Text3D size={3} font={`/font/days_regular_macroman/Days_Regular.json`}>
+        <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
+          <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
             {`=`}
             <meshPhysicalMaterial
               thickness={0.5}
@@ -75,11 +75,11 @@ export function MouseGesture() {
               reflectivity={0.1}
               color={'blue'}
               roughness={0.3}></meshPhysicalMaterial>
-          </Text3D>
+          </Text>
         </group>
 
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} position={[-3, 2, -4]}>
+          <group userData={{ dragGroup: true }} position={[-4, 2, -4]}>
             <MathSymbol left={'+ 1'} right='- 1'></MathSymbol>
           </group>
 
@@ -159,7 +159,7 @@ function MathSymbol({ left = '', right = '' }) {
   return (
     <>
       <group ref={ref}>
-        <Text fontSize={3} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+        <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
           {side === 'left' && left}
           {side === 'right' && right}
           <meshPhysicalMaterial
@@ -170,7 +170,7 @@ function MathSymbol({ left = '', right = '' }) {
             color={'blue'}
             roughness={0.3}></meshPhysicalMaterial>
 
-          <Sphere args={[3.5, 8, 8]}>
+          <Sphere args={[2, 8, 8]}>
             <MeshDiscardMaterial></MeshDiscardMaterial>
           </Sphere>
         </Text>
@@ -281,10 +281,10 @@ function SelectiveBloomRender() {
   )
 }
 
-function Computer() {
-  let gltf = useGLTF(`/mini-homes/computer.glb`)
-  return <primitive object={gltf.scene} />
-}
+// function Computer() {
+//   let gltf = useGLTF(`/mini-homes/computer.glb`)
+//   return <primitive object={gltf.scene} />
+// }
 
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
