@@ -16,12 +16,12 @@ import {
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react'
-import { Scene, Vector3 } from 'three'
+import { DoubleSide, Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EffectComposer, N8AO, SSR } from '@react-three/postprocessing'
 import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
-
+import anime from 'animejs'
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
 
@@ -79,15 +79,15 @@ export function MouseGesture() {
         </group>
 
         <group name='raycast-group'>
-          <group userData={{ dragGroup: true }} position={[-4, 2, -4]}>
+          <group userData={{ dragGroup: true }} position={[-3, 2, -4]}>
             <MathSymbol left={'+ 1'} right='- 1'></MathSymbol>
           </group>
 
-          <group userData={{ dragGroup: true }} position={[-10, 2, -4]}>
+          <group userData={{ dragGroup: true }} position={[-8, 2, -4]}>
             <MathSymbol left={'+ 2x'} right='- 2x'></MathSymbol>
           </group>
 
-          <group userData={{ dragGroup: true }} position={[6, 2, -4]}>
+          <group userData={{ dragGroup: true }} position={[3, 2, -4]}>
             <MathSymbol left={'+ 3'} right='- 3'></MathSymbol>
           </group>
 
@@ -147,10 +147,14 @@ function MathSymbol({ left = '', right = '' }) {
 
       let shouldBeSide = v3.x >= 0 ? 'right' : 'left'
 
-      if (side !== 'left') {
-        setSide(shouldBeSide)
-      }
-      if (side !== 'right') {
+      if (side !== shouldBeSide) {
+        ref.current.rotation.x = 0
+        anime({
+          duration: 1000,
+          targets: [ref.current.rotation],
+          x: Math.PI * 4,
+          easing: 'easeInOutQuad',
+        })
         setSide(shouldBeSide)
       }
     }
@@ -168,6 +172,7 @@ function MathSymbol({ left = '', right = '' }) {
             metalness={0}
             reflectivity={0.1}
             color={'blue'}
+            side={DoubleSide}
             roughness={0.3}></meshPhysicalMaterial>
 
           <Sphere args={[2, 8, 8]}>
