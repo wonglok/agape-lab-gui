@@ -11,7 +11,7 @@ import {
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Suspense, use, useEffect, useMemo, useRef } from 'react'
 import { Scene, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EffectComposer, N8AO, SSR } from '@react-three/postprocessing'
@@ -208,6 +208,11 @@ function SelectiveBloomRender() {
       }
     })
   }, [])
+
+  let scene = useThree((r) => r.scene)
+  useEffect(() => {
+    //
+  }, [scene])
   return (
     <>
       <EnvSSRWorks isGame={true} useStore={useStore}></EnvSSRWorks>
