@@ -100,7 +100,7 @@ export function MouseGesture() {
         <Hand></Hand>
 
         <Suspense fallback={null}>
-          <Environment files={`/lok/shanghai.hdr`}></Environment>
+          <Environment background files={`/hdr/grass.hdr`}></Environment>
           <group position={[0, -5, 4]} scale={5}>
             <BG></BG>
           </group>
@@ -142,7 +142,7 @@ function SelectiveBloomRender() {
           envMapIntensity: 0.3,
           ssrPass: {
             useThisOne: true,
-            intensity: 1,
+            intensity: 0.3,
             exponent: 1,
             distance: 10,
             fade: 0,
@@ -168,11 +168,11 @@ function SelectiveBloomRender() {
             velocityResolutionScale: 0.1,
           },
           bloomPass: {
-            useThisOne: true,
+            useThisOne: false,
             mipmapBlur: true,
-            luminanceThreshold: 0.6700000000000003,
-            intensity: 4.89,
-            resolutionScale: 1,
+            luminanceThreshold: 0.9,
+            intensity: 1,
+            resolutionScale: 0.3,
           },
           wavePass: {
             useThisOne: false,
@@ -193,9 +193,9 @@ function SelectiveBloomRender() {
             useThisOne: true,
             hue: 0,
             satuation: 0,
-            brightness: 0,
-            contrast: 0,
-            saturation: 0,
+            brightness: 0.2,
+            contrast: 0.2,
+            saturation: 0.1,
           },
           aoPass: {
             useThisOne: true,
