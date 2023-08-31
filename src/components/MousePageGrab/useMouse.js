@@ -347,7 +347,7 @@ export const useMouse = create((set, get) => {
                     stick.lookAt(
                       array[handIndex * eachHandPointCount + 9].position.x,
                       array[handIndex * eachHandPointCount + 9].position.y,
-                      array[handIndex * eachHandPointCount + 9].position.z - 1,
+                      array[handIndex * eachHandPointCount + 9].position.z - 5,
                     )
 
                     let casterGroup = get().scene.getObjectByName('raycast-group')
