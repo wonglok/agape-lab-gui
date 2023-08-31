@@ -437,7 +437,7 @@ export const useMouse = create((set, get) => {
                       if (latestGesture === 'Closed_Fist') {
                         set((b4) => {
                           if (b4.picking && b4.picking?.length === 0 && get()?.activeObjects[0]) {
-                            return { ...b4, picking: get()?.activeObjects }
+                            return { ...b4, picking: [get()?.activeObjects[0]] }
                           } else {
                             return { ...b4 }
                           }
