@@ -58,12 +58,6 @@ export function MouseGesture() {
 
   useFrame((st, dt) => {
     useMouse.getState().onLoop(st, dt)
-
-    st.scene.traverse((it) => {
-      if (it.material) {
-        it.material.envMapIntensity = 0.5
-      }
-    })
   })
 
   return (
