@@ -163,22 +163,22 @@ function MathSymbol({ left = '', right = '' }) {
   return (
     <>
       <group ref={ref}>
-        <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
-          {side === 'left' && left}
-          {side === 'right' && right}
-          <meshPhysicalMaterial
-            thickness={0.5}
-            transmission={1}
-            metalness={0}
-            reflectivity={0.1}
-            color={'blue'}
-            side={DoubleSide}
-            roughness={0.3}></meshPhysicalMaterial>
+        <Sphere args={[2.3, 16, 16]}>
+          <MeshDiscardMaterial></MeshDiscardMaterial>
 
-          <Sphere args={[2, 8, 8]}>
-            <MeshDiscardMaterial></MeshDiscardMaterial>
-          </Sphere>
-        </Text>
+          <Text fontSize={2} textAlign='center' font={`/font/days_regular_macroman/Days-webfont.ttf`}>
+            {side === 'left' && left}
+            {side === 'right' && right}
+            <meshPhysicalMaterial
+              thickness={0.5}
+              transmission={1}
+              metalness={0}
+              reflectivity={0.1}
+              color={'blue'}
+              side={DoubleSide}
+              roughness={0.3}></meshPhysicalMaterial>
+          </Text>
+        </Sphere>
       </group>
     </>
   )
