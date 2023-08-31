@@ -22,6 +22,8 @@ import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 //
 export const useMouse = create((set, get) => {
   return {
+    cursor: null,
+    stick: null,
     bloomLights: [],
     bloomMeshes: [],
     handID: false,
@@ -140,9 +142,8 @@ export const useMouse = create((set, get) => {
       stick.name = 'handFingerStick'
       stick.visible = false
 
-      let handFingerStick = get()?.scene?.getObjectByName('handFingerStick')
-      handFingerStick?.removeFromParent()
-      get().scene.add(stick)
+      set({ stick: <primitive object={stick}></primitive> })
+
       let raycaster = new Raycaster()
       let dir = new Vector3()
       let plane = new Mesh(
@@ -154,19 +155,23 @@ export const useMouse = create((set, get) => {
       let targetGoal = new Vector3()
 
       let cursor = new Object3D()
-      get().scene.add(cursor)
+      set({ cursor: <primitive object={cursor}></primitive> })
+
+      let o3 = new Object3D()
+
+      set({ ribbons: <primitive object={o3}></primitive> })
 
       let tail = new CursorTrackerTail({
         gl: get().gl,
         mini: new Mini({}),
         camera: get().camera,
-        mounter: get().scene,
+        mounter: o3,
         cursor: cursor,
         color: new Color('#ffffff'),
         onInsert: (v) => {
-          set({
-            bloomMeshes: [v],
-          })
+          // set({
+          //   bloomMeshes: [v],
+          // })
         },
       })
 
@@ -175,6 +180,7 @@ export const useMouse = create((set, get) => {
           tail.mini.clean()
         },
       })
+
       let ray = new Ray()
       set({
         onLoop: (st, dt) => {
@@ -195,7 +201,10 @@ export const useMouse = create((set, get) => {
             let res = boundsTree.raycastFirst(ray, DoubleSide)
 
             let activeObjects = get().activeObjects
-            if (activeObjects && activeObjects.length > 0) {
+            let picking = get().picking
+            if (picking && picking.length > 0) {
+              picking[0].getWorldPosition(cursor.position)
+            } else if (activeObjects && activeObjects.length > 0) {
               cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
             } else {
               if (res) {
@@ -226,7 +235,7 @@ export const useMouse = create((set, get) => {
                     let result = results[0]
                     if (picked && picked.material && result) {
                       targetGoal.set(result.point.x, result.point.y, it.position.z)
-                      it.position.lerp(targetGoal, 1)
+                      it.position.lerp(targetGoal, 0.5)
                     }
                   }
                 })
@@ -284,19 +293,6 @@ export const useMouse = create((set, get) => {
                     hand.position.lerp(goal.position, 1)
                     hand.visible = true
 
-                    // if (bone === 7) {
-                    //   hand.visible = true
-                    // }
-                    // if (bone === 8) {
-                    //   hand.visible = true
-                    // }
-                    // if (bone === 4) {
-                    //   hand.visible = true
-                    // }
-                    // if (bone === 12) {
-                    //   hand.visible = true
-                    // }
-
                     if (bone === 1) {
                       hand.visible = false
                     }
@@ -320,14 +316,14 @@ export const useMouse = create((set, get) => {
                       if (res) {
                         get().activeObjects?.forEach((it) => {
                           if (it) {
-                            it.material.emissive = new Color(0x000000)
+                            it.material.emissive = new Color('#000000')
                           }
                         })
                         set({
                           activeObjects: res.map((r) => {
                             let it = r.object
                             it.userData.raycastPoint = r.point
-                            it.material.emissive = new Color(0xffffff)
+                            it.material.emissive = new Color('#ffffff')
                             return it
                           }),
                         })

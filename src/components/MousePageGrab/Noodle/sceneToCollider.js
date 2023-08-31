@@ -1,7 +1,7 @@
 import { MeshBVH } from 'three-mesh-bvh'
 import { Box3, BoxBufferGeometry, Mesh, SphereBufferGeometry, Vector3, MeshBasicMaterial, Matrix4 } from 'three'
 
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 export async function sceneToCollider({ scene }) {
   //
@@ -120,45 +120,43 @@ export async function sceneToCollider({ scene }) {
       }
       geometriesToBeMerged.push(cloned)
     }
-    await new Promise((r) => r())
+
+    await new Promise((r) => {
+      r()
+    })
     // console.log("processing glb", ((i / processList.length) * 100).toFixed(2));
     i++
   }
+
   await new Promise((r) => r())
 
   // create the merged geometry
-  const combined = BufferGeometryUtils.mergeBufferGeometries(geometriesToBeMerged, false)
+  const combined = mergeBufferGeometries(geometriesToBeMerged, false)
 
   combined.boundsTree = new MeshBVH(combined, {
-    // Which split strategy to use when constructing the BVH.
-    // strategy: CENTER,
-
-    // The maximum depth to allow the tree to build to.
-    // Setting this to a smaller trades raycast speed for better construction
-    // time and less memory allocation.
-    maxDepth: 40,
-
-    // The number of triangles to aim for in a leaf node. Setting this to a lower
-    // number can improve raycast performance but increase construction time and
-    // memory footprint.
-    maxLeafTris: 15,
-
-    // If true then the bounding box for the geometry is set once the BVH
-    // has been constructed.
-    setBoundingBox: true,
-
-    // If true then the MeshBVH will use SharedArrayBuffer rather than ArrayBuffer when
-    // initializing the BVH buffers. Geometry index data will be created as a
-    // SharedArrayBuffer only if it needs to be created. Otherwise it is used as-is.
-    useSharedArrayBuffer: false,
-
-    // An optional function that takes a "progress" argument in the range [0, 1]
-    // indicating the progress along BVH generation. Useful primarily when generating
-    // the BVH asynchronously with the GenerateMeshBVHWorker class.
-    onProgress: null,
-
-    // Print out warnings encountered during tree construction.
-    verbose: true,
+    // // Which split strategy to use when constructing the BVH.
+    // // strategy: CENTER,
+    // // The maximum depth to allow the tree to build to.
+    // // Setting this to a smaller trades raycast speed for better construction
+    // // time and less memory allocation.
+    // maxDepth: 40,
+    // // The number of triangles to aim for in a leaf node. Setting this to a lower
+    // // number can improve raycast performance but increase construction time and
+    // // memory footprint.
+    // maxLeafTris: 15,
+    // // If true then the bounding box for the geometry is set once the BVH
+    // // has been constructed.
+    // setBoundingBox: true,
+    // // If true then the MeshBVH will use SharedArrayBuffer rather than ArrayBuffer when
+    // // initializing the BVH buffers. Geometry index data will be created as a
+    // // SharedArrayBuffer only if it needs to be created. Otherwise it is used as-is.
+    // useSharedArrayBuffer: false,
+    // // An optional function that takes a "progress" argument in the range [0, 1]
+    // // indicating the progress along BVH generation. Useful primarily when generating
+    // // the BVH asynchronously with the GenerateMeshBVHWorker class.
+    // onProgress: null,
+    // // Print out warnings encountered during tree construction.
+    // verbose: true,
   })
 
   let collider = new Mesh(combined, new MeshBasicMaterial({ wireframe: true }))

@@ -39,11 +39,12 @@ export function MousePageGrab() {
           {
             <button
               className='p-2 bg-gray-200'
-              onClick={() => {
-                useMouse.getState().initVideo()
-                useMouse.getState().initTask()
-              }}>
-              {loading ? `Loading...` : `Start`}
+              // onClick={() => {
+              //   useMouse.getState().initVideo()
+              //   useMouse.getState().initTask()
+              // }}
+            >
+              {loading ? `Processing...` : `Downloading....`}
             </button>
           }
         </div>

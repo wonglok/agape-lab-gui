@@ -107,7 +107,22 @@ export function MouseGesture() {
         <Init></Init>
 
         <SelectiveBloomRender></SelectiveBloomRender>
+
+        <Insert></Insert>
       </group>
+    </>
+  )
+}
+
+function Insert() {
+  let stick = useMouse((r) => r.stick)
+  let cursor = useMouse((r) => r.cursor)
+  let ribbons = useMouse((r) => r.ribbons)
+  return (
+    <>
+      {stick}
+      {cursor}
+      {ribbons}
     </>
   )
 }
