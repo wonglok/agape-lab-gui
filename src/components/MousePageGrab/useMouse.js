@@ -315,14 +315,37 @@ export const useMouse = create((set, get) => {
                       if (res) {
                         get().activeObjects?.forEach((it) => {
                           if (it) {
-                            it.material.emissive = new Color('#000000')
+                            let ancestor = it
+                            it.traverseAncestors((an) => {
+                              if (an?.userData?.dragGroup) {
+                                ancestor = an
+                              }
+                            })
+
+                            ancestor.traverse((ob) => {
+                              if (ob.material) {
+                                ob.material.emissive = new Color('#000000')
+                              }
+                            })
                           }
                         })
                         set({
                           activeObjects: res.map((r) => {
                             let it = r.object
                             it.userData.raycastPoint = r.point
-                            it.material.emissive = new Color('#ffffff')
+
+                            let ancestor = it
+                            it.traverseAncestors((an) => {
+                              if (an?.userData?.dragGroup) {
+                                ancestor = an
+                              }
+                            })
+
+                            ancestor.traverse((ob) => {
+                              if (ob.material) {
+                                ob.material.emissive = new Color('#ffffff')
+                              }
+                            })
                             return it
                           }),
                         })
@@ -339,7 +362,7 @@ export const useMouse = create((set, get) => {
                       {
                         let thumbTip = array[handIndex * eachHandPointCount + 4]
                         let midTip = array[handIndex * eachHandPointCount + 12]
-                        if (thumbTip.position.distanceTo(midTip.position) > 0.7 / 0.75) {
+                        if (thumbTip.position.distanceTo(midTip.position) > 0.85) {
                           set((b4) => {
                             if (b4.picking && b4.picking.length > 0) {
                               return { ...b4, picking: [] }
@@ -347,7 +370,7 @@ export const useMouse = create((set, get) => {
                               return { ...b4 }
                             }
                           })
-                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.6 / 0.75) {
+                        } else if (thumbTip.position.distanceTo(midTip.position) <= 0.7) {
                           set((b4) => {
                             if (b4.picking?.length === 0 && get()?.activeObjects[0]) {
                               return { ...b4, picking: [get()?.activeObjects[0]] }
