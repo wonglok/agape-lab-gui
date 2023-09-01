@@ -192,19 +192,19 @@ function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
       let shouldBeSide = v3.x >= 0 ? 'right' : 'left'
 
       if (side !== shouldBeSide) {
-        ref.current.rotation.x = 0
+        ref.current.rotation.z = 0
         anime({
           duration: 1000,
           targets: [ref.current.rotation],
-          x: Math.PI * 2,
+          z: Math.PI * 2,
           easing: 'easeInOutQuad',
         })
         setSide(shouldBeSide)
       }
     }
     if (ref.current) {
-      if (!ref.current.centered) {
-        ref.current.centered = true
+      if (!ref.current.geometry.centered) {
+        ref.current.geometry.centered = true
         ref.current.geometry.center()
       }
     }
@@ -238,12 +238,10 @@ function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
 function Insert() {
   let handsInsert = useMouse((r) => r.handsInsert)
   let hoverPlane = useMouse((r) => r.hoverPlane)
-  // let ribbons = useMouse((r) => r.ribbons)
   return (
     <>
       {handsInsert}
       {hoverPlane}
-      {/* {ribbons} */}
     </>
   )
 }
@@ -337,11 +335,6 @@ function SelectiveBloomRender() {
   )
 }
 
-// function Computer() {
-//   let gltf = useGLTF(`/mini-homes/computer.glb`)
-//   return <primitive object={gltf.scene} />
-// }
-
 function BG() {
   let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
 
@@ -400,6 +393,7 @@ function Init() {
 
   return null
 }
+
 function Hand() {
   let bones = useMouse((r) => r.bones)
   return (

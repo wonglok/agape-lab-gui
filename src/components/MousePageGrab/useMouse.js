@@ -287,13 +287,11 @@ export const useMouse = create((set, get) => {
               }
 
               if (key === 'pinch') {
-                console.log(key, val)
                 isPinching = val
                 list = beforeState['found']
               }
 
               if (key === 'delta') {
-                console.log(val)
                 if (isPinching) {
                   list.forEach((it) => {
                     it.object.position.add(val)
