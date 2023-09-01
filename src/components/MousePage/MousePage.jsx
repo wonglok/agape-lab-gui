@@ -28,7 +28,6 @@ export function MousePage() {
               className='p-2 bg-gray-200'
               onClick={() => {
                 useMouse.getState().initVideo()
-                useMouse.getState().initTask()
               }}>
               {loading ? `Loading...` : `Start`}
             </button>

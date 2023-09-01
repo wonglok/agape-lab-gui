@@ -32,7 +32,7 @@ export const useMouse = create((set, get) => {
     cancel: () => {},
     cleanVideoTexture: () => {},
     runProcessVideoFrame: () => {},
-    initVideo: () => {
+    initVideo: async () => {
       set({ loading: true })
       let video = document.createElement('video')
       video.playsInline = true
@@ -90,8 +90,7 @@ export const useMouse = create((set, get) => {
         }
         video.play()
       })
-    },
-    initTask: async () => {
+
       const handCount = 1
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(

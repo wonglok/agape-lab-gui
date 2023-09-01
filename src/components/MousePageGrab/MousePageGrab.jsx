@@ -8,15 +8,6 @@ export function MousePageGrab() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
   let video = useMouse((r) => r.video)
   let loading = useMouse((r) => r.loading)
-  // let scene = useMouse((r) => r.scene)
-  // let camera = useMouse((r) => r.camera)
-  // let controls = useMouse((r) => r.controls)
-  // useEffect(() => {
-  //   if (showStartMenu && scene && camera && controls) {
-  //     useMouse.getState().initVideo()
-  //     useMouse.getState().initTask()
-  //   }
-  // }, [showStartMenu, scene, camera, controls])
 
   return (
     <>
@@ -36,17 +27,7 @@ export function MousePageGrab() {
 
       {showStartMenu && (
         <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full'>
-          {
-            <button
-              className='p-2 bg-gray-200'
-              // onClick={() => {
-              //   useMouse.getState().initVideo()
-              //   useMouse.getState().initTask()
-              // }}
-            >
-              {loading ? `Processing...` : `Downloading....`}
-            </button>
-          }
+          {<button className='p-2 bg-gray-200'>{loading ? `Processing...` : `Downloading....`}</button>}
         </div>
       )}
 

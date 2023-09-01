@@ -40,7 +40,7 @@ export const useMouse = create((set, get) => {
 
     //
     collider: useMouseCache.get('collider') || false,
-    handResult: false,
+    // handResult: false,
     bones: [],
     scene: false,
     camera: false,
@@ -57,9 +57,10 @@ export const useMouse = create((set, get) => {
     cancel: () => {},
     cleanVideoTexture: () => {},
     runProcessVideoFrame: () => {},
-    initVideo: () => {
+    initVideo: async () => {
       set({ inited: true })
       set({ loading: true })
+
       let video = document.createElement('video')
       video.playsInline = true
 
@@ -87,6 +88,7 @@ export const useMouse = create((set, get) => {
             get().runProcessVideoFrame({ video })
           }
           id = video.requestVideoFrameCallback(func)
+
           get().cancel()
           set({
             cancel: () => {
@@ -96,7 +98,6 @@ export const useMouse = create((set, get) => {
               }
               canRun = false
             },
-            vid: id,
             videoTexture: videoTexture,
             video: video,
           })
@@ -104,8 +105,7 @@ export const useMouse = create((set, get) => {
         }
         video.play()
       })
-    },
-    initTask: async () => {
+
       const handCount = 2
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
@@ -307,14 +307,13 @@ export const useMouse = create((set, get) => {
         handsInsert: myHands.map((h) => {
           return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
         }),
+
         runProcessVideoFrame: ({ video }) => {
           if (video) {
             let nowInMs = Date.now()
             let result = handLandmarker.recognizeForVideo(video, nowInMs, {
               rotationDegrees: 0,
             })
-
-            set({ handResult: result })
 
             myHands.forEach((eHand, idx) => {
               if (result.landmarks[idx]) {
@@ -334,8 +333,6 @@ export const useMouse = create((set, get) => {
           }
         },
       })
-
-      //
 
       let dragPlane = new Mesh(
         new PlaneGeometry(1000, 1000, 100, 100),

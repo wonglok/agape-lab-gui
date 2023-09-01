@@ -1,24 +1,8 @@
-import {
-  Box,
-  Environment,
-  Icosahedron,
-  MeshTransmissionMaterial,
-  OrbitControls,
-  Sphere,
-  Plane,
-  useGLTF,
-  MeshDiscardMaterial,
-  Text3D,
-  Center,
-  Text,
-  PerspectiveCamera,
-  Ring,
-  Torus,
-} from '@react-three/drei'
+import { Box, Environment, Icosahedron, OrbitControls, useGLTF, Text3D, PerspectiveCamera } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
-import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react'
-import { DoubleSide, Scene, Vector3 } from 'three'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Box3, DoubleSide, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
@@ -162,13 +146,23 @@ function meshBounds(raycaster, intersects) {
   // Checking boundingSphere distance to ray
   if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
   _sphere.copy(geometry.boundingSphere)
-  _sphere.radius = _sphere.radius * 2
+  _sphere.radius = _sphere.radius
   _sphere.applyMatrix4(matrixWorld)
   if (raycaster.ray.intersectsSphere(_sphere) === false) return
   _inverseMatrix.copy(matrixWorld).invert()
   _ray.copy(raycaster.ray).applyMatrix4(_inverseMatrix)
-  // Check boundingBox before continuing
-  if (geometry.boundingBox !== null && _ray.intersectBox(geometry.boundingBox, _vA) === null) return
+
+  if (geometry.boundingBox !== null && _ray.intersectBox(geometry.boundingBox, _vA) === null)
+    // Check boundingBox before continuing
+    return
+
+  if (!geometry.boundingBox) {
+    geometry.computeBoundingBox()
+  }
+  if (!geometry.boundingBox.scaledUp) {
+    geometry.boundingBox.scaledUp = true
+    geometry.boundingBox.expandByScalar(geometry.boundingSphere.radius * 3)
+  }
   intersects.push({
     distance: _vA.distanceTo(raycaster.ray.origin),
     point: _vA.clone(),
@@ -384,7 +378,6 @@ function Init() {
     }
 
     useMouse.getState().initVideo()
-    useMouse.getState().initTask()
 
     return () => {
       useMouse.getState().cleanMini()
