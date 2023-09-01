@@ -39,7 +39,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
+        <SelectiveBloomRender></SelectiveBloomRender>
 
         <Insert></Insert>
 
@@ -49,7 +49,7 @@ export function MouseGesture() {
 
         <Suspense fallback={null}>
           <Environment background files={`/hdr/grass.hdr`}></Environment>
-          <group position={[10, -10, -22]} scale={10}>
+          <group position={[7, -10, -22]} scale={10}>
             <BG url={`/room/room-fancy.003.glb`}></BG>
           </group>
         </Suspense>
@@ -259,12 +259,12 @@ function SelectiveBloomRender() {
             useThisOne: true,
             hue: 0,
             satuation: 0,
-            brightness: 0.0,
-            contrast: 0.25,
-            saturation: 0.1,
+            brightness: -0.06,
+            contrast: 0.2,
+            saturation: 0.05,
           },
           ssrPass: {
-            useThisOne: true,
+            useThisOne: false,
             intensity: 0.5,
             exponent: 1,
             distance: 10,
@@ -291,10 +291,9 @@ function SelectiveBloomRender() {
             velocityResolutionScale: 0.1,
           },
           bloomPass: {
-            useThisOne: false,
+            useThisOne: true,
             mipmapBlur: false,
             luminanceThreshold: 0.5,
-            luminanceSmoothing: 1.0,
             intensity: 0.3,
             resolutionScale: 0.3,
           },
