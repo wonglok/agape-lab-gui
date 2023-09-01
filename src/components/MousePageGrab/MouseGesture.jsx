@@ -12,6 +12,8 @@ import {
   Center,
   Text,
   PerspectiveCamera,
+  Ring,
+  Torus,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
@@ -23,6 +25,7 @@ import { create } from 'zustand'
 import anime from 'animejs'
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js'
 import { Ray, Matrix4, Sphere as Sphere3JS } from 'three'
+import { useMouseCache } from './useMouseCache.jsx'
 
 export function MouseGesture() {
   let videoTexture = useMouse((r) => r.videoTexture)
@@ -72,40 +75,15 @@ export function MouseGesture() {
 
         <primitive object={camera}></primitive>
 
-        <group userData={{ dragGroup: false }} position={[0, 2, -4]}>
-          <Text3D size={1.5} textAlign='center' font={`/font/days_regular_macroman/Days_Regular.json`}>
-            {`=`}
-            <meshPhysicalMaterial
-              side={DoubleSide}
-              transmission={1}
-              roughness={0.5}
-              color={'blue'}></meshPhysicalMaterial>
-          </Text3D>
-        </group>
+        <MathSymbol position={[0, 2, -4]} canDrag={false} left={'='} right='='></MathSymbol>
 
-        <group name='raycast-group'>
+        <group name='groupCast'>
           <MathSymbol position={[-3, 2, -4]} left={'+ 1'} right='- 1'></MathSymbol>
 
           <MathSymbol position={[-8, 2, -4]} left={'+ 2x'} right='- 2x'></MathSymbol>
 
           <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
-
-          {/*
-          <group userData={{ dragGroup: true }} scale={2} position={[0, 0, -4]}>
-            <Sphere args={[1, 32, 32]}>
-              <meshPhysicalMaterial
-                thickness={0.5}
-                transmission={1}
-                metalness={0}
-                reflectivity={0.1}
-                roughness={0.3}></meshPhysicalMaterial>
-            </Sphere>
-          </group> */}
-
-          {/*  */}
         </group>
-
-        {/* <gridHelper position={[0, 0.15, 0]} args={[100, 30, 0xff0000, 0xff0000]}></gridHelper> */}
 
         <PerspectiveCamera near={0.5} far={300} fov={76} makeDefault></PerspectiveCamera>
 
@@ -113,7 +91,8 @@ export function MouseGesture() {
           rotateSpeed={-1}
           object-position={[0, 1.6, 10]}
           target={[0, 1.6, 10 - 1]}
-          makeDefault></OrbitControls>
+          makeDefault
+          enabled={false}></OrbitControls>
 
         <Hand></Hand>
 
@@ -126,7 +105,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        <SelectiveBloomRender></SelectiveBloomRender>
+        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
 
         <Insert></Insert>
 
@@ -180,11 +159,10 @@ function meshBounds(raycaster, intersects) {
   const matrixWorld = this.matrixWorld
   if (material === undefined) return
 
-  //
   // Checking boundingSphere distance to ray
   if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
   _sphere.copy(geometry.boundingSphere)
-  _sphere.radius = _sphere.radius * 1.25
+  _sphere.radius = _sphere.radius * 1.1
   _sphere.applyMatrix4(matrixWorld)
   if (raycaster.ray.intersectsSphere(_sphere) === false) return
   _inverseMatrix.copy(matrixWorld).invert()
@@ -198,7 +176,7 @@ function meshBounds(raycaster, intersects) {
   })
 }
 
-function MathSymbol({ position, left = '', right = '' }) {
+function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
   let ref = useRef()
 
   let [side, setSide] = useState('')
@@ -224,45 +202,47 @@ function MathSymbol({ position, left = '', right = '' }) {
         setSide(shouldBeSide)
       }
     }
+    if (ref.current) {
+      if (!ref.current.centered) {
+        ref.current.centered = true
+        ref.current.geometry.center()
+      }
+    }
   })
 
   return (
     <>
-      <group position={position} userData={{ dragGroup: true }}>
-        <Center>
-          <Text3D
-            anchorX={'center'}
-            anchorY={'middle'}
-            ref={ref}
-            size={1.5}
-            textAlign='center'
-            raycast={meshBounds}
-            font={`/font/days_regular_macroman/Days_Regular.json`}>
-            {side === 'left' && left}
-            {side === 'right' && right}
-            <meshPhysicalMaterial
-              side={DoubleSide}
-              transmission={1}
-              roughness={0.5}
-              thickness={2}
-              color={'blue'}></meshPhysicalMaterial>
-          </Text3D>
-        </Center>
+      <group position={position} userData={{ dragGroup: canDrag }}>
+        <Text3D
+          ref={ref}
+          anchorX={'center'}
+          anchorY={'middle'}
+          size={1.5}
+          textAlign='center'
+          raycast={meshBounds}
+          font={`/font/days_regular_macroman/Days_Regular.json`}>
+          {side === 'left' && left}
+          {side === 'right' && right}
+          <meshPhysicalMaterial
+            side={DoubleSide}
+            transmission={1}
+            roughness={0.5}
+            thickness={2}
+            color={'blue'}></meshPhysicalMaterial>
+        </Text3D>
       </group>
     </>
   )
 }
 
 function Insert() {
-  let stick = useMouse((r) => r.stick)
-  let cursor = useMouse((r) => r.cursor)
+  let handsInsert = useMouse((r) => r.handsInsert)
   let hoverPlane = useMouse((r) => r.hoverPlane)
   // let ribbons = useMouse((r) => r.ribbons)
   return (
     <>
+      {handsInsert}
       {hoverPlane}
-      {stick}
-      {cursor}
       {/* {ribbons} */}
     </>
   )
@@ -372,8 +352,15 @@ function BG() {
     if (useMouse.getState().collider) {
       return
     }
+
+    if (useMouseCache.has('collider')) {
+      useMouse.setState({ collider: useMouseCache.get('collider') })
+      return
+    }
+
     sceneToCollider({ scene: gltf.scene }).then((r) => {
       useMouse.setState({ collider: r })
+      useMouseCache.set('collider', r)
     })
   }, [gltf.scene])
   return <primitive object={gltf.scene} />
@@ -414,13 +401,13 @@ function Init() {
   return null
 }
 function Hand() {
-  let hands = useMouse((r) => r.hands)
+  let bones = useMouse((r) => r.bones)
   return (
     <group>
-      {hands.map((r) => {
+      {bones.map((r) => {
         return (
           <group key={r.uuid}>
-            <OneHand hand={r}></OneHand>
+            <OneHand bone={r}></OneHand>
           </group>
         )
       })}
@@ -428,16 +415,12 @@ function Hand() {
   )
 }
 
-function EventPop({ onChangeActiveObjects = () => {} }) {
-  return null
-}
-
-function OneHand({ hand }) {
+function OneHand({ bone }) {
   let ref = useRef()
   useFrame(() => {
     if (ref.current) {
-      ref.current.position.lerp(hand.position, 1.0)
-      ref.current.visible = hand.visible
+      ref.current.position.lerp(bone.position, 0.25)
+      ref.current.visible = bone.visible
     }
   })
 

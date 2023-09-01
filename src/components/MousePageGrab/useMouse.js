@@ -1,5 +1,14 @@
 import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
-import { Color, CubicBezierCurve3, DoubleSide, MathUtils, MeshBasicMaterial, Ray } from 'three'
+import {
+  Color,
+  CubicBezierCurve3,
+  DoubleSide,
+  IcosahedronGeometry,
+  MathUtils,
+  MeshBasicMaterial,
+  MeshPhysicalMaterial,
+  Ray,
+} from 'three'
 import { BoxGeometry } from 'three'
 import { CubicBezierCurve, TubeGeometry } from 'three'
 import {
@@ -16,6 +25,8 @@ import {
 // import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
+import { useMouseCache } from './useMouseCache'
+import { eH } from 'mind-ar/dist/controller-495b585f'
 // import { Mini } from './Noodle/Mini'
 // import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 
@@ -27,10 +38,11 @@ export const useMouse = create((set, get) => {
     bloomLights: [],
     bloomMeshes: [],
     handID: false,
+
     //
-    collider: false,
+    collider: useMouseCache.get('collider') || false,
     handResult: false,
-    hands: [],
+    bones: [],
     scene: false,
     camera: false,
     picking: false,
@@ -51,16 +63,6 @@ export const useMouse = create((set, get) => {
       set({ loading: true })
       let video = document.createElement('video')
       video.playsInline = true
-      // let width = window.innerWidth
-      // let height = window.innerHeight
-      // if (width >= height) {
-      //   video.width = 512
-      //   video.height = 512 * (height / width)
-      // }
-      // if (width < height) {
-      //   video.width = 512 * (width / height)
-      //   video.height = 512
-      // }
 
       let stream = navigator.mediaDevices.getUserMedia({
         video: {
@@ -104,7 +106,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const handCount = 1
+      const handCount = 2
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -118,339 +120,197 @@ export const useMouse = create((set, get) => {
         numHands: handCount,
         runningMode: 'VIDEO',
       })
+
       setTimeout(() => {
         handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount, runningMode: 'VIDEO' })
         console.log('set to gpu')
       }, 100)
+
       set({ recogizer: gestureRecognizer })
 
       let handLandmarker = gestureRecognizer
-      let array = []
-      let eachHandPointCount = 21
-      let dotCount = handCount * eachHandPointCount // plus 1 for palm
-      for (let i = 0; i < dotCount; i++) {
-        array.push(new Object3D())
+
+      class MyHand {
+        constructor({ onChange = (v) => console.log(v) }) {
+          this.scan = new Object3D()
+          this.o3d = new Object3D()
+
+          let stick = new Mesh(new BoxGeometry(0.01, 0.01, 8), new MeshBasicMaterial({ color: 0xffff00 }))
+          this.stick = stick
+          this.o3d.add(stick)
+          stick.geometry.translate(0, 0, 8 / 2)
+          stick.visible = false
+          stick.direction = new Vector3()
+
+          let crystal = new MeshPhysicalMaterial({ color: '#0000ff', metalness: 1, roughness: 0 })
+          this.dots = []
+          for (let i = 0; i < 20; i++) {
+            let mesh = new Mesh(new IcosahedronGeometry(0.1, 1), crystal)
+            this.dots.push({
+              mesh,
+              dir: new Vector3(),
+            })
+            this.o3d.add(mesh)
+          }
+
+          let goal = new Object3D()
+
+          this.useHand = create((set, get) => {
+            return {
+              change: (key, val) => {
+                set((st) => {
+                  if (st[key] !== val) {
+                    onChange({ target: this, key, val })
+                    return { ...st, [key]: val }
+                  } else {
+                    return st
+                  }
+                })
+              },
+            }
+          })
+          this.change = (key, val) => {
+            this.useHand.getState().change(key, val)
+          }
+          this.useHand.subscribe((st, b4) => {
+            if (st.show !== b4.show) {
+              if (st.show) {
+                this.o3d.visible = true
+              } else {
+                this.o3d.visible = false
+              }
+            }
+            return {
+              ...st,
+            }
+          })
+
+          this.raycaster = new Raycaster()
+          this.update = ({ landmarks, worldLandmarks, gestures, handednesses, video }) => {
+            stick.visible = false
+            if (landmarks?.length > 0) {
+              stick.visible = true
+            }
+            let cam = get().camera
+            let target = get().controlsTarget
+            let viewport = get().viewport
+            let vp = viewport.getCurrentViewport()
+
+            if (cam && target && vp) {
+              let lmk = landmarks[0]
+              let vpx = (lmk.x * 2.0 - 1.0) * vp.width
+              let vpy = (lmk.y * 2.0 - 1.0) * vp.height
+              let vpz = lmk.z
+
+              for (let bone = 0; bone < 20; bone++) {
+                let dotMesh = this.dots[bone].mesh
+                let wmk = worldLandmarks[bone]
+                goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
+                goal.position.x += -vpx
+                goal.position.y += -vpy + 2.5
+                goal.position.z += -vpz
+
+                dotMesh.position.lerp(goal.position, 0.45)
+                dotMesh.visible = true
+              }
+
+              let thumb = this.dots[4].mesh
+              let index = this.dots[8].mesh
+
+              if (thumb && index) {
+                let distance = thumb.position.distanceTo(index.position)
+                if (distance < 0.8) {
+                  this.change('pinch', true)
+                } else {
+                  this.change('pinch', false)
+                }
+              }
+
+              this.dots[7].mesh.lookAt(this.dots[8].mesh.position)
+
+              this.stick.position.copy(this.dots[7].mesh.position)
+              this.stick.quaternion.copy(this.dots[7].mesh.quaternion)
+              this.stick.getWorldDirection(this.dots[7].dir)
+
+              this.raycaster.set(this.stick.position, this.dots[7].dir)
+
+              let opt = []
+              let scene = get().scene
+              let groupCast = scene.getObjectByName('groupCast')
+              if (groupCast) {
+                opt.push(groupCast)
+              }
+              let castRes = this.raycaster.intersectObjects(opt, true)
+
+              let hitPt = castRes[0]?.object?.position
+              if (hitPt) {
+                this.change('hitPt', hitPt)
+              } else {
+                this.change('hitPt', false)
+              }
+
+              if (castRes) {
+                this.change('found', castRes)
+              } else {
+                this.change('found', [])
+              }
+            }
+          }
+        }
       }
-      array.map((r) => {
-        r.visible = true
-        return r
+
+      let myHands = []
+      for (let i = 0; i < handCount; i++) {
+        myHands.push(
+          new MyHand({
+            onChange: ({ target, key, val }) => {
+              //
+              console.log(key, val)
+
+              //
+            },
+          }),
+        )
+      }
+
+      set({
+        handsInsert: myHands.map((h) => {
+          return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
+        }),
+        runProcessVideoFrame: ({ video }) => {
+          if (video) {
+            let nowInMs = Date.now()
+            let result = handLandmarker.recognizeForVideo(video, nowInMs, {
+              rotationDegrees: 0,
+            })
+
+            set({ handResult: result })
+
+            myHands.forEach((eHand, idx) => {
+              if (result.landmarks[idx]) {
+                eHand.change('show', true)
+                eHand.update({
+                  video,
+                  gestures: result.gestures[idx],
+                  landmarks: result.landmarks[idx],
+                  worldLandmarks: result.worldLandmarks[idx],
+                })
+              } else {
+                eHand.change('show', false)
+              }
+            })
+          }
+        },
       })
 
       //
 
-      let stick = new Mesh(new BoxGeometry(0.02, 0.02, 8), new MeshBasicMaterial({ color: 0xff00ff }))
-      stick.geometry.translate(0, 0, 8 / 2)
-      stick.visible = false
-      stick.direction = new Vector3()
-      set({ stick: <primitive object={stick}></primitive> })
-
-      let raycaster = new Raycaster()
-      let dir = new Vector3()
       let plane = new Mesh(
         new PlaneGeometry(1000, 1000, 100, 100),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
       plane.name = 'raycast-plane'
       plane.visible = false
-
-      set({ hoverPlane: <primitive object={plane}></primitive> })
-      let targetGoal = new Vector3()
-
-      let cursor = new Object3D()
-      set({ cursor: <primitive object={cursor}></primitive> })
-
-      // let o3 = new Object3D()
-
-      // set({ ribbons: <primitive object={o3}></primitive> })
-
-      // let tail = new CursorTrackerTail({
-      //   gl: get().gl,
-      //   mini: new Mini({}),
-      //   camera: get().camera,
-      //   mounter: o3,
-      //   cursor: cursor,
-      //   color: new Color('#ffffff'),
-      //   onInsert: (v) => {
-      //     // set({
-      //     //   bloomMeshes: [v],
-      //     // })
-      //   },
-      // })
-
-      // set({
-      //   cleanMini: () => {
-      //     tail.mini.clean()
-      //   },
-      // })
-
-      //
-      // let ray = new Ray()
-      set({
-        onLoop: (st, dt) => {
-          // {
-          //   // tail.mini.work(st, dt)
-          //   let collider = get().collider
-          //   let geometry = collider?.geometry
-          //   let boundsTree = geometry?.boundsTree
-
-          //   let handIndex = 0
-          //   let beforeTip = array[handIndex * eachHandPointCount + 6]
-          //   let indexTip = array[handIndex * eachHandPointCount + 8]
-          //   beforeTip.lookAt(indexTip.position)
-          //   beforeTip.getWorldDirection(dir)
-
-          //   ray.set(beforeTip.position, dir)
-
-          //   let res = boundsTree.raycastFirst(ray, DoubleSide)
-
-          //   let activeObjects = get().activeObjects
-          //   let picking = get().picking
-
-          //   let mouse = get().mouse
-
-          //   if (picking && picking.length > 0) {
-          //     picking[0].getWorldPosition(cursor.position)
-          //   } else if (activeObjects && activeObjects.length > 0) {
-          //     cursor.position.lerp(activeObjects[0].userData.raycastPoint, 1)
-          //   } else if (res) {
-          //     cursor.position.lerp(res.point, 1)
-          //   }
-          // }
-          // console.log(cursor.position)
-
-          //
-          {
-            {
-              let casterGroup = get().scene.getObjectByName('raycast-group')
-              casterGroup.traverse((ob) => {
-                if (ob.material) {
-                  ob.material.emissive = new Color('#000000')
-                }
-              })
-            }
-
-            let picking = get()?.picking || []
-            picking.forEach((picked) => {
-              if (picked) {
-                picked.traverse((ob) => {
-                  if (ob.material) {
-                    ob.material.emissive = new Color('#ffffff')
-                  }
-                })
-
-                picked.traverseAncestors((it) => {
-                  if (it?.userData?.dragGroup) {
-                    stick.getWorldDirection(stick.direction)
-                    raycaster.set(stick.position, stick.direction)
-
-                    let results = raycaster.intersectObject(plane)
-                    let result = results[0]
-
-                    if (it && result) {
-                      targetGoal.set(result.point.x, result.point.y, it.position.z)
-                      it.position.lerp(targetGoal, 0.25)
-                    }
-                  }
-                })
-              }
-            })
-          }
-
-          // {
-          //
-          //   let res = raycaster.intersectObject(casterGroup, true)
-          //   get().activeObjects?.forEach((it) => {
-          //     if (it) {
-          //       let ancestor = it
-          //       it.traverseAncestors((an) => {
-          //         if (an?.userData?.dragGroup) {
-          //           ancestor = an
-          //         }
-          //       })
-
-          //       ancestor.traverse((ob) => {
-          //         if (ob.material) {
-          //           ob.material.emissive = new Color('#000000')
-          //         }
-          //       })
-          //     }
-          //   })
-          //   if (res) {
-          //     res.map((r) => {
-          //       let it = r.object
-          //       let ancestor = it
-          //       it.traverseAncestors((an) => {
-          //         if (an?.userData?.dragGroup) {
-          //           ancestor = an
-          //         }
-          //       })
-          //       ancestor.traverse((ob) => {
-          //         if (ob.material) {
-          //           ob.material.emissive = new Color('#ffffff')
-          //         }
-          //       })
-          //     })
-          //   }
-          // }
-        },
-      })
-
-      let goal = new Object3D()
-
-      let midOfAB2C = new Object3D()
-      let midOfCD2E = new Object3D()
-
-      let b4midOfAB2C = new Object3D()
-      let b4midOfCD2E = new Object3D()
-
-      set({
-        hands: array,
-        runProcessVideoFrame: ({ video }) => {
-          //
-          if (video) {
-            let nowInMs = Date.now()
-            let result = handLandmarker.recognizeForVideo(video, nowInMs, {
-              rotationDegrees: 0,
-            })
-            // console.log(result)
-            array.map((r) => {
-              r.visible = false
-              return r
-            })
-            {
-              stick.visible = false
-            }
-            let cam = get().camera
-            let target = get().controlsTarget
-            if (cam && target) {
-              let vp = {
-                width: 25,
-                height: 25,
-              }
-              set({ handResult: result || [] })
-              if (vp && result && result?.landmarks?.length > 0) {
-                {
-                  stick.visible = true
-                }
-                result.landmarks.forEach((lmk, handIndex) => {
-                  let vpx = (lmk[0].x * 2.0 - 1.0) * vp.width
-                  let vpy = (lmk[0].y * 2.0 - 1.0) * vp.height
-                  let vpz = lmk[0].z
-
-                  for (let bone = 0; bone < eachHandPointCount; bone++) {
-                    let hand = array[handIndex * eachHandPointCount + bone]
-                    let wmk = result.worldLandmarks[handIndex][bone]
-                    goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
-                    goal.position.x += -vpx
-                    goal.position.y += -vpy
-                    goal.position.z += -vpz
-
-                    hand.position.lerp(goal.position, 0.5)
-                    hand.visible = true
-
-                    if (bone === 1) {
-                      hand.visible = false
-                    }
-                    if (bone === 2) {
-                      hand.visible = false
-                    }
-                  }
-
-                  b4midOfAB2C.position.lerpVectors(
-                    array[handIndex * eachHandPointCount + 3].position,
-                    array[handIndex * eachHandPointCount + 7].position,
-                    0.5,
-                  )
-
-                  b4midOfCD2E.position.lerpVectors(
-                    b4midOfAB2C.position,
-                    array[handIndex * eachHandPointCount + 11].position,
-                    0.5,
-                  )
-
-                  midOfAB2C.position.lerpVectors(
-                    array[handIndex * eachHandPointCount + 4].position,
-                    array[handIndex * eachHandPointCount + 8].position,
-                    0.5,
-                  )
-
-                  midOfCD2E.position.lerpVectors(
-                    midOfAB2C.position,
-                    array[handIndex * eachHandPointCount + 12].position,
-                    0.5,
-                  )
-
-                  {
-                    let camera = get().camera
-
-                    raycaster.setFromCamera(
-                      {
-                        x: -(lmk[0].x * 2.0 - 1.0),
-                        y: -(lmk[1].y * 2.0 - 1.0),
-                      },
-                      camera,
-                    )
-
-                    stick.scale.setScalar(1)
-                    stick.position.copy(array[handIndex * eachHandPointCount + 9].position)
-                    stick.lookAt(
-                      array[handIndex * eachHandPointCount + 9].position.x,
-                      array[handIndex * eachHandPointCount + 9].position.y,
-                      array[handIndex * eachHandPointCount + 9].position.z - 5,
-                    )
-
-                    let casterGroup = get().scene.getObjectByName('raycast-group')
-                    if (casterGroup) {
-                      //
-                      let res = raycaster.intersectObject(casterGroup, true)
-                      if (res && res[0]) {
-                        res[0].object.userData.raycastPoint = res[0].point
-
-                        set({
-                          activeObjects: [res[0].object],
-                        })
-                      }
-                    }
-                  }
-
-                  {
-                    {
-                      //\
-                      let latestGesture = result.gestures[0][0].categoryName
-                      if (latestGesture === 'Closed_Fist') {
-                        set((b4) => {
-                          if (!b4.picking && get()?.activeObjects[0]) {
-                            let first = get()?.activeObjects[0]
-
-                            if (plane) {
-                              first.getWorldPosition(plane.position)
-                            }
-
-                            return { ...b4, picking: [first] }
-                          } else {
-                            return { ...b4 }
-                          }
-                        })
-                      } else {
-                        set((b4) => {
-                          if (b4.picking && b4.picking.length > 0) {
-                            return { ...b4, picking: false }
-                          } else {
-                            return { ...b4 }
-                          }
-                        })
-                      }
-                    }
-                  }
-
-                  //
-                })
-                //
-              }
-            }
-          }
-        },
-      })
     },
   }
 })
