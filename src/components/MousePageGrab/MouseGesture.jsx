@@ -35,15 +35,7 @@ export function MouseGesture() {
           target={[0, 1.6, 10 - 1]}
           makeDefault
           enabled={false}></OrbitControls>
-
         <Hand></Hand>
-
-        <Suspense fallback={null}>
-          <Environment background files={`/hdr/grass.hdr`}></Environment>
-          <group position={[0, -10, 3]} scale={10}>
-            <BG url={`/teahouse/teahouse-opt-transformed.glb`}></BG>
-          </group>
-        </Suspense>
 
         <Init></Init>
 
@@ -54,6 +46,13 @@ export function MouseGesture() {
         <DragGUI></DragGUI>
 
         <Vars></Vars>
+
+        <Suspense fallback={null}>
+          <Environment background files={`/hdr/grass.hdr`}></Environment>
+          <group position={[10, -10, -22]} scale={10}>
+            <BG url={`/room/room-fancy.003.glb`}></BG>
+          </group>
+        </Suspense>
       </group>
     </>
   )
