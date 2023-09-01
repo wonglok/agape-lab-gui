@@ -105,7 +105,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        <SelectiveBloomRender></SelectiveBloomRender>
+        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
 
         <Insert></Insert>
 
@@ -258,7 +258,7 @@ function SelectiveBloomRender() {
           envMapIntensity: 1,
           ssrPass: {
             useThisOne: true,
-            intensity: 1,
+            intensity: 0.3,
             exponent: 1,
             distance: 10,
             fade: 0,
@@ -273,8 +273,8 @@ function SelectiveBloomRender() {
             blur: 0,
             blurKernel: 1,
             blurSharpness: 10,
-            jitter: 0.025,
-            jitterRoughness: 0.025,
+            jitter: 0.125,
+            jitterRoughness: 0.125,
             steps: 8,
             refineSteps: 8,
             missedRays: true,
