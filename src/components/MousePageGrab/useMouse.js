@@ -309,6 +309,7 @@ export const useMouse = create((set, get) => {
       }
 
       let allHands = []
+
       for (let i = 0; i < handCount; i++) {
         let onHandList = []
         let isPinching = false
@@ -350,7 +351,6 @@ export const useMouse = create((set, get) => {
 
       set({
         onLoop: () => {
-          //
           let result = get().handResult
           let video = get().video
 
