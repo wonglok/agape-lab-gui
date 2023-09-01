@@ -209,7 +209,7 @@ export const useMouse = create((set, get) => {
                 goal.position.y += -vpy + 2.5
                 goal.position.z += -vpz
 
-                dotMesh.position.lerp(goal.position, 0.2)
+                dotMesh.position.lerp(goal.position, 0.15)
                 dotMesh.visible = true
               }
 
