@@ -235,7 +235,6 @@ export const useMouse = create((set, get) => {
                   this.change('found', [castRes[0]])
                 } else {
                   this.change('found', [])
-                  this.change('pinch', false)
                 }
               }
 
@@ -322,6 +321,7 @@ export const useMouse = create((set, get) => {
             myHands.forEach((eHand, idx) => {
               if (result.landmarks[idx]) {
                 eHand.change('show', true)
+                eHand.o3d.visible = true
                 eHand.update({
                   video,
                   gestures: result.gestures[idx],
@@ -330,6 +330,7 @@ export const useMouse = create((set, get) => {
                 })
               } else {
                 eHand.change('show', false)
+                eHand.o3d.visible = false
               }
             })
           }
