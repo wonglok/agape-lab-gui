@@ -26,7 +26,6 @@ import {
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
 import { useMouseCache } from './useMouseCache'
-import { eH } from 'mind-ar/dist/controller-495b585f'
 // import { Mini } from './Noodle/Mini'
 // import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 
@@ -71,6 +70,7 @@ export const useMouse = create((set, get) => {
         },
         audio: false,
       })
+
       stream.then((r) => {
         video.srcObject = r
         video.onloadeddata = () => {
@@ -106,7 +106,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const handCount = 2
+      const handCount = 1
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -155,36 +155,37 @@ export const useMouse = create((set, get) => {
           let goal = new Object3D()
 
           this.useHand = create((set, get) => {
-            return {
-              change: (key, val) => {
-                let before = get()[key]
-                onChange({ target: this, key, val, before: before })
+            return {}
+          })
 
-                set((st) => {
-                  if (st[key] !== val) {
-                    return { ...st, [key]: val }
-                  } else {
-                    return st
-                  }
-                })
-              },
-            }
-          })
+          let target = this
+          let getH = this.useHand.getState
+          let setH = this.useHand.setState
           this.change = (key, val) => {
-            this.useHand.getState().change(key, val)
-          }
-          this.useHand.subscribe((st, b4) => {
-            if (st.show !== b4.show) {
-              if (st.show) {
-                this.o3d.visible = true
-              } else {
-                this.o3d.visible = false
+            setH((s) => {
+              if (s[key] === val) {
+                return { ...s }
               }
-            }
-            return {
-              ...st,
-            }
-          })
+
+              let beforeState = { ...s }
+              let afterState = { ...s, [key]: val }
+              onChange({
+                //
+                target: target,
+
+                //
+                key,
+
+                val: val,
+                before: s[key],
+
+                //
+                afterState,
+                beforeState,
+              })
+              return afterState
+            })
+          }
 
           this.raycaster = new Raycaster()
           this.update = ({ landmarks, worldLandmarks, gestures, handednesses, video }) => {
@@ -200,57 +201,94 @@ export const useMouse = create((set, get) => {
               for (let bone = 0; bone < 20; bone++) {
                 let dotMesh = this.dots[bone].mesh
                 let wmk = worldLandmarks[bone]
+
                 goal.position.set(-wmk.x, -wmk.y, wmk.z).multiplyScalar(20)
                 goal.position.x += -vpx
                 goal.position.y += -vpy + 2.5
                 goal.position.z += -vpz
 
-                dotMesh.position.lerp(goal.position, 0.45)
+                dotMesh.position.lerp(goal.position, 0.15)
                 dotMesh.visible = true
               }
 
-              let thumb = this.dots[4].mesh
-              let index = this.dots[8].mesh
+              {
+                this.stick.position.copy(this.dots[9].mesh.position)
+                this.stick.lookAt(
+                  //!SECTION
+                  this.dots[9].mesh.position.x,
+                  this.dots[9].mesh.position.y,
+                  this.dots[9].mesh.position.z - 5,
+                )
 
-              if (thumb && index) {
-                let distance = thumb.position.distanceTo(index.position)
-                if (distance < 0.8) {
-                  this.change('pinch', true)
+                this.stick.getWorldDirection(this.dots[9].dir)
+                this.raycaster.set(this.dots[9].mesh.position, this.dots[9].dir)
+
+                let opt = []
+                let scene = get().scene
+                let groupCast = scene.getObjectByName('groupCast')
+                if (groupCast) {
+                  opt.push(groupCast)
+                }
+                let castRes = this.raycaster.intersectObjects(opt, true)
+
+                if (castRes) {
+                  this.change('found', castRes)
                 } else {
-                  this.change('pinch', false)
+                  this.change('found', [])
                 }
               }
 
-              this.dots[7].mesh.lookAt(this.dots[8].mesh.position)
-              this.stick.position.copy(this.dots[7].mesh.position)
-              this.stick.quaternion.copy(this.dots[7].mesh.quaternion)
-              this.stick.getWorldDirection(this.dots[7].dir)
+              {
+                let isGrabbing = gestures[0]?.categoryName === 'Closed_Fist'
+                let isOpenPalm = gestures[0]?.categoryName === 'Open_Palm'
 
-              this.raycaster.set(this.stick.position, this.dots[7].dir)
-
-              let opt = []
-              let scene = get().scene
-              let groupCast = scene.getObjectByName('groupCast')
-              if (groupCast) {
-                opt.push(groupCast)
+                if (isGrabbing === true) {
+                  this.change('pinch', true)
+                }
+                if (isOpenPalm === true) {
+                  this.change('pinch', false)
+                }
               }
-              let castRes = this.raycaster.intersectObjects(opt, true)
+              // {
+              //   let thumb = this.dots[4].mesh.position
+              //   let index = this.dots[8].mesh.position
+              //   let middle = this.dots[12].mesh.position
 
-              if (castRes) {
-                this.change('found', castRes)
-              } else {
-                this.change('found', [])
+              //   // if (thumb && middle && index) {
+              //   //   let distance1 = thumb.distanceTo(middle)
+              //   //   let distance2 = thumb.distanceTo(index)
+
+              //   //   if (distance1 <= 1.1 || distance2 <= 1.1) {
+              //   //     this.change('pinch', true)
+              //   //   } else if (distance1 > 1.1 || distance2 > 1.1) {
+              //   //     this.change('pinch', false)
+              //   //   }
+              //   // }
+              // }
+
+              {
+                let result = this.raycaster.intersectObject(dragPlane, false)
+                if (result[0]?.point) {
+                  if (this.useHand.getState().move) {
+                    this.change('delta', result[0]?.point.clone().sub(this.useHand.getState().move))
+                  }
+                  this.change('move', result[0]?.point.clone())
+                }
               }
+
+              //
             }
           }
         }
       }
 
+      let list = []
       let myHands = []
+      let isPinching = false
       for (let i = 0; i < handCount; i++) {
         myHands.push(
           new MyHand({
-            onChange: ({ key, val, before }) => {
+            onChange: ({ key, val, before, beforeState, afterState }) => {
               if (key === 'found') {
                 if (before?.length > 0) {
                   before.forEach((it) => {
@@ -264,18 +302,20 @@ export const useMouse = create((set, get) => {
                 }
               }
 
-              // if (key === 'pinch') {
-              //   if (val) {
-              //     let found = get().activeObjects
-              //     if (found.length > 0) {
-              //       let uuid = found[0].object.uuid
-              //       set({ activeUUID: uuid })
-              //     }
-              //   } else {
-              //     set({ activeUUID: false })
-              //   }
-              // }
-              //
+              if (key === 'pinch') {
+                console.log(key, val)
+                isPinching = val
+                list = beforeState['found']
+              }
+
+              if (key === 'delta') {
+                console.log(val)
+                if (isPinching) {
+                  list.forEach((it) => {
+                    it.object.position.add(val)
+                  })
+                }
+              }
             },
           }),
         )
@@ -313,12 +353,14 @@ export const useMouse = create((set, get) => {
 
       //
 
-      let plane = new Mesh(
+      let dragPlane = new Mesh(
         new PlaneGeometry(1000, 1000, 100, 100),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
-      plane.name = 'raycast-plane'
-      plane.visible = false
+      dragPlane.visible = false
+      dragPlane.position.z = -10
+      get().camera.add(dragPlane)
+      get().scene.add(get().camera)
     },
   }
 })
