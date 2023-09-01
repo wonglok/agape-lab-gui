@@ -268,39 +268,40 @@ export const useMouse = create((set, get) => {
 
       let myHands = []
       for (let i = 0; i < handCount; i++) {
-        let list = []
+        let onHandList = []
         let isPinching = false
-        myHands.push(
-          new MyHand({
-            onChange: ({ key, val, before, beforeState, afterState }) => {
-              if (key === 'found') {
-                if (before?.length > 0) {
-                  before.forEach((it) => {
-                    it.object.material.emissive = new Color('#000000')
-                  })
-                }
-                if (val?.length > 0) {
-                  val.forEach((it) => {
-                    it.object.material.emissive = new Color('#ff0000')
-                  })
-                }
-              }
 
-              if (key === 'pinch') {
-                isPinching = val
-                list = beforeState['found']
+        let hand = new MyHand({
+          onChange: ({ key, val, before, beforeState, afterState }) => {
+            if (key === 'found') {
+              if (before?.length > 0) {
+                before.forEach((it) => {
+                  it.object.material.emissive = new Color('#000000')
+                })
               }
+              if (val?.length > 0) {
+                val.forEach((it) => {
+                  it.object.material.emissive = new Color('#ff0000')
+                })
+              }
+            }
 
-              if (key === 'delta') {
-                if (isPinching) {
-                  list.forEach((it) => {
-                    it.object.position.add(val)
-                  })
-                }
+            if (key === 'pinch') {
+              isPinching = val
+              onHandList = beforeState['found']
+            }
+
+            if (key === 'delta') {
+              if (isPinching) {
+                onHandList.forEach((it) => {
+                  it.object.position.add(val)
+                })
               }
-            },
-          }),
-        )
+            }
+          },
+        })
+
+        myHands.push(hand)
       }
 
       set({

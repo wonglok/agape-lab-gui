@@ -12,53 +12,11 @@ import { Ray, Matrix4, Sphere as Sphere3JS } from 'three'
 import { useMouseCache } from './useMouseCache.jsx'
 
 export function MouseGesture() {
-  let videoTexture = useMouse((r) => r.videoTexture)
-
-  let camera = useThree((r) => r.camera)
-  useEffect(() => {
-    useMouse.setState({ camera })
-  }, [camera])
-
-  let scene = useThree((r) => r.scene)
-  useEffect(() => {
-    useMouse.setState({ scene })
-  }, [scene])
-
-  let gl = useThree((r) => r.gl)
-  useEffect(() => {
-    useMouse.setState({ gl })
-  }, [gl])
-
-  let mouse = useThree((r) => r.mouse)
-  useEffect(() => {
-    useMouse.setState({ mouse })
-  }, [mouse])
-
-  let viewport = useThree((r) => r.viewport)
-  let controls = useThree((r) => r.controls)
-
-  useEffect(() => {
-    if (controls?.target) {
-      useMouse.setState({ viewport, controlsTarget: new Vector3(0, controls?.target.y, 0) })
-    }
-  }, [viewport, controls?.target])
-
-  useFrame((st, dt) => {
-    useMouse.getState().onLoop(st, dt)
-  })
+  // let videoTexture = useMouse((r) => r.videoTexture)
 
   return (
     <>
       <group>
-        {videoTexture && <>{createPortal(<></>, camera)}</>}
-
-        {/* <mesh scale={[-7.5, 7.5, 7.5]} position={[0, 5, -10]}>
-          <meshStandardMaterial transparent side={DoubleSide} opacity={0.5} map={videoTexture}></meshStandardMaterial>
-          <planeGeometry args={[1, 1]}></planeGeometry>
-        </mesh> */}
-
-        <primitive object={camera}></primitive>
-
         <MathSymbol position={[0, 2, -4]} canDrag={false} left={'='} right='='></MathSymbol>
 
         <group name='groupCast'>
@@ -94,11 +52,53 @@ export function MouseGesture() {
         <Insert></Insert>
 
         <DragGUI></DragGUI>
+
+        <Vars></Vars>
       </group>
     </>
   )
 }
 
+function Vars() {
+  let camera = useThree((r) => r.camera)
+  useEffect(() => {
+    useMouse.setState({ camera })
+  }, [camera])
+
+  let scene = useThree((r) => r.scene)
+  useEffect(() => {
+    useMouse.setState({ scene })
+  }, [scene])
+
+  let gl = useThree((r) => r.gl)
+  useEffect(() => {
+    useMouse.setState({ gl })
+  }, [gl])
+
+  let mouse = useThree((r) => r.mouse)
+  useEffect(() => {
+    useMouse.setState({ mouse })
+  }, [mouse])
+
+  let viewport = useThree((r) => r.viewport)
+  let controls = useThree((r) => r.controls)
+
+  useEffect(() => {
+    if (controls?.target) {
+      useMouse.setState({ viewport, controlsTarget: new Vector3(0, controls?.target.y, 0) })
+    }
+  }, [viewport, controls?.target])
+
+  useFrame((st, dt) => {
+    useMouse.getState().onLoop(st, dt)
+  })
+
+  return (
+    <>
+      <primitive object={camera}></primitive>
+    </>
+  )
+}
 function DragGUI() {
   let gl = useThree((r) => r.gl)
   let scene = useThree((r) => r.scene)
