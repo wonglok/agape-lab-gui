@@ -231,8 +231,8 @@ export const useMouse = create((set, get) => {
                 }
                 let castRes = this.raycaster.intersectObjects(opt, true)
 
-                if (castRes) {
-                  this.change('found', castRes)
+                if (castRes && castRes[0]) {
+                  this.change('found', [castRes[0]])
                 } else {
                   this.change('found', [])
                 }
