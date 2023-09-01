@@ -48,7 +48,7 @@ export function MouseGesture() {
         <Vars></Vars>
 
         <Suspense fallback={null}>
-          <Environment background files={`/hdr/grass.hdr`}></Environment>
+          <Environment background files={`/envMap/poly_haven_studio_1k.hdr`}></Environment>
           <group position={[7, -10, -22]} scale={10}>
             <BG url={`/room/room-fancy.003.glb`}></BG>
           </group>
@@ -258,14 +258,14 @@ function SelectiveBloomRender() {
           colorPass: {
             useThisOne: true,
             hue: 0,
-            satuation: 0,
-            brightness: -0.06,
-            contrast: 0.2,
-            saturation: 0.05,
+            satuation: 0.3,
+            brightness: -0.1,
+            contrast: 0.1,
+            saturation: 0.0,
           },
           ssrPass: {
-            useThisOne: false,
-            intensity: 0.5,
+            useThisOne: true,
+            intensity: 1,
             exponent: 1,
             distance: 10,
             fade: 0,
@@ -280,8 +280,12 @@ function SelectiveBloomRender() {
             blur: 0,
             blurKernel: 1,
             blurSharpness: 10,
-            jitter: 0.025,
-            jitterRoughness: 0.025,
+
+            //
+            jitter: 0.125,
+            jitterRoughness: 0.125,
+
+            //
             steps: 8,
             refineSteps: 8,
             missedRays: true,
@@ -292,9 +296,9 @@ function SelectiveBloomRender() {
           },
           bloomPass: {
             useThisOne: true,
-            mipmapBlur: false,
-            luminanceThreshold: 0.5,
-            intensity: 0.3,
+            mipmapBlur: true,
+            luminanceThreshold: 0.9,
+            intensity: 1,
             resolutionScale: 0.3,
           },
           wavePass: {
