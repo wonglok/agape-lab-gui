@@ -139,7 +139,6 @@ export const useMouse = create((set, get) => {
           this.stick = stick
           this.o3d.add(stick)
           stick.geometry.translate(0, 0, 8 / 2)
-          stick.visible = false
           stick.direction = new Vector3()
 
           let crystal = new MeshPhysicalMaterial({ color: '#0000ff', metalness: 1, roughness: 0 })
@@ -158,9 +157,10 @@ export const useMouse = create((set, get) => {
           this.useHand = create((set, get) => {
             return {
               change: (key, val) => {
+                let before = get()[key]
                 set((st) => {
                   if (st[key] !== val) {
-                    onChange({ target: this, key, val })
+                    onChange({ target: this, key, val, before: before })
                     return { ...st, [key]: val }
                   } else {
                     return st
@@ -187,16 +187,10 @@ export const useMouse = create((set, get) => {
 
           this.raycaster = new Raycaster()
           this.update = ({ landmarks, worldLandmarks, gestures, handednesses, video }) => {
-            stick.visible = false
-            if (landmarks?.length > 0) {
-              stick.visible = true
-            }
-            let cam = get().camera
-            let target = get().controlsTarget
             let viewport = get().viewport
             let vp = viewport.getCurrentViewport()
 
-            if (cam && target && vp) {
+            if (vp) {
               let lmk = landmarks[0]
               let vpx = (lmk.x * 2.0 - 1.0) * vp.width
               let vpy = (lmk.y * 2.0 - 1.0) * vp.height
@@ -242,13 +236,6 @@ export const useMouse = create((set, get) => {
               }
               let castRes = this.raycaster.intersectObjects(opt, true)
 
-              let hitPt = castRes[0]?.object?.position
-              if (hitPt) {
-                this.change('hitPt', hitPt)
-              } else {
-                this.change('hitPt', false)
-              }
-
               if (castRes) {
                 this.change('found', castRes)
               } else {
@@ -263,10 +250,23 @@ export const useMouse = create((set, get) => {
       for (let i = 0; i < handCount; i++) {
         myHands.push(
           new MyHand({
-            onChange: ({ target, key, val }) => {
+            onChange: ({ target, key, val, before }) => {
               //
               console.log(key, val)
 
+              if (key === 'found' && val?.length > 0 === true) {
+                if (before) {
+                  console.log(before)
+                  before.forEach((it) => {
+                    it.object.material.emissive = new Color('#000000')
+                  })
+                }
+                if (target.useHand.getState()?.found?.length > 0) {
+                  target.useHand.getState()?.found.forEach((it) => {
+                    it.object.material.emissive = new Color('#ff0000')
+                  })
+                }
+              }
               //
             },
           }),
