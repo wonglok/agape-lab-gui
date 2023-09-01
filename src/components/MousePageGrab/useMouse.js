@@ -249,22 +249,6 @@ export const useMouse = create((set, get) => {
                   this.change('pinch', false)
                 }
               }
-              // {
-              //   let thumb = this.dots[4].mesh.position
-              //   let index = this.dots[8].mesh.position
-              //   let middle = this.dots[12].mesh.position
-
-              //   // if (thumb && middle && index) {
-              //   //   let distance1 = thumb.distanceTo(middle)
-              //   //   let distance2 = thumb.distanceTo(index)
-
-              //   //   if (distance1 <= 1.1 || distance2 <= 1.1) {
-              //   //     this.change('pinch', true)
-              //   //   } else if (distance1 > 1.1 || distance2 > 1.1) {
-              //   //     this.change('pinch', false)
-              //   //   }
-              //   // }
-              // }
 
               {
                 let result = this.raycaster.intersectObject(dragPlane, false)
