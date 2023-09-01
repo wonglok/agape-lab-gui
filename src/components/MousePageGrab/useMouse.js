@@ -57,7 +57,7 @@ export const useMouse = create((set, get) => {
     onLoop: () => {},
     cancel: () => {},
     cleanVideoTexture: () => {},
-    eachVideoFrame: () => {},
+    eachVideoFrameProc: () => {},
     initVideo: async () => {
       set({ inited: true })
       set({ loading: true })
@@ -87,7 +87,7 @@ export const useMouse = create((set, get) => {
               id = video.requestVideoFrameCallback(func)
             }
             videoTexture.needsUpdate = true
-            get().eachVideoFrame({ video })
+            get().eachVideoFrameProc({ video })
           }
           id = video.requestVideoFrameCallback(func)
 
@@ -132,7 +132,7 @@ export const useMouse = create((set, get) => {
       set({ recogizer: gestureRecognizer })
 
       set({
-        eachVideoFrame: () => {
+        eachVideoFrameProc: () => {
           let video = get().video
           let recogizer = get().recogizer
           if (video && recogizer) {
