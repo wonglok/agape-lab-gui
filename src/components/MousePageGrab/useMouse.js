@@ -192,7 +192,24 @@ export const useMouse = create((set, get) => {
               let beforeState = { ...s }
               let afterState = { ...s, [key]: val }
 
-              let bubble = {
+              this.eventHandlers[key]?.forEach((fnc) => {
+                fnc({
+                  //
+                  target: target,
+
+                  //
+                  key,
+
+                  val: val,
+                  before: s[key],
+
+                  //
+                  afterState,
+                  beforeState,
+                })
+              })
+
+              onChange({
                 //
                 target: target,
 
@@ -205,12 +222,7 @@ export const useMouse = create((set, get) => {
                 //
                 afterState,
                 beforeState,
-              }
-
-              this.eventHandlers[key]?.forEach((fnc) => {
-                fnc({ ...bubble })
               })
-              onChange({ ...bubble })
               return afterState
             })
           }
@@ -296,13 +308,38 @@ export const useMouse = create((set, get) => {
         }
       }
 
-      let allHands = []
-
+      let myHands = []
       for (let i = 0; i < handCount; i++) {
         let onHandList = []
         let isPinching = false
 
-        let hand = new MyHand({})
+        let hand = new MyHand({
+          // onChange: ({ key, val, before, beforeState, afterState }) => {
+          //   // if (key === 'found') {
+          //   //   if (before?.length > 0) {
+          //   //     before.forEach((it) => {
+          //   //       it.object.material.emissive = new Color('#000000')
+          //   //     })
+          //   //   }
+          //   //   if (val?.length > 0) {
+          //   //     val.forEach((it) => {
+          //   //       it.object.material.emissive = new Color('#ff0000')
+          //   //     })
+          //   //   }
+          //   // }
+          //   // if (key === 'pinch') {
+          //   //   isPinching = val
+          //   //   onHandList = beforeState['found']
+          //   // }
+          //   // if (key === 'delta') {
+          //   //   if (isPinching) {
+          //   //     onHandList.forEach((it) => {
+          //   //       it.object.position.add(val)
+          //   //     })
+          //   //   }
+          //   // }
+          // },
+        })
 
         hand.on('found', ({ key, val, before, beforeState, afterState }) => {
           if (before?.length > 0) {
@@ -329,21 +366,19 @@ export const useMouse = create((set, get) => {
             })
           }
         })
+
+        myHands.push(hand)
       }
 
       set({
-        handsInsert: allHands.map((h) => {
+        handsInsert: myHands.map((h) => {
           return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
         }),
-      })
 
-      set({
         onLoop: () => {
           let result = get().handResult
           let video = get().video
-
-          //
-          allHands.forEach((eHand, idx) => {
+          myHands.forEach((eHand, idx) => {
             if (result?.landmarks[idx]) {
               eHand.change('show', true)
               eHand.o3d.visible = true
