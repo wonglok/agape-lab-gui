@@ -235,6 +235,7 @@ export const useMouse = create((set, get) => {
                   this.change('found', [castRes[0]])
                 } else {
                   this.change('found', [])
+                  this.change('pinch', false)
                 }
               }
 
