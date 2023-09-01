@@ -1,4 +1,14 @@
-import { Box, Environment, Icosahedron, OrbitControls, useGLTF, Text3D, PerspectiveCamera } from '@react-three/drei'
+import {
+  Box,
+  Environment,
+  Icosahedron,
+  OrbitControls,
+  useGLTF,
+  Text3D,
+  PerspectiveCamera,
+  Sphere,
+  MeshTransmissionMaterial,
+} from '@react-three/drei'
 import { useMouse } from './useMouse.js'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
@@ -25,6 +35,16 @@ export function MouseGesture() {
           <MathSymbol position={[-8, 2, -4]} left={'+ 2x'} right='- 2x'></MathSymbol>
 
           <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
+
+          <group scale={2} position={[0, -3, -2]} userData={{ dragGroup: true }}>
+            <Sphere scale={[1.3, 1.3, 0.25]}>
+              <MeshTransmissionMaterial
+                transmission={1}
+                roughness={0.1}
+                thickness={1.5}
+                reflectivity={0.5}></MeshTransmissionMaterial>
+            </Sphere>
+          </group>
         </group>
 
         <PerspectiveCamera near={0.5} far={300} fov={76} makeDefault></PerspectiveCamera>
@@ -35,6 +55,7 @@ export function MouseGesture() {
           target={[0, 1.6, 10 - 1]}
           makeDefault
           enabled={false}></OrbitControls>
+
         <Hand></Hand>
 
         <Init></Init>
@@ -43,8 +64,6 @@ export function MouseGesture() {
 
         <Insert></Insert>
 
-        <DragGUI></DragGUI>
-
         <Vars></Vars>
 
         <Suspense fallback={null}>
@@ -52,6 +71,7 @@ export function MouseGesture() {
           <group rotation={[0, 0.5, 0]} position={[15, -10, -30]} scale={10}>
             <BG url={`/room/room-fancy.003.glb`}></BG>
           </group>
+          <DragGUI></DragGUI>
         </Suspense>
       </group>
     </>
@@ -125,7 +145,7 @@ function DragGUI() {
   }, [gl, camera, scene, controls])
   return (
     <>
-      {/* <></DragControls> */}
+      {/*  */}
       {/*  */}
     </>
   )
@@ -171,9 +191,7 @@ function meshBounds(raycaster, intersects) {
 
 function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
   let ref = useRef()
-
   let [side, setSide] = useState('')
-
   let v3 = useMemo(() => {
     return new Vector3(0, 0, 0)
   }, [])
@@ -321,10 +339,6 @@ function SelectiveBloomRender() {
     })
   }, [])
 
-  let scene = useThree((r) => r.scene)
-  useEffect(() => {
-    //
-  }, [scene])
   return (
     <>
       <EnvSSRWorks isGame={true} useStore={useStore}></EnvSSRWorks>
