@@ -222,7 +222,6 @@ export const useMouse = create((set, get) => {
               }
 
               this.dots[7].mesh.lookAt(this.dots[8].mesh.position)
-
               this.stick.position.copy(this.dots[7].mesh.position)
               this.stick.quaternion.copy(this.dots[7].mesh.quaternion)
               this.stick.getWorldDirection(this.dots[7].dir)
@@ -251,11 +250,9 @@ export const useMouse = create((set, get) => {
       for (let i = 0; i < handCount; i++) {
         myHands.push(
           new MyHand({
-            onChange: ({ target, key, val, before }) => {
-              //
-              console.log(key)
+            onChange: ({ key, val, before }) => {
               if (key === 'found') {
-                if (before) {
+                if (before?.length > 0) {
                   before.forEach((it) => {
                     it.object.material.emissive = new Color('#000000')
                   })
@@ -266,6 +263,18 @@ export const useMouse = create((set, get) => {
                   })
                 }
               }
+
+              // if (key === 'pinch') {
+              //   if (val) {
+              //     let found = get().activeObjects
+              //     if (found.length > 0) {
+              //       let uuid = found[0].object.uuid
+              //       set({ activeUUID: uuid })
+              //     }
+              //   } else {
+              //     set({ activeUUID: false })
+              //   }
+              // }
               //
             },
           }),
