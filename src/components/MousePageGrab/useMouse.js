@@ -26,6 +26,7 @@ import {
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { create } from 'zustand'
 import { useMouseCache } from './useMouseCache'
+import { Clock } from 'three'
 // import { Mini } from './Noodle/Mini'
 // import { CursorTrackerTail } from './Noodle/CursorTrackerTail'
 
@@ -187,6 +188,7 @@ export const useMouse = create((set, get) => {
             })
           }
 
+          let clock = new Clock()
           this.raycaster = new Raycaster()
           this.update = ({ landmarks, worldLandmarks, gestures, handednesses, video }) => {
             let viewport = get().viewport
@@ -254,6 +256,7 @@ export const useMouse = create((set, get) => {
                 let result = this.raycaster.intersectObject(dragPlane, false)
                 if (result[0]?.point) {
                   if (this.useHand.getState().move) {
+                    let dt = clock.getDelta()
                     this.change('delta', result[0]?.point.clone().sub(this.useHand.getState().move))
                   }
                   this.change('move', result[0]?.point.clone())
@@ -309,7 +312,8 @@ export const useMouse = create((set, get) => {
           return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
         }),
 
-        runProcessVideoFrame: ({ video }) => {
+        onLoop: (st, dt) => {
+          let video = get().video
           if (video) {
             let nowInMs = Date.now()
             let result = handLandmarker.recognizeForVideo(video, nowInMs, {
@@ -336,7 +340,7 @@ export const useMouse = create((set, get) => {
       })
 
       let dragPlane = new Mesh(
-        new PlaneGeometry(1000, 1000, 100, 100),
+        new PlaneGeometry(1000, 1000, 3, 3),
         new MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 1.0 }),
       )
       dragPlane.visible = false
