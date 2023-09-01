@@ -106,7 +106,7 @@ export const useMouse = create((set, get) => {
       })
     },
     initTask: async () => {
-      const handCount = 1
+      const handCount = 2
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -266,10 +266,10 @@ export const useMouse = create((set, get) => {
         }
       }
 
-      let list = []
       let myHands = []
-      let isPinching = false
       for (let i = 0; i < handCount; i++) {
+        let list = []
+        let isPinching = false
         myHands.push(
           new MyHand({
             onChange: ({ key, val, before, beforeState, afterState }) => {
