@@ -162,7 +162,7 @@ function meshBounds(raycaster, intersects) {
   // Checking boundingSphere distance to ray
   if (geometry.boundingSphere === null) geometry.computeBoundingSphere()
   _sphere.copy(geometry.boundingSphere)
-  _sphere.radius = _sphere.radius * 1.1
+  _sphere.radius = _sphere.radius * 2
   _sphere.applyMatrix4(matrixWorld)
   if (raycaster.ray.intersectsSphere(_sphere) === false) return
   _inverseMatrix.copy(matrixWorld).invert()
@@ -204,7 +204,7 @@ function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
     }
     if (ref.current) {
       if (!ref.current.geometry.centered) {
-        ref.current.geometry.centered = true
+        ref.current.centered = true
         ref.current.geometry.center()
       }
     }
