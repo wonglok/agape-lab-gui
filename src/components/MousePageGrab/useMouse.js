@@ -312,30 +312,34 @@ export const useMouse = create((set, get) => {
           return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
         }),
 
-        onLoop: (st, dt) => {
-          let video = get().video
+        runProcessVideoFrame: ({ video }) => {
           if (video) {
             let nowInMs = Date.now()
             let result = handLandmarker.recognizeForVideo(video, nowInMs, {
               rotationDegrees: 0,
             })
 
-            myHands.forEach((eHand, idx) => {
-              if (result.landmarks[idx]) {
-                eHand.change('show', true)
-                eHand.o3d.visible = true
-                eHand.update({
-                  video,
-                  gestures: result.gestures[idx],
-                  landmarks: result.landmarks[idx],
-                  worldLandmarks: result.worldLandmarks[idx],
-                })
-              } else {
-                eHand.change('show', false)
-                eHand.o3d.visible = false
-              }
-            })
+            set({ handResult: result })
           }
+        },
+        onLoop: () => {
+          let result = get().handResult
+          let video = get().video
+          myHands.forEach((eHand, idx) => {
+            if (result?.landmarks[idx]) {
+              eHand.change('show', true)
+              eHand.o3d.visible = true
+              eHand.update({
+                video,
+                gestures: result.gestures[idx],
+                landmarks: result.landmarks[idx],
+                worldLandmarks: result.worldLandmarks[idx],
+              })
+            } else {
+              eHand.change('show', false)
+              eHand.o3d.visible = false
+            }
+          })
         },
       })
 
