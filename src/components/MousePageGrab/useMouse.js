@@ -158,9 +158,10 @@ export const useMouse = create((set, get) => {
             return {
               change: (key, val) => {
                 let before = get()[key]
+                onChange({ target: this, key, val, before: before })
+
                 set((st) => {
                   if (st[key] !== val) {
-                    onChange({ target: this, key, val, before: before })
                     return { ...st, [key]: val }
                   } else {
                     return st
@@ -252,17 +253,15 @@ export const useMouse = create((set, get) => {
           new MyHand({
             onChange: ({ target, key, val, before }) => {
               //
-              console.log(key, val)
-
-              if (key === 'found' && val?.length > 0 === true) {
+              console.log(key)
+              if (key === 'found') {
                 if (before) {
-                  console.log(before)
                   before.forEach((it) => {
                     it.object.material.emissive = new Color('#000000')
                   })
                 }
-                if (target.useHand.getState()?.found?.length > 0) {
-                  target.useHand.getState()?.found.forEach((it) => {
+                if (val?.length > 0) {
+                  val.forEach((it) => {
                     it.object.material.emissive = new Color('#ff0000')
                   })
                 }
