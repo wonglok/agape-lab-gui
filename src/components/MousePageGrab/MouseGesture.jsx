@@ -105,7 +105,7 @@ export function MouseGesture() {
 
         <Init></Init>
 
-        {/* <SelectiveBloomRender></SelectiveBloomRender> */}
+        <SelectiveBloomRender></SelectiveBloomRender>
 
         <Insert></Insert>
 
@@ -255,10 +255,10 @@ function SelectiveBloomRender() {
         postProcessingConfig: {
           multisampling: 2,
           emissiveIntensity: 1,
-          envMapIntensity: 0.3,
+          envMapIntensity: 1,
           ssrPass: {
-            useThisOne: false,
-            intensity: 0.3,
+            useThisOne: true,
+            intensity: 1,
             exponent: 1,
             distance: 10,
             fade: 0,
@@ -284,10 +284,10 @@ function SelectiveBloomRender() {
             velocityResolutionScale: 0.1,
           },
           bloomPass: {
-            useThisOne: true,
-            mipmapBlur: true,
-            luminanceThreshold: 0.9,
-            luminanceSmoothing: 0.5,
+            useThisOne: false,
+            mipmapBlur: false,
+            luminanceThreshold: 0.5,
+            luminanceSmoothing: 1.0,
             intensity: 0.3,
             resolutionScale: 0.3,
           },
@@ -310,9 +310,9 @@ function SelectiveBloomRender() {
             useThisOne: true,
             hue: 0,
             satuation: 0,
-            brightness: 0.25,
-            contrast: 0.3,
-            saturation: 0.15,
+            brightness: 0.05,
+            contrast: 0.2,
+            saturation: 0.1,
           },
           aoPass: {
             useThisOne: true,
