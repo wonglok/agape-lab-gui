@@ -49,7 +49,7 @@ export function MouseGesture() {
 
         <Suspense fallback={null}>
           <Environment background files={`/envMap/poly_haven_studio_1k.hdr`}></Environment>
-          <group position={[7, -10, -22]} scale={10}>
+          <group rotation={[0, 0.6, 0]} position={[7, -10, -22]} scale={10}>
             <BG url={`/room/room-fancy.003.glb`}></BG>
           </group>
         </Suspense>
