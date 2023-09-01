@@ -192,24 +192,7 @@ export const useMouse = create((set, get) => {
               let beforeState = { ...s }
               let afterState = { ...s, [key]: val }
 
-              this.eventHandlers[key]?.forEach((fnc) => {
-                fnc({
-                  //
-                  target: target,
-
-                  //
-                  key,
-
-                  val: val,
-                  before: s[key],
-
-                  //
-                  afterState,
-                  beforeState,
-                })
-              })
-
-              onChange({
+              let bubble = {
                 //
                 target: target,
 
@@ -222,7 +205,12 @@ export const useMouse = create((set, get) => {
                 //
                 afterState,
                 beforeState,
+              }
+
+              this.eventHandlers[key]?.forEach((fnc) => {
+                fnc({ ...bubble })
               })
+              onChange({ ...bubble })
               return afterState
             })
           }
