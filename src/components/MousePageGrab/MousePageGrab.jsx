@@ -20,9 +20,15 @@ export function MousePageGrab() {
             ev.preventDefault()
           }
         }}>
+        {/*  */}
+
         <Stats></Stats>
 
+        {/*  */}
+
         <MouseGesture></MouseGesture>
+
+        {/*  */}
       </Canvas>
 
       {showStartMenu && (
