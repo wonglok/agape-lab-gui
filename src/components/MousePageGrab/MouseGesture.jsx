@@ -41,7 +41,7 @@ export function MouseGesture() {
         <Suspense fallback={null}>
           <Environment background files={`/hdr/grass.hdr`}></Environment>
           <group position={[0, -10, 3]} scale={10}>
-            <BG></BG>
+            <BG url={`/teahouse/teahouse-opt-transformed.glb`}></BG>
           </group>
         </Suspense>
 
@@ -330,8 +330,8 @@ function SelectiveBloomRender() {
   )
 }
 
-function BG() {
-  let gltf = useGLTF(`/teahouse/teahouse-opt-transformed.glb`)
+function BG({ url = `/teahouse/teahouse-opt-transformed.glb` }) {
+  let gltf = useGLTF(url)
 
   useEffect(() => {
     if (!gltf?.scene) {
