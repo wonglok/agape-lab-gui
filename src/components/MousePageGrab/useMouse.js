@@ -57,7 +57,7 @@ export const useMouse = create((set, get) => {
     onLoop: () => {},
     cancel: () => {},
     cleanVideoTexture: () => {},
-    runProcessVideoFrame: () => {},
+    eachVideoFrame: () => {},
     initVideo: async () => {
       set({ inited: true })
       set({ loading: true })
@@ -79,6 +79,7 @@ export const useMouse = create((set, get) => {
           let videoTexture = new VideoTexture(video)
           videoTexture.encoding = sRGBEncoding
           videoTexture.mapping = EquirectangularReflectionMapping
+
           let id = 0
           let canRun = true
           let func = () => {
@@ -86,7 +87,7 @@ export const useMouse = create((set, get) => {
               id = video.requestVideoFrameCallback(func)
             }
             videoTexture.needsUpdate = true
-            get().runProcessVideoFrame({ video })
+            get().eachVideoFrame({ video })
           }
           id = video.requestVideoFrameCallback(func)
 
@@ -108,6 +109,7 @@ export const useMouse = create((set, get) => {
       })
 
       const handCount = 2
+
       // Create task for image file processing:
       const vision = await FilesetResolver.forVisionTasks(
         // path/to/wasm/root
@@ -123,13 +125,25 @@ export const useMouse = create((set, get) => {
       })
 
       setTimeout(() => {
-        handLandmarker.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount, runningMode: 'VIDEO' })
-        console.log('set to gpu')
+        gestureRecognizer.setOptions({ baseOptions: { delegate: 'GPU' }, numHands: handCount, runningMode: 'VIDEO' })
+        console.log('Set to GPU')
       }, 100)
 
       set({ recogizer: gestureRecognizer })
 
-      let handLandmarker = gestureRecognizer
+      set({
+        eachVideoFrame: () => {
+          let video = get().video
+          let recogizer = get().recogizer
+          if (video && recogizer) {
+            let nowInMs = Date.now()
+            let result = recogizer.recognizeForVideo(video, nowInMs, {
+              rotationDegrees: 0,
+            })
+            set({ handResult: result })
+          }
+        },
+      })
 
       class MyHand {
         constructor({ onChange = (v) => console.log(v) }) {
@@ -312,16 +326,6 @@ export const useMouse = create((set, get) => {
           return <primitive key={h.o3d.uuid} object={h.o3d}></primitive>
         }),
 
-        runProcessVideoFrame: ({ video }) => {
-          if (video) {
-            let nowInMs = Date.now()
-            let result = handLandmarker.recognizeForVideo(video, nowInMs, {
-              rotationDegrees: 0,
-            })
-
-            set({ handResult: result })
-          }
-        },
         onLoop: () => {
           let result = get().handResult
           let video = get().video
