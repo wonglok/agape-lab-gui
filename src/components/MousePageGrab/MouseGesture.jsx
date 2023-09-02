@@ -53,6 +53,9 @@ export function MouseGesture() {
           rotateSpeed={-1}
           object-position={[0, 1.6, 10]}
           target={[0, 1.6, 10 - 1]}
+          enablePan={false}
+          enableZoom={false}
+          enableRotate={false}
           makeDefault
           enabled={false}></OrbitControls>
 
