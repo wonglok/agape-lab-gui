@@ -36,6 +36,10 @@ export function MouseGesture() {
           <group position={[0, -3, -1]} userData={{ dragGroup: true }}>
             <Sphere scale={[2, 2, 0.5]} userData={{ noGlow: true }}>
               <MeshTransmissionMaterial
+                backside={true}
+                side={DoubleSide}
+                backsideThickness={0.5}
+                transmissionSampler={true}
                 transmission={1}
                 roughness={0.1}
                 thickness={1.5}
@@ -234,12 +238,11 @@ function MathSymbol({ canDrag = true, position, left = '', right = '' }) {
           font={`/font/days_regular_macroman/Days_Regular.json`}>
           {side === 'left' && left}
           {side === 'right' && right}
-          <meshPhysicalMaterial
+          <meshStandardMaterial
             side={DoubleSide}
-            transmission={1}
-            roughness={0.5}
-            thickness={2}
-            color={'blue'}></meshPhysicalMaterial>
+            roughness={0.15}
+            metalness={1}
+            color={'#0000ff'}></meshStandardMaterial>
         </Text3D>
       </group>
     </>
