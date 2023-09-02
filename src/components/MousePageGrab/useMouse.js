@@ -209,20 +209,20 @@ export const useMouse = create((set, get) => {
                 })
               })
 
-              onChange({
-                //
-                target: target,
+              // onChange({
+              //   //
+              //   target: target,
 
-                //
-                key,
+              //   //
+              //   key,
 
-                val: val,
-                before: s[key],
+              //   val: val,
+              //   before: s[key],
 
-                //
-                afterState,
-                beforeState,
-              })
+              //   //
+              //   afterState,
+              //   beforeState,
+              // })
               return afterState
             })
           }
