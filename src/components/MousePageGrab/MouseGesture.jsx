@@ -22,8 +22,6 @@ import { Ray, Matrix4, Sphere as Sphere3JS } from 'three'
 import { useMouseCache } from './useMouseCache.jsx'
 
 export function MouseGesture() {
-  // let videoTexture = useMouse((r) => r.videoTexture)
-
   return (
     <>
       <group>
