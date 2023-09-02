@@ -41,9 +41,12 @@ export function MouseGesture() {
                 backsideThickness={0.5}
                 transmissionSampler={true}
                 transmission={1}
-                roughness={0.1}
+                roughness={0.0}
                 thickness={1.5}
-                reflectivity={0.5}></MeshTransmissionMaterial>
+                reflectivity={0.5}
+                chromaticAberration={0.15}
+                //
+              ></MeshTransmissionMaterial>
             </Sphere>
           </group>
         </group>
