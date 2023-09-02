@@ -36,7 +36,7 @@ export function MouseGesture() {
 
           <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
 
-          <group position={[10, -3, 0]} userData={{ dragGroup: true }}>
+          <group position={[0, -3, 0]} userData={{ dragGroup: true }}>
             <Sphere scale={[2, 2, 0.5]}>
               <MeshTransmissionMaterial
                 transmission={1}
