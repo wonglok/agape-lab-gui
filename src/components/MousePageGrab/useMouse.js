@@ -313,33 +313,7 @@ export const useMouse = create((set, get) => {
         let onHandList = []
         let isPinching = false
 
-        let hand = new MyHand({
-          // onChange: ({ key, val, before, beforeState, afterState }) => {
-          //   // if (key === 'found') {
-          //   //   if (before?.length > 0) {
-          //   //     before.forEach((it) => {
-          //   //       it.object.material.emissive = new Color('#000000')
-          //   //     })
-          //   //   }
-          //   //   if (val?.length > 0) {
-          //   //     val.forEach((it) => {
-          //   //       it.object.material.emissive = new Color('#ff0000')
-          //   //     })
-          //   //   }
-          //   // }
-          //   // if (key === 'pinch') {
-          //   //   isPinching = val
-          //   //   onHandList = beforeState['found']
-          //   // }
-          //   // if (key === 'delta') {
-          //   //   if (isPinching) {
-          //   //     onHandList.forEach((it) => {
-          //   //       it.object.position.add(val)
-          //   //     })
-          //   //   }
-          //   // }
-          // },
-        })
+        let hand = new MyHand({})
 
         hand.on('found', ({ key, val, before, beforeState, afterState }) => {
           if (before?.length > 0) {
@@ -349,7 +323,10 @@ export const useMouse = create((set, get) => {
           }
           if (val?.length > 0) {
             val.forEach((it) => {
-              it.object.material.emissive = new Color('#ff0000')
+              if (it?.object?.userData?.noGlow) {
+                return
+              }
+              it.object.material.emissive = new Color('#ffffff')
             })
           }
         })

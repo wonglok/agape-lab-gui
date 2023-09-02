@@ -34,7 +34,7 @@ export function MouseGesture() {
           <MathSymbol position={[3, 2, -4]} left={'+ 3'} right='- 3'></MathSymbol>
 
           <group position={[0, -3, -1]} userData={{ dragGroup: true }}>
-            <Sphere scale={[2, 2, 0.5]}>
+            <Sphere scale={[2, 2, 0.5]} userData={{ noGlow: true }}>
               <MeshTransmissionMaterial
                 transmission={1}
                 roughness={0.1}
@@ -315,7 +315,7 @@ function SelectiveBloomRender() {
           bloomPass: {
             useThisOne: true,
             mipmapBlur: true,
-            luminanceThreshold: 0.9,
+            luminanceThreshold: 0.5,
             intensity: 1,
             resolutionScale: 0.3,
           },
