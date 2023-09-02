@@ -1,5 +1,4 @@
 import {
-  Box,
   Environment,
   Icosahedron,
   OrbitControls,
@@ -10,9 +9,9 @@ import {
   MeshTransmissionMaterial,
 } from '@react-three/drei'
 import { useMouse } from './useMouse.js'
-import { createPortal, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Box3, DoubleSide, Vector3 } from 'three'
+import { DoubleSide, Vector3 } from 'three'
 import { sceneToCollider } from './Noodle/sceneToCollider.js'
 import { EnvSSRWorks } from './PostProcessing/EnvSSRWorks.jsx'
 import { create } from 'zustand'
