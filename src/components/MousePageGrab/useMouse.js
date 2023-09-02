@@ -324,7 +324,7 @@ export const useMouse = create((set, get) => {
               if (it?.object?.userData?.noGlow) {
                 return
               }
-              it.object.material.emissive = new Color('#ffffff')
+              it.object.material.emissive = new Color('#00ff00')
             })
           }
         })
