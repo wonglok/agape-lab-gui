@@ -10,10 +10,8 @@ import {
   Ray,
 } from 'three'
 import { BoxGeometry } from 'three'
-import { CubicBezierCurve, TubeGeometry } from 'three'
 import {
   EquirectangularReflectionMapping,
-  ExtrudeGeometry,
   Mesh,
   Object3D,
   PlaneGeometry,
