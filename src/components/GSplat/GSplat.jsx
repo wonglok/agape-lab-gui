@@ -13,7 +13,7 @@ export function GSplat() {
     <>
       {/*  */}
 
-      <Canvas gl={{ logarithmicDepthBuffer: true, antialias: false, depth: false, color: false, stencil: false }}>
+      <Canvas gl={{ logarithmicDepthBuffer: false, antialias: false, depth: false, color: false, stencil: false }}>
         <color args={[0x000000]} attach={'background'}></color>
         <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
         <Content></Content>
@@ -420,20 +420,21 @@ class SPlatClass extends Group {
 						// Set the alpha value of the fragment color to the dissolve factor
 						vDissolveFactor = dissolveFactor;
 						
+            //
 						// center.xyz += (1.0 - dissolveFactor) * normalize(center.xyz);
-
 						// vec3 dist = center.xyz - ;
-						
 						// vec3 myCenter = center.rgb;
 						// float vl = length(myCenter.xyz - origin.xyz);
 						// if (vl >= radius) {
 						// 	vl = radius;
 						// }
+            //
 						
+            //
 						// float eH = 3.141592 * 2.0 * (y);
 						center.y += 0.09 * cos(vDissolveFactor * 2.0 * 3.141592);
 						// vHeight = pow(y, 3.0) * -1.3;
-
+            //
 
 						vec4 camspace = gsModelViewMatrix * center;
 						vec4 pos2d = gsProjectionMatrix * camspace;
@@ -553,13 +554,12 @@ class SPlatClass extends Group {
 						}
 
             gl_FragColor = toLinear(gl_FragColor);
-
 					}
 				`,
-          // blending: THREE.CustomBlending,
-          // blendSrcAlpha: THREE.OneFactor,
+          blending: THREE.CustomBlending,
+          blendSrcAlpha: THREE.OneFactor,
           depthTest: false,
-          depthWrite: false,
+          depthWrite: true,
           transparent: true,
         })
         let mesh = new THREE.Mesh(geometry, material, vertexCount)
