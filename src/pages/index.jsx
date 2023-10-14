@@ -21,6 +21,13 @@ const pages = [
   //src/pages/
   //
   //src/pages/blog/2023/07/28/ClothSimPage.jsx
+  //src/pages/.jsx
+  {
+    key: md5(v4()),
+    url: `/blog/2023/10/14/gaussian-splat/3dgs`,
+    name: `Gaussian Splat`,
+    date: '2023-07-28',
+  },
   {
     key: md5(v4()),
     url: `/blog/2023/08/27/compiler`,
