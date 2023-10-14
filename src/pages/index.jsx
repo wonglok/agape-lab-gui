@@ -40,12 +40,12 @@ const pages = [
     name: `WebcamMouseGrab`,
     date: '2023-07-28',
   },
-  {
-    key: md5(v4()),
-    url: `/blog/2023/08/27/mouse`,
-    name: `WebcamMouse`,
-    date: '2023-07-28',
-  },
+  // {
+  //   key: md5(v4()),
+  //   url: `/blog/2023/08/27/mouse`,
+  //   name: `WebcamMouse`,
+  //   date: '2023-07-28',
+  // },
   {
     key: md5(v4()),
     url: `/blog/2023/08/27/ik`,

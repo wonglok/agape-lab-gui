@@ -1,3 +1,5 @@
-import { MousePage } from '@/components/MousePage/MousePage'
+// import { MousePage } from '@/components/MousePage/MousePage'
 
-export default MousePage
+export default function Page() {
+  return <></>
+}
