@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "engines": {
-    "node": "<= 16.15.1"
+    "node": "18.x"
   },
   "scripts": {
     "lt": "ngrok http 3000 --subdomain wonglok --region ap",
