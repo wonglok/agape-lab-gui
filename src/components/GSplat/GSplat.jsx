@@ -440,7 +440,7 @@ class SPlatClass extends Group {
 						
             //
 						// float eH = 3.141592 * 2.0 * (y);
-						center.y += 0.19 * cos(vDissolveFactor * 2.0 * 3.141592);
+						center.y += 0.3 * cos(vDissolveFactor * 2.0 * 3.141592);
 						// vHeight = pow(y, 3.0) * -1.3;
             //
 
@@ -546,8 +546,8 @@ class SPlatClass extends Group {
 						gl_FragColor = vec4(vColor.rgb, B);
 						gl_FragColor.a *= vDissolveFactor;
 
-						float dissolveStartDistance = progress * radius - 2.0;
-						float dissolveEndDistance = progress * radius + 2.0;
+						float dissolveStartDistance = progress * radius - 3.0;
+						float dissolveEndDistance = progress * radius + 3.0;
 
 						float distanceFade = distance(origin, vCenter);
 						float dissolveFactor = smoothstep(dissolveStartDistance, dissolveEndDistance, distanceFade);
