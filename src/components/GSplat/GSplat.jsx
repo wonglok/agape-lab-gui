@@ -29,20 +29,12 @@ export function GSplat() {
           onPointerDown={(ev) => {
             window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
           }}
-          args={[10000, 0.1, 10000]}>
-          <meshBasicMaterial color={'#000000'} side={THREE.FrontSide}></meshBasicMaterial>
-        </Box>
-
-        <Sphere
-          visible={false}
-          frustumCulled={false}
-          position={[0, 0, 0]}
-          onPointerDown={(ev) => {
-            // window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
+          onClick={(ev) => {
+            window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
           }}
-          args={[5000, 32, 32]}>
-          <meshBasicMaterial color={'#000000'} side={THREE.BackSide}></meshBasicMaterial>
-        </Sphere>
+          args={[10000, 0.1, 10000]}>
+          <meshBasicMaterial color={'#000000'} side={THREE.DoubleSide}></meshBasicMaterial>
+        </Box>
       </Canvas>
 
       {/*  */}
@@ -594,7 +586,7 @@ class SPlatClass extends Group {
           material.uniforms.origin.value.copy(detail)
           // camera.getWorldPosition(material.uniforms.origin.value)
           material.uniforms.progress.value = 0
-          material.uniforms.radius.value = 50
+          material.uniforms.radius.value = 80
 
           anime({
             targets: [material.uniforms.progress],
