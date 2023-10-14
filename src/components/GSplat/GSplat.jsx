@@ -4,8 +4,10 @@ import { Group } from 'three'
 import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
-import { OrbitControls } from '@react-three/drei'
+import { Box, OrbitControls, Sphere } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { MeshBasicMaterial } from 'three147'
+import { BackSide } from 'three'
 export function GSplat() {
   return (
     <>
@@ -13,12 +15,34 @@ export function GSplat() {
 
       <Canvas gl={{ logarithmicDepthBuffer: true, antialias: false, depth: false, color: false, stencil: false }}>
         <color args={[0x000000]} attach={'background'}></color>
-        <OrbitControls makeDefault object-position={[-12, 0.5, 1.5]} target={[0, 0, 0.5]}></OrbitControls>
+        <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
         <Content></Content>
 
         <EffectComposer multisampling={0} disableNormalPass>
           <Bloom luminanceThreshold={1} intensity={2} mipmapBlur></Bloom>
         </EffectComposer>
+
+        <Box
+          visible={false}
+          frustumCulled={false}
+          position={[0, -0.1, 0]}
+          onPointerDown={(ev) => {
+            window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
+          }}
+          args={[10000, 0.1, 10000]}>
+          <meshBasicMaterial color={'#000000'} side={THREE.FrontSide}></meshBasicMaterial>
+        </Box>
+
+        <Sphere
+          visible={false}
+          frustumCulled={false}
+          position={[0, 0, 0]}
+          onPointerDown={(ev) => {
+            // window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
+          }}
+          args={[5000, 32, 32]}>
+          <meshBasicMaterial color={'#000000'} side={THREE.BackSide}></meshBasicMaterial>
+        </Sphere>
       </Canvas>
 
       {/*  */}
@@ -492,6 +516,26 @@ class SPlatClass extends Group {
 					in float vPerlin;
 					in float vDissolveFactor;
 
+          // Converts a color from linear light gamma to sRGB gamma
+          vec4 fromLinear(vec4 linearRGB)
+          {
+              bvec4 cutoff = lessThan(linearRGB, vec4(0.0031308));
+              vec4 higher = vec4(1.055)*pow(linearRGB, vec4(1.0/2.4)) - vec4(0.055);
+              vec4 lower = linearRGB * vec4(12.92);
+
+              return mix(higher, lower, cutoff);
+          }
+
+          // Converts a color from sRGB gamma to linear light gamma
+          vec4 toLinear(vec4 sRGB)
+          {
+              bvec4 cutoff = lessThan(sRGB, vec4(0.04045));
+              vec4 higher = pow((sRGB + vec4(0.055))/vec4(1.055), vec4(2.4));
+              vec4 lower = sRGB/vec4(12.92);
+
+              return mix(higher, lower, cutoff);
+          }
+
 					void main() {
 						
 						float A = -dot(vPosition, vPosition);
@@ -504,28 +548,30 @@ class SPlatClass extends Group {
 						float dissolveStartDistance = progress * radius - 2.0;
 						float dissolveEndDistance = progress * radius + 2.0;
 
-						float distanceFade = distance(origin, vCenter);
+						float distanceFade = distance(origin, vCenter + A);
 						float dissolveFactor = smoothstep(dissolveStartDistance, dissolveEndDistance, distanceFade);
-
 
 						vec3 add = vec3(0.0);
 						if (distanceFade > dissolveStartDistance && distanceFade < dissolveEndDistance) {
-							add.r += dissolveFactor * (1.0 + dissolveFactor);
-							add.g += dissolveFactor * (1.0 + dissolveFactor);
-							add.b += dissolveFactor * (1.0 + dissolveFactor);
+							add.r = dissolveFactor * (1.0 + dissolveFactor);
+							add.g = dissolveFactor * (1.0 + dissolveFactor);
+							add.b = dissolveFactor * (1.0 + dissolveFactor);
 							
-							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 3.0, dissolveFactor);
+							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 5.5, pow(dissolveFactor, 2.0));
 						}
+
+            gl_FragColor = toLinear(gl_FragColor);
 
 					}
 				`,
-          blending: THREE.CustomBlending,
-          blendSrcAlpha: THREE.OneFactor,
-          depthTest: true,
+          // blending: THREE.CustomBlending,
+          // blendSrcAlpha: THREE.OneFactor,
+          depthTest: false,
           depthWrite: false,
           transparent: true,
         })
         let mesh = new THREE.Mesh(geometry, material, vertexCount)
+        mesh.frustumCulled = false
 
         material.onBeforeRender = (renderer, scene, camera, geometry, object, group) => {
           let projectionMatrix = this.getProjectionMatrix(camera)
@@ -542,8 +588,10 @@ class SPlatClass extends Group {
         }
 
         material.uniforms.progress.value = 0
-        document.body.addEventListener('click', () => {
-          material.uniforms.origin.value.set(0, 0, 0)
+        window.addEventListener('click-floor', ({ detail }) => {
+          console.log(detail)
+
+          material.uniforms.origin.value.copy(detail)
           // camera.getWorldPosition(material.uniforms.origin.value)
           material.uniforms.progress.value = 0
           material.uniforms.radius.value = 50
@@ -609,7 +657,7 @@ class SPlatClass extends Group {
 
                   self.onmessage = (e) => {
 
-                    console.log(e);
+                    // console.log(e);
                     if (e.data.matrices) {
                       matrices = new Float32Array(e.data.matrices)
                     }
@@ -635,6 +683,9 @@ class SPlatClass extends Group {
           [matrices.buffer],
         )
 
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('click-floor', { detail: new THREE.Vector3(0, 0, 0) }))
+        }, 1000)
         this.worker.onmessage = (e) => {
           let indexes = new Uint32Array(e.data.sortedIndexes)
           mesh.geometry.attributes.splatIndex.set(indexes)
