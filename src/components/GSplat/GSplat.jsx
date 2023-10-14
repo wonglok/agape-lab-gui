@@ -554,7 +554,12 @@ class SPlatClass extends Group {
 						}
 
             gl_FragColor = toLinear(gl_FragColor);
-					}
+            gl_FragColor.a = B * vDissolveFactor;
+
+            if (gl_FragColor.a <= 0.0001) {
+              discard;
+            }
+          }
 				`,
           blending: THREE.CustomBlending,
           blendSrcAlpha: THREE.OneFactor,
