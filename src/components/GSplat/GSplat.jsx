@@ -30,7 +30,7 @@ export function GSplat() {
             window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
           }}
           args={[10000000, 0.1, 10000000]}>
-          <meshBasicMaterial color={'#000000'} side={THREE.DoubleSide}></meshBasicMaterial>
+          <meshBasicMaterial color={'#00ff00'} side={THREE.DoubleSide}></meshBasicMaterial>
         </Box>
       </Canvas>
 
