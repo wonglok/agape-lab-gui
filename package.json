@@ -1,8 +1,8 @@
 {
-  "name": "react-three-next",
+  "name": "lab-agape",
   "version": "2.0.0",
   "authors": [
-    "Renaud ROHLINGER <https://twitter.com/onirenaud>"
+    "LOKLOK <https://twitter.com/wonglok831>"
   ],
   "license": "MIT",
   "private": true,
@@ -53,7 +53,7 @@
     "realism-effects": "^1.0.2",
     "reconnecting-websocket": "^4.4.0",
     "stats.js": "^0.17.0",
-    "three": "0.150.1",
+    "three": "0.150.0",
     "three-pathfinding": "^1.2.0",
     "three-stdlib": "^2.21.6",
     "three140": "npm:three@^0.140.0",

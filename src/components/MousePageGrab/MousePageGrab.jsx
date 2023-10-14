@@ -4,6 +4,7 @@ import { useMouse } from './useMouse.js'
 import { Stats } from '@react-three/drei'
 import { useEffect, useRef } from 'react'
 // import { useEffect } from 'react'
+
 export function MousePageGrab() {
   let showStartMenu = useMouse((r) => r.showStartMenu)
   let video = useMouse((r) => r.video)
