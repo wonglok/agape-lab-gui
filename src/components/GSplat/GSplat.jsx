@@ -19,7 +19,7 @@ export function GSplat() {
         <Content></Content>
 
         <EffectComposer multisampling={0} disableNormalPass>
-          <Bloom luminanceThreshold={1} intensity={2} mipmapBlur></Bloom>
+          <Bloom luminanceThreshold={1} intensity={1} mipmapBlur></Bloom>
         </EffectComposer>
 
         <Box
@@ -143,7 +143,9 @@ class SPlatClass extends Group {
           console.log('vertexCount limited to 4096*4096', vertexCount)
           vertexCount = 4096 * 4096
         }
-
+        //
+        let posList = []
+        //
         let matrices = new Float32Array(vertexCount * 16)
         const centerAndScaleData = new Float32Array(4096 * 4096 * 4)
         const covAndColorData = new Uint32Array(4096 * 4096 * 4)
@@ -202,7 +204,13 @@ class SPlatClass extends Group {
           }
         }
 
-        const centerAndScaleTexture = new THREE.DataTexture(centerAndScaleData, 4096, 4096, THREE.RGBA, THREE.FloatType)
+        const centerAndScaleTexture = new THREE.DataTexture(
+          centerAndScaleData,
+          4096,
+          4096,
+          THREE.RGBAFormat,
+          THREE.FloatType,
+        )
         centerAndScaleTexture.needsUpdate = true
         const covAndColorTexture = new THREE.DataTexture(
           covAndColorData,
@@ -550,7 +558,7 @@ class SPlatClass extends Group {
 							add.g = dissolveFactor * (1.0 + dissolveFactor);
 							add.b = dissolveFactor * (1.0 + dissolveFactor);
 							
-							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 5.5, pow(dissolveFactor, 2.0));
+							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 5.5, pow(dissolveFactor, 2.0) * 0.5);
 						}
 
             gl_FragColor = toLinear(gl_FragColor);
