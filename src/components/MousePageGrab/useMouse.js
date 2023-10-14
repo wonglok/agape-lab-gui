@@ -1,4 +1,3 @@
-import { FilesetResolver, GestureRecognizer, HandLandmarker } from '@mediapipe/tasks-vision'
 import {
   Color,
   CubicBezierCurve3,
@@ -59,6 +58,8 @@ export const useMouse = create((set, get) => {
     initVideo: async () => {
       set({ inited: true })
       set({ loading: true })
+
+      let { FilesetResolver, GestureRecognizer, HandLandmarker } = await import('@mediapipe/tasks-vision')
 
       let video = document.createElement('video')
       video.playsInline = true
