@@ -11,6 +11,7 @@ export function MousePageGrab() {
 
   return (
     <>
+      {/*  */}
       <Canvas
         onCreated={(st) => {
           st.gl.domElement.ontouchstart = (ev) => {
