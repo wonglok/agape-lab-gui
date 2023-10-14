@@ -6,8 +6,8 @@ import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, OrbitControls, Sphere } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
-import { MeshBasicMaterial } from 'three147'
-import { BackSide } from 'three'
+// import { MeshBasicMaterial } from 'three147'
+// import { BackSide } from 'three'
 export function GSplat() {
   return (
     <>
@@ -26,7 +26,7 @@ export function GSplat() {
           visible={false}
           frustumCulled={false}
           position={[0, -0.1, 0]}
-          onPointerDown={(ev) => {
+          onClick={(ev) => {
             window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
           }}
           args={[10000000, 0.1, 10000000]}>
@@ -146,6 +146,7 @@ class SPlatClass extends Group {
         let matrices = new Float32Array(vertexCount * 16)
         const centerAndScaleData = new Float32Array(4096 * 4096 * 4)
         const covAndColorData = new Uint32Array(4096 * 4096 * 4)
+        const quatData = new Float32Array(4096 * 4096 * 4)
         const covAndColorData_uint8 = new Uint8Array(covAndColorData.buffer)
         const covAndColorData_int16 = new Int16Array(covAndColorData.buffer)
         for (let i = 0; i < vertexCount; i++) {
@@ -155,8 +156,14 @@ class SPlatClass extends Group {
             -(u_buffer[32 * i + 28 + 3] - 128) / 128.0,
             (u_buffer[32 * i + 28 + 0] - 128) / 128.0,
           )
+
           let center = new THREE.Vector3(f_buffer[8 * i + 0], f_buffer[8 * i + 1], -f_buffer[8 * i + 2])
           let scale = new THREE.Vector3(f_buffer[8 * i + 3 + 0], f_buffer[8 * i + 3 + 1], f_buffer[8 * i + 3 + 2])
+
+          quatData[i * 4 + 0] = quat.x
+          quatData[i * 4 + 1] = quat.y
+          quatData[i * 4 + 2] = quat.z
+          quatData[i * 4 + 3] = quat.w
 
           let mtx = new THREE.Matrix4()
           mtx.makeRotationFromQuaternion(quat)
@@ -200,6 +207,9 @@ class SPlatClass extends Group {
             matrices[i * 16 + j] = mtx.elements[j]
           }
         }
+
+        const quatTexture = new THREE.DataTexture(quatData, 4096, 4096, THREE.RGBAFormat, THREE.FloatType)
+        quatTexture.needsUpdate = true
 
         const centerAndScaleTexture = new THREE.DataTexture(
           centerAndScaleData,
@@ -250,6 +260,7 @@ class SPlatClass extends Group {
             focal: { value: 1000.0 }, // Dummy. will be overwritten
             centerAndScaleTexture: { value: centerAndScaleTexture },
             covAndColorTexture: { value: covAndColorTexture },
+            quatTexture: { value: quatTexture },
             gsProjectionMatrix: { value: this.getProjectionMatrix() },
             gsModelViewMatrix: { value: this.getModelViewMatrix() },
           },
@@ -277,26 +288,26 @@ class SPlatClass extends Group {
 						return vec2(float(v1), float(v0));
 					}
 
-					 mat4 rotationX( in float angle ) {
+					mat4 rotationX( in float angle ) {
 							return mat4(	1.0,		0,			0,			0,
 											0, 	cos(angle),	-sin(angle),		0,
 											0, 	sin(angle),	 cos(angle),		0,
 											0, 			0,			  0, 		1);
 						}
 
-						mat4 rotationY( in float angle ) {
-							return mat4(	cos(angle),		0,		sin(angle),	0,
-													0,		1.0,			 0,	0,
-											-sin(angle),	0,		cos(angle),	0,
-													0, 		0,				0,	1);
-						}
+          mat4 rotationY( in float angle ) {
+            return mat4(	cos(angle),		0,		sin(angle),	0,
+                        0,		1.0,			 0,	0,
+                    -sin(angle),	0,		cos(angle),	0,
+                        0, 		0,				0,	1);
+          }
 
-						mat4 rotationZ( in float angle ) {
-							return mat4(	cos(angle),		-sin(angle),	0,	0,
-											sin(angle),		cos(angle),		0,	0,
-													0,				0,		1,	0,
-													0,				0,		0,	1);
-						}
+          mat4 rotationZ( in float angle ) {
+            return mat4(	cos(angle),		-sin(angle),	0,	0,
+                    sin(angle),		cos(angle),		0,	0,
+                        0,				0,		1,	0,
+                        0,				0,		0,	1);
+          }
 
 
 					//  Function from Iñigo Quiles
@@ -313,12 +324,17 @@ class SPlatClass extends Group {
 					uniform float progress;
 					uniform float radius;
 					uniform vec3 origin;
+          
+          uniform sampler2D quatTexture;
 
 					out vec3 vCenter;
 
 					out float vPerlin;
 					out float vDissolveFactor;
-
+          //
+          vec3 qtransform( vec4 q, vec3 v ){ 
+            return v + 2.0*cross(cross(v, q.xyz ) + q.w*v, q.xyz);
+          } 
 
 					//	Classic Perlin 3D Noise
 					//	by Stefan Gustavson
@@ -396,7 +412,9 @@ class SPlatClass extends Group {
 					}
 
 					void main () {
-						ivec2 texPos = ivec2(splatIndex%uint(4096),splatIndex/uint(4096));
+            //
+            ivec2 texPos = ivec2(splatIndex%uint(4096),splatIndex/uint(4096));
+						vec4 quatData = texelFetch(quatTexture, texPos, 0);
 						vec4 centerAndScaleData = texelFetch(centerAndScaleTexture, texPos, 0);
 
 						vec4 center = vec4(centerAndScaleData.xyz, 1);
@@ -424,7 +442,8 @@ class SPlatClass extends Group {
 						vPerlin = cnoise(vec3(center.rgb - startAt.rgb) * 0.35);
 						// Set the alpha value of the fragment color to the dissolve factor
 						vDissolveFactor = dissolveFactor;
-						
+
+
             //
 						// center.xyz += (1.0 - dissolveFactor) * normalize(center.xyz);
 						// vec3 dist = center.xyz - ;
@@ -441,8 +460,10 @@ class SPlatClass extends Group {
 						// vHeight = pow(y, 3.0) * -1.3;
             //
 
-						vec4 camspace = gsModelViewMatrix * center;
-						vec4 pos2d = gsProjectionMatrix * camspace;
+						// vec4 camspace = gsModelViewMatrix * center;
+						// vec4 pos2d = gsProjectionMatrix * camspace;
+						vec4 camspace = modelViewMatrix * vec4(center.x, -center.y, center.z, center.w);
+						vec4 pos2d = projectionMatrix * camspace;
 
 						float bounds = 1.2 * pos2d.w;
 						if (pos2d.z < -pos2d.w || pos2d.x < -bounds || pos2d.x > bounds
@@ -493,8 +514,11 @@ class SPlatClass extends Group {
 							float(colorUint >> uint(24)) / 255.0
 						);
 						vPosition = position.xy;
-
-						gl_Position = vec4(
+            
+            // gl_Position = projectionMatrix * modelViewMatrix * vec4(center.rgb + 3.0 * qtransform(quatData, vec3(position.xy * v1 / viewport * 2.0 + position.xy * v2 / viewport * 2.0, position.z)), 1.0);
+            
+            
+            gl_Position = vec4(
 							vCenter 
 								+ position.x * v2 / viewport * 2.0 
 								+ position.y * v1 / viewport * 2.0, pos2d.z / pos2d.w, 1.0);
@@ -553,15 +577,15 @@ class SPlatClass extends Group {
 						if (distanceFade > dissolveStartDistance && distanceFade < dissolveEndDistance) {
 							add = vec3(dissolveFactor * (1.0 + dissolveFactor));
 							
-							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 5.5, pow(dissolveFactor, 2.0) * 0.5);
+							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 3.5, pow(dissolveFactor, 2.0) * 0.5);
 						}
 
             gl_FragColor = toLinear(gl_FragColor);
             gl_FragColor.a = B * vDissolveFactor;
 
-            if (gl_FragColor.a <= 0.0001) {
-              discard;
-            }
+            // if (gl_FragColor.a <= 0.0001) {
+            //   discard;
+            // }
           }
 				`,
           blending: THREE.CustomBlending,
@@ -599,7 +623,7 @@ class SPlatClass extends Group {
           anime({
             targets: [material.uniforms.progress],
             value: 1,
-            duration: 330 * material.uniforms.radius.value,
+            duration: 300 * material.uniforms.radius.value,
             easing: 'easeOutQuad',
           }).finished.then(() => {})
         })
