@@ -141,12 +141,9 @@ class SPlatClass extends Group {
           vertexCount = 4096 * 4096
         }
         //
-        let posList = []
-        //
         let matrices = new Float32Array(vertexCount * 16)
         const centerAndScaleData = new Float32Array(4096 * 4096 * 4)
         const covAndColorData = new Uint32Array(4096 * 4096 * 4)
-        const quatData = new Float32Array(4096 * 4096 * 4)
         const covAndColorData_uint8 = new Uint8Array(covAndColorData.buffer)
         const covAndColorData_int16 = new Int16Array(covAndColorData.buffer)
         for (let i = 0; i < vertexCount; i++) {
@@ -156,14 +153,8 @@ class SPlatClass extends Group {
             -(u_buffer[32 * i + 28 + 3] - 128) / 128.0,
             (u_buffer[32 * i + 28 + 0] - 128) / 128.0,
           )
-
           let center = new THREE.Vector3(f_buffer[8 * i + 0], f_buffer[8 * i + 1], -f_buffer[8 * i + 2])
           let scale = new THREE.Vector3(f_buffer[8 * i + 3 + 0], f_buffer[8 * i + 3 + 1], f_buffer[8 * i + 3 + 2])
-
-          quatData[i * 4 + 0] = quat.x
-          quatData[i * 4 + 1] = quat.y
-          quatData[i * 4 + 2] = quat.z
-          quatData[i * 4 + 3] = quat.w
 
           let mtx = new THREE.Matrix4()
           mtx.makeRotationFromQuaternion(quat)
@@ -208,16 +199,7 @@ class SPlatClass extends Group {
           }
         }
 
-        const quatTexture = new THREE.DataTexture(quatData, 4096, 4096, THREE.RGBAFormat, THREE.FloatType)
-        quatTexture.needsUpdate = true
-
-        const centerAndScaleTexture = new THREE.DataTexture(
-          centerAndScaleData,
-          4096,
-          4096,
-          THREE.RGBAFormat,
-          THREE.FloatType,
-        )
+        const centerAndScaleTexture = new THREE.DataTexture(centerAndScaleData, 4096, 4096, THREE.RGBA, THREE.FloatType)
         centerAndScaleTexture.needsUpdate = true
         const covAndColorTexture = new THREE.DataTexture(
           covAndColorData,
@@ -260,7 +242,6 @@ class SPlatClass extends Group {
             focal: { value: 1000.0 }, // Dummy. will be overwritten
             centerAndScaleTexture: { value: centerAndScaleTexture },
             covAndColorTexture: { value: covAndColorTexture },
-            quatTexture: { value: quatTexture },
             gsProjectionMatrix: { value: this.getProjectionMatrix() },
             gsModelViewMatrix: { value: this.getModelViewMatrix() },
           },
