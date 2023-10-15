@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, OrbitControls, Sphere } from '@react-three/drei'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
+// import { Bloom, EffectComposer } from '@react-three/postprocessing'
 // import { MeshBasicMaterial } from 'three147'
 // import { BackSide } from 'three'
 export function GSplat() {
@@ -13,14 +13,14 @@ export function GSplat() {
     <>
       {/*  */}
 
-      <Canvas gl={{ logarithmicDepthBuffer: false, antialias: false, depth: false, color: false, stencil: false }}>
+      <Canvas>
         <color args={[0x000000]} attach={'background'}></color>
         <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
         <Content></Content>
 
-        <EffectComposer multisampling={0} disableNormalPass>
+        {/* <EffectComposer multisampling={0} disableNormalPass>
           <Bloom luminanceThreshold={1} intensity={1} mipmapBlur></Bloom>
-        </EffectComposer>
+        </EffectComposer> */}
 
         <Box
           visible={false}
@@ -136,14 +136,14 @@ class SPlatClass extends Group {
         let vertexCount = Math.floor(buffer.byteLength / rowLength)
         let f_buffer = new Float32Array(buffer)
 
-        if (vertexCount > 4096 * 4096) {
-          console.log('vertexCount limited to 4096*4096', vertexCount)
-          vertexCount = 4096 * 4096
+        if (vertexCount > 1024 * 1024) {
+          console.log('vertexCount limited to 1024*1024', vertexCount)
+          vertexCount = 1024 * 1024
         }
         //
         let matrices = new Float32Array(vertexCount * 16)
-        const centerAndScaleData = new Float32Array(4096 * 4096 * 4)
-        const covAndColorData = new Uint32Array(4096 * 4096 * 4)
+        const centerAndScaleData = new Float32Array(1024 * 1024 * 4)
+        const covAndColorData = new Uint32Array(1024 * 1024 * 4)
         const covAndColorData_uint8 = new Uint8Array(covAndColorData.buffer)
         const covAndColorData_int16 = new Int16Array(covAndColorData.buffer)
         for (let i = 0; i < vertexCount; i++) {
@@ -199,12 +199,12 @@ class SPlatClass extends Group {
           }
         }
 
-        const centerAndScaleTexture = new THREE.DataTexture(centerAndScaleData, 4096, 4096, THREE.RGBA, THREE.FloatType)
+        const centerAndScaleTexture = new THREE.DataTexture(centerAndScaleData, 1024, 1024, THREE.RGBA, THREE.FloatType)
         centerAndScaleTexture.needsUpdate = true
         const covAndColorTexture = new THREE.DataTexture(
           covAndColorData,
-          4096,
-          4096,
+          1024,
+          1024,
           THREE.RGBAIntegerFormat,
           THREE.UnsignedIntType,
         )
@@ -310,7 +310,7 @@ class SPlatClass extends Group {
 
 					out vec3 vCenter;
 
-					out float vPerlin;
+					// out float vPerlin;
 					out float vDissolveFactor;
           //
           vec3 qtransform( vec4 q, vec3 v ){ 
@@ -394,7 +394,7 @@ class SPlatClass extends Group {
 
 					void main () {
             //
-            ivec2 texPos = ivec2(splatIndex%uint(4096),splatIndex/uint(4096));
+            ivec2 texPos = ivec2(splatIndex%uint(1024),splatIndex/uint(1024));
 						vec4 quatData = texelFetch(quatTexture, texPos, 0);
 						vec4 centerAndScaleData = texelFetch(centerAndScaleTexture, texPos, 0);
 
@@ -420,7 +420,7 @@ class SPlatClass extends Group {
 						// Calculate the dissolve factor based on the distance
 						float dissolveFactor = smoothstep(dissolveStartDistance, dissolveEndDistance, distanceFade);
 
-						vPerlin = cnoise(vec3(center.rgb - startAt.rgb) * 0.35);
+						// vPerlin = cnoise(vec3(center.rgb - startAt.rgb) * 0.35);
 						// Set the alpha value of the fragment color to the dissolve factor
 						vDissolveFactor = dissolveFactor;
 
@@ -516,7 +516,7 @@ class SPlatClass extends Group {
 					uniform vec3 origin;
 					uniform float radius;	
 
-					in float vPerlin;
+					// in float vPerlin;
 					in float vDissolveFactor;
 
           // Converts a color from linear light gamma to sRGB gamma
@@ -561,7 +561,7 @@ class SPlatClass extends Group {
 							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 3.5, pow(dissolveFactor, 2.0) * 0.5);
 						}
 
-            gl_FragColor = toLinear(gl_FragColor);
+            // gl_FragColor = toLinear(gl_FragColor);
             gl_FragColor.a = B * vDissolveFactor;
 
             // if (gl_FragColor.a <= 0.0001) {
@@ -574,6 +574,7 @@ class SPlatClass extends Group {
           depthTest: false,
           depthWrite: true,
           transparent: true,
+          // glslVersion: '300 es',
         })
         let mesh = new THREE.Mesh(geometry, material, vertexCount)
         mesh.frustumCulled = false
