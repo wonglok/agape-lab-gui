@@ -32,8 +32,8 @@ export function GSplat() {
 }
 
 function Focus() {
+  // let controls = useThree((r) => r.controls)
   let ball = useRef()
-  let controls = useThree((r) => r.controls)
   let camera = useThree((r) => r.camera)
   return (
     <>
