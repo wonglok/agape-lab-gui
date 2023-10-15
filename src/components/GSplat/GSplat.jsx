@@ -44,7 +44,7 @@ function Content() {
 
   let camera = useThree((r) => r.camera)
   useEffect(() => {
-    let obj = new SPlatClass({ camera })
+    let obj = new SPlatMobileClass({ camera })
     setState({
       obj,
       compos: <primitive object={obj} />,
@@ -59,7 +59,7 @@ function Content() {
   return <>{st?.compos}</>
 }
 
-class SPlatClass extends Group {
+class SPlatMobileClass extends Group {
   constructor({ camera }) {
     //
     super()
@@ -425,7 +425,6 @@ class SPlatClass extends Group {
 						vDissolveFactor = dissolveFactor;
 
 
-            //
 						// center.xyz += (1.0 - dissolveFactor) * normalize(center.xyz);
 						// vec3 dist = center.xyz - ;
 						// vec3 myCenter = center.rgb;
@@ -441,10 +440,10 @@ class SPlatClass extends Group {
 						// vHeight = pow(y, 3.0) * -1.3;
             //
 
-						// vec4 camspace = gsModelViewMatrix * center;
-						// vec4 pos2d = gsProjectionMatrix * camspace;
-						vec4 camspace = modelViewMatrix * vec4(center.x, -center.y, center.z, center.w);
-						vec4 pos2d = projectionMatrix * camspace;
+						vec4 camspace = gsModelViewMatrix * center;
+						vec4 pos2d = gsProjectionMatrix * camspace;
+						// vec4 camspace = modelViewMatrix * vec4(center.x, -center.y, center.z, center.w);
+						// vec4 pos2d = projectionMatrix * camspace;
 
 						float bounds = 1.2 * pos2d.w;
 						if (pos2d.z < -pos2d.w || pos2d.x < -bounds || pos2d.x > bounds
@@ -496,14 +495,14 @@ class SPlatClass extends Group {
 						);
 						vPosition = position.xy;
             
-            // gl_Position = projectionMatrix * modelViewMatrix * vec4(center.rgb + 3.0 * qtransform(quatData, vec3(position.xy * v1 / viewport * 2.0 + position.xy * v2 / viewport * 2.0, position.z)), 1.0);
-            
-            
             gl_Position = vec4(
 							vCenter 
 								+ position.x * v2 / viewport * 2.0 
 								+ position.y * v1 / viewport * 2.0, pos2d.z / pos2d.w, 1.0);
-					}
+
+            // gl_Position = projectionMatrix * modelViewMatrix * vec4(center.rgb + 3.0 * qtransform(quatData, vec3(position.xy * v1 / viewport * 2.0 + position.xy * v2 / viewport * 2.0, position.z)), 1.0);
+            
+            }
 					`,
           fragmentShader: `
 					in vec4 vColor;
@@ -546,7 +545,7 @@ class SPlatClass extends Group {
 						float B = exp(A) * vColor.a;
 
 						gl_FragColor = vec4(vColor.rgb, B);
-						gl_FragColor.a *= vDissolveFactor;
+						// gl_FragColor.a *= vDissolveFactor;
 
 						float dissolveStartDistance = progress * radius - 3.0;
 						float dissolveEndDistance = progress * radius + 3.0;
@@ -571,8 +570,8 @@ class SPlatClass extends Group {
 				`,
           blending: THREE.CustomBlending,
           blendSrcAlpha: THREE.OneFactor,
-          depthTest: false,
-          depthWrite: true,
+          depthTest: true,
+          depthWrite: false,
           transparent: true,
           // glslVersion: '300 es',
         })
@@ -595,7 +594,7 @@ class SPlatClass extends Group {
 
         material.uniforms.progress.value = 0
         window.addEventListener('click-floor', ({ detail }) => {
-          console.log(detail)
+          // console.log(detail)
 
           material.uniforms.origin.value.copy(detail)
           // camera.getWorldPosition(material.uniforms.origin.value)
@@ -607,7 +606,9 @@ class SPlatClass extends Group {
             value: 1,
             duration: 300 * material.uniforms.radius.value,
             easing: 'easeOutQuad',
-          }).finished.then(() => {})
+          }).finished.then(() => {
+            //
+          })
         })
 
         mesh.frustumCulled = false
