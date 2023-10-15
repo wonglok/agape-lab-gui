@@ -4,8 +4,8 @@ import { Group } from 'three'
 import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
-import { Box, OrbitControls, Sphere } from '@react-three/drei'
-import { Vector2 } from 'three'
+import { Box, OrbitControls, Sphere, TransformControls } from '@react-three/drei'
+
 // import { Bloom, EffectComposer } from '@react-three/postprocessing'
 // import { MeshBasicMaterial } from 'three147'
 // import { BackSide } from 'three'
@@ -38,7 +38,6 @@ function Focus() {
   return (
     <>
       <Box
-        visible={false}
         frustumCulled={false}
         position={[0, -1.5, 0]}
         onClick={(ev) => {
@@ -59,8 +58,8 @@ function Focus() {
             }),
           )
         }}
-        args={[10000000, 0.1, 10000000]}>
-        <meshBasicMaterial color={'#00ff00'} side={THREE.DoubleSide}></meshBasicMaterial>
+        args={[500, 0.1, 500, 100, 1, 100]}>
+        <meshBasicMaterial color={'#00ff00'} wireframe={true} side={THREE.DoubleSide}></meshBasicMaterial>
       </Box>
 
       <Sphere scale={0.1} visible={false} ref={ball}></Sphere>
@@ -82,7 +81,19 @@ function Content() {
     let obj = new SPlatMobileClass({ camera, target: controls.target })
     setState({
       obj,
-      compos: <primitive object={obj} />,
+      compos: (
+        <>
+          <group quaternion={[0.045377556852419475, 0.002883670468155779, -0.02352204538395564, 0.9986887779281849]}>
+            <primitive object={obj} />
+          </group>
+
+          {/* <TransformControls
+            mode='rotate'
+            onChange={(ev) => {
+              console.log(ev.target.worldQuaternion.toArray())
+            }}></TransformControls> */}
+        </>
+      ),
     })
   }, [camera, controls])
 
