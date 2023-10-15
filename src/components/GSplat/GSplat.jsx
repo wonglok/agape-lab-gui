@@ -1,10 +1,11 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Group } from 'three'
 import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, OrbitControls, Sphere } from '@react-three/drei'
+import { Vector2 } from 'three'
 // import { Bloom, EffectComposer } from '@react-three/postprocessing'
 // import { MeshBasicMaterial } from 'three147'
 // import { BackSide } from 'three'
@@ -22,16 +23,7 @@ export function GSplat() {
           <Bloom luminanceThreshold={1} intensity={1} mipmapBlur></Bloom>
         </EffectComposer> */}
 
-        <Box
-          visible={false}
-          frustumCulled={false}
-          position={[0, -0.1, 0]}
-          onClick={(ev) => {
-            window.dispatchEvent(new CustomEvent('click-floor', { detail: ev.point }))
-          }}
-          args={[10000000, 0.1, 10000000]}>
-          <meshBasicMaterial color={'#00ff00'} side={THREE.DoubleSide}></meshBasicMaterial>
-        </Box>
+        <Focus></Focus>
       </Canvas>
 
       {/*  */}
@@ -39,17 +31,60 @@ export function GSplat() {
   )
 }
 
+function Focus() {
+  let ball = useRef()
+  let controls = useThree((r) => r.controls)
+  let camera = useThree((r) => r.camera)
+  return (
+    <>
+      <Box
+        visible={false}
+        frustumCulled={false}
+        position={[0, -1.5, 0]}
+        onClick={(ev) => {
+          // controls.target.set(ev.point.x, ev.point.y, ev.point.z)
+
+          // anime({
+          //   targets: [controls.target, ball.current.position],
+          //   x: ev.point.x,
+          //   y: ev.point.y,
+          //   z: ev.point.z,
+          //   duration: 1000,
+          //   easing: 'easeOutQuad',
+          // })
+
+          window.dispatchEvent(
+            new CustomEvent('click-floor', {
+              detail: { camera: camera.position, target: ev.point },
+            }),
+          )
+        }}
+        args={[10000000, 0.1, 10000000]}>
+        <meshBasicMaterial color={'#00ff00'} side={THREE.DoubleSide}></meshBasicMaterial>
+      </Box>
+
+      <Sphere scale={0.1} visible={false} ref={ball}></Sphere>
+    </>
+  )
+}
 function Content() {
   let [st, setState] = useState(null)
 
   let camera = useThree((r) => r.camera)
+  let controls = useThree((r) => r.controls)
   useEffect(() => {
-    let obj = new SPlatMobileClass({ camera })
+    if (!camera) {
+      return
+    }
+    if (!controls) {
+      return
+    }
+    let obj = new SPlatMobileClass({ camera, target: controls.target })
     setState({
       obj,
       compos: <primitive object={obj} />,
     })
-  }, [camera])
+  }, [camera, controls])
 
   useFrame(() => {
     if (st?.obj) {
@@ -60,19 +95,20 @@ function Content() {
 }
 
 class SPlatMobileClass extends Group {
-  constructor({ camera }) {
+  constructor({ camera, controls }) {
     //
     super()
+    this.controls = controls
     let o3 = new Object3D()
     this.add(o3)
 
     // this.add(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1)))
 
-    this.loadData(`https://huggingface.co/cakewalk/splat-data/resolve/main/train.splat`, camera, o3)
+    this.loadData(`https://huggingface.co/cakewalk/splat-data/resolve/main/train.splat`, camera, o3, controls)
     //
   }
   // also works from vanilla three.js
-  loadData(src, camera, object) {
+  loadData(src, camera, object, controls) {
     this.src = src
     this.camera = camera
     this.object = object
@@ -421,27 +457,25 @@ class SPlatMobileClass extends Group {
 						float dissolveFactor = smoothstep(dissolveStartDistance, dissolveEndDistance, distanceFade);
 
 						// vPerlin = cnoise(vec3(center.rgb - startAt.rgb) * 0.35);
+
 						// Set the alpha value of the fragment color to the dissolve factor
 						vDissolveFactor = dissolveFactor;
 
-
-						// center.xyz += (1.0 - dissolveFactor) * normalize(center.xyz);
+            // center.xyz += (1.0 - dissolveFactor) * normalize(center.xyz);
 						// vec3 dist = center.xyz - ;
 						// vec3 myCenter = center.rgb;
 						// float vl = length(myCenter.xyz - origin.xyz);
 						// if (vl >= radius) {
 						// 	vl = radius;
 						// }
-            //
 						
-            //
 						// float eH = 3.141592 * 2.0 * (y);
 						center.y += 0.3 * cos(vDissolveFactor * 2.0 * 3.141592);
 						// vHeight = pow(y, 3.0) * -1.3;
-            //
 
 						vec4 camspace = gsModelViewMatrix * center;
 						vec4 pos2d = gsProjectionMatrix * camspace;
+
 						// vec4 camspace = modelViewMatrix * vec4(center.x, -center.y, center.z, center.w);
 						// vec4 pos2d = projectionMatrix * camspace;
 
@@ -545,7 +579,7 @@ class SPlatMobileClass extends Group {
 						float B = exp(A) * vColor.a;
 
 						gl_FragColor = vec4(vColor.rgb, B);
-						// gl_FragColor.a *= vDissolveFactor;
+						gl_FragColor.a *= vDissolveFactor;
 
 						float dissolveStartDistance = progress * radius - 3.0;
 						float dissolveEndDistance = progress * radius + 3.0;
@@ -596,7 +630,7 @@ class SPlatMobileClass extends Group {
         window.addEventListener('click-floor', ({ detail }) => {
           // console.log(detail)
 
-          material.uniforms.origin.value.copy(detail)
+          material.uniforms.origin.value.copy(detail.target)
           // camera.getWorldPosition(material.uniforms.origin.value)
           material.uniforms.progress.value = 0
           material.uniforms.radius.value = 80
@@ -691,7 +725,11 @@ class SPlatMobileClass extends Group {
         )
 
         setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('click-floor', { detail: new THREE.Vector3(0, 0, 0) }))
+          window.dispatchEvent(
+            new CustomEvent('click-floor', {
+              detail: { camera: new THREE.Vector3(0, 0, 0), target: new THREE.Vector3(0, 0, 0) },
+            }),
+          )
         }, 1000)
         this.worker.onmessage = (e) => {
           let indexes = new Uint32Array(e.data.sortedIndexes)
