@@ -19,7 +19,7 @@ export function GSplat() {
 
       <Canvas>
         <color args={[0x000000]} attach={'background'}></color>
-        {/* <PerspectiveCamera near={0.1} far={500} fov={90} makeDefault></PerspectiveCamera> */}
+        <PerspectiveCamera near={0.05} far={1500} fov={56} makeDefault></PerspectiveCamera>
         {/*  */}
 
         <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
@@ -621,7 +621,7 @@ class SPlatMobileClass extends Group {
         //   transparent: true,
         // })
 
-        let mesh = new THREE.InstancedMesh(pl, null, 256 * 256)
+        let mesh = new THREE.InstancedMesh(pl, null, vertexCount)
         pl.setAttribute('splatIndex', splatIndexes)
         mesh.frustumCulled = false
 
@@ -648,7 +648,7 @@ class SPlatMobileClass extends Group {
         let stdMat = new THREE.MeshStandardMaterial({
           blending: THREE.CustomBlending,
           blendSrcAlpha: THREE.OneFactor,
-          depthTest: true,
+          depthTest: false,
           depthWrite: false,
           transparent: true,
           side: THREE.DoubleSide,
@@ -1104,18 +1104,18 @@ class SPlatMobileClass extends Group {
       camera = this.camera
     }
     const viewMatrix = camera.matrixWorld.clone()
-    viewMatrix.elements[1] *= -1.0
-    viewMatrix.elements[4] *= -1.0
-    viewMatrix.elements[6] *= -1.0
-    viewMatrix.elements[9] *= -1.0
-    viewMatrix.elements[13] *= -1.0
+    // viewMatrix.elements[1] *= -1.0
+    // viewMatrix.elements[4] *= -1.0
+    // viewMatrix.elements[6] *= -1.0
+    // viewMatrix.elements[9] *= -1.0
+    // viewMatrix.elements[13] *= -1.0
     const mtx = this.object.matrixWorld.clone()
     mtx.invert()
-    mtx.elements[1] *= -1.0
-    mtx.elements[4] *= -1.0
-    mtx.elements[6] *= -1.0
-    mtx.elements[9] *= -1.0
-    mtx.elements[13] *= -1.0
+    // mtx.elements[1] *= -1.0
+    // mtx.elements[4] *= -1.0
+    // mtx.elements[6] *= -1.0
+    // mtx.elements[9] *= -1.0
+    // mtx.elements[13] *= -1.0
     mtx.multiply(viewMatrix)
     mtx.invert()
     return mtx
