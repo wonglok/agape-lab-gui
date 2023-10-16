@@ -21,8 +21,7 @@ export function GSplat() {
         <color args={[0x000000]} attach={'background'}></color>
         <PerspectiveCamera near={0.05} far={1500} fov={56} makeDefault></PerspectiveCamera>
         {/*  */}
-
-        <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
+        <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[-2, 0, 0.0]}></OrbitControls>
 
         <></>
         {/* <Environment files={`/hdr/grass.hdr`}></Environment> */}
@@ -68,7 +67,10 @@ function Focus() {
         penumbra={0.5}
         decay={2}
         target={o3}
+        visible={false}
         ref={light}></pointLight>
+      <ambientLight intensity={1} />
+
       {/* <pointLight visible={true} ref={light} position={[0, 0, 0]} intensity={1} distance={3}></pointLight> */}
 
       <Box
@@ -357,7 +359,7 @@ class SPlatMobileClass extends Group {
 
         const geometry = new THREE.InstancedBufferGeometry().copy(pl)
         geometry.setAttribute('splatIndex', splatIndexes)
-        geometry.instanceCount = vertexCount
+        geometry.instanceCount = 256 * 256
 
         // let material = new THREE.ShaderMaterial({
         //   uniforms: {
@@ -646,9 +648,9 @@ class SPlatMobileClass extends Group {
         this.object.add(mesh)
 
         let stdMat = new THREE.MeshStandardMaterial({
-          blending: THREE.CustomBlending,
-          blendSrcAlpha: THREE.OneFactor,
-          depthTest: false,
+          // blending: THREE.CustomBlending,
+          // blendSrcAlpha: THREE.OneFactor,
+          depthTest: true,
           depthWrite: false,
           transparent: true,
           side: THREE.DoubleSide,
@@ -722,6 +724,10 @@ class SPlatMobileClass extends Group {
           uniform float splatScale;
           varying vec4 v_Color;
           varying vec2 v_UV;
+          varying float v_DissolveFactor;
+          uniform vec3 origin;
+          uniform float radius;
+          uniform float progress;
           
           vec3 qtransform( vec4 q, vec3 v ){ 
             return v + 2.0*cross(cross(v, q.xyz ) + q.w*v, q.xyz);
@@ -735,6 +741,39 @@ class SPlatMobileClass extends Group {
 
             return mat3(uu, vv, ww);
           }
+
+          mat4 rotationX( in float angle ) {
+							return mat4(	1.0,		0,			0,			0,
+											0, 	cos(angle),	-sin(angle),		0,
+											0, 	sin(angle),	 cos(angle),		0,
+											0, 			0,			  0, 		1);
+						}
+
+          mat4 rotationY( in float angle ) {
+            return mat4(	cos(angle),		0,		sin(angle),	0,
+                        0,		1.0,			 0,	0,
+                    -sin(angle),	0,		cos(angle),	0,
+                        0, 		0,				0,	1);
+          }
+
+          mat4 rotationZ( in float angle ) {
+            return mat4(	cos(angle),		-sin(angle),	0,	0,
+                    sin(angle),		cos(angle),		0,	0,
+                        0,				0,		1,	0,
+                        0,				0,		0,	1);
+          }
+
+
+					//  Function from Iñigo Quiles
+					//  www.iquilezles.org/www/articles/functions/functions.htm
+					float cubicPulse( float c, float w, float x ){
+							x = abs(x - c);
+							if( x>w ) return 0.0;
+							x /= w;
+							return 1.0 - x*x*(3.0-2.0*x);
+					}
+
+
 
           void main() {
 
@@ -773,9 +812,29 @@ class SPlatMobileClass extends Group {
 							return;
 						}
 
-            // mat3 lookMXT = calcLookAtMatrix(center.rgb, cameraPosition, 1.0);
-            // transformed.rgb = center.rgb + rotPos.rgb; 
-            // qtransform(quatData, rotPos.rgb);
+            
+            vec3 startAt = origin.rgb;
+
+						vec3 diff = center.rgb - startAt.rgb;
+
+						float d3 = length(diff.xyz);
+						float d2 = length(diff.xz);
+
+						float y = pow(cubicPulse(-0.25 + progress * 1.25, 0.25, d3 / radius), 1.0);
+
+						// Calculate the distance between the fragment and the camera position
+						float distanceFade = distance(startAt, center.rgb);
+
+						float dissolveStartDistance = progress * radius + 2.0;
+						float dissolveEndDistance = progress * radius - 2.0;
+
+						// Calculate the dissolve factor based on the distance
+						float dissolveFactor = smoothstep(dissolveStartDistance, dissolveEndDistance, distanceFade);
+
+						// vPerlin = cnoise(vec3(center.rgb - startAt.rgb) * 0.35);
+
+						// Set the alpha value of the fragment color to the dissolve factor
+						v_DissolveFactor = dissolveFactor;
 
             vec3 splatGeo = vec3(scaleData.rgb * splatScale * position);
             transformed.rgb = center.rgb + qtransform(quatData, splatGeo.rgb); 
@@ -802,6 +861,7 @@ class SPlatMobileClass extends Group {
           shader.fragmentShader = `
           #define STANDARD
           varying vec4 v_Color;
+          varying float v_DissolveFactor;
           varying vec2 v_UV;
 
           #ifdef PHYSICAL
@@ -980,7 +1040,7 @@ class SPlatMobileClass extends Group {
 
             // gl_FragColor.rgb = v_Color.rgb;
             // gl_FragColor = fromLinear(gl_FragColor);
-            gl_FragColor.a = (0.5 - length(v_UV.xy - 0.5)) * opacity * 2.0;
+            gl_FragColor.a = (0.5 - length(v_UV.xy - 0.5)) * opacity * v_DissolveFactor;
           }
           `
         }
