@@ -808,9 +808,10 @@ class SPlatMobileClass extends Group {
 						float bounds = 1.2 * pos2d.w;
 						if (pos2d.z < -pos2d.w || pos2d.x < -bounds || pos2d.x > bounds
 							|| pos2d.y < -bounds || pos2d.y > bounds) {
-							gl_Position = vec4(0.0, 0.0, 2.0, 1.0);
+							gl_Position = vec4(0.0, 0.0, 0.0, -1.0);
 							return;
 						}
+
 
             
             vec3 startAt = origin.rgb;
@@ -848,14 +849,17 @@ class SPlatMobileClass extends Group {
 
             vViewPosition = - mvPosition.xyz;
 
+
             #include <worldpos_vertex>
             #include <shadowmap_vertex>
             #include <fog_vertex>
 
-          #ifdef USE_TRANSMISSION
-            vWorldPosition = worldPosition.xyz;
-          #endif
-          }
+            #ifdef USE_TRANSMISSION
+              vWorldPosition = worldPosition.xyz;
+            #endif
+
+
+            }
           `
 
           shader.fragmentShader = `
