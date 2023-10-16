@@ -289,8 +289,8 @@ class SPlatMobileClass extends Group {
             radius: { value: 50.0 },
             progress: { value: 0.0 },
             time: { value: 0.0 },
-            viewport: { value: new Float32Array([1980, 1080]) }, // Dummy. will be overwritten
-            focal: { value: 1000.0 }, // Dummy. will be overwritten
+            viewport: { value: new Float32Array([1980, 1080]) },
+            focal: { value: 1000.0 },
             centerAndScaleTexture: { value: centerAndScaleTexture },
             covAndColorTexture: { value: covAndColorTexture },
             gsProjectionMatrix: { value: this.getProjectionMatrix() },
@@ -299,6 +299,14 @@ class SPlatMobileClass extends Group {
           vertexShader: /* glsl */ `
 					precision highp usampler2D;
 
+          float dot2( in vec2 v ) { return dot(v,v); }
+          float dot2( in vec3 v ) { return dot(v,v); }
+          float ndot( in vec2 a, in vec2 b ) { return a.x*b.x - a.y*b.y; }
+
+          float sdBox( vec3 p, vec3 b ){
+            vec3 q = abs(p) - b;
+            return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+          }
 
 					out vec4 vColor;
 					out vec2 vPosition;
