@@ -5,7 +5,6 @@ import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, Environment, OrbitControls, Sphere, TransformControls } from '@react-three/drei'
-import { PLYLoader } from 'three-stdlib'
 
 // import { Bloom, EffectComposer } from '@react-three/postprocessing'
 // import { MeshBasicMaterial } from 'three147'
