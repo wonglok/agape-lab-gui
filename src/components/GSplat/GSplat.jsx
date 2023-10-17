@@ -5,10 +5,8 @@ import * as THREE from 'three'
 import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, Environment, OrbitControls, Sphere, TransformControls } from '@react-three/drei'
+import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
-// import { Bloom, EffectComposer } from '@react-three/postprocessing'
-// import { MeshBasicMaterial } from 'three147'
-// import { BackSide } from 'three'
 export function GSplat() {
   return (
     <>
@@ -22,9 +20,9 @@ export function GSplat() {
         <Environment files={`https://lab.agape.land/hdr/grass.hdr`}></Environment>
         <directionalLight intensity={3} position={[1, 1, 1]}></directionalLight>
 
-        {/* <EffectComposer multisampling={0} disableNormalPass>
+        <EffectComposer multisampling={0} disableNormalPass>
           <Bloom luminanceThreshold={1} intensity={1} mipmapBlur></Bloom>
-        </EffectComposer> */}
+        </EffectComposer>
 
         <Focus></Focus>
       </Canvas>
@@ -614,10 +612,10 @@ class SPlatMobileClass extends Group {
 						if (distanceFade > dissolveStartDistance && distanceFade < dissolveEndDistance) {
 							add = vec3(dissolveFactor * (1.0 + dissolveFactor));
 
-							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 3.5, pow(dissolveFactor, 2.0) * 0.5);
+							gl_FragColor.rgb = mix(gl_FragColor.rgb, add.rgb * vec3(0.8, 0.3, 0.0) * 5.5, pow(dissolveFactor, 2.0) * 0.5);
 						}
 
-            // gl_FragColor = toLinear(gl_FragColor);
+            gl_FragColor = toLinear(gl_FragColor);
             gl_FragColor.a = B * vDissolveFactor;
 
             // if (gl_FragColor.a <= 0.0001) {
