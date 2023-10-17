@@ -6,6 +6,7 @@ import anime from 'animejs'
 import { Object3D } from 'three'
 import { Box, Environment, OrbitControls, Sphere, TransformControls } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { Vector3 } from 'three'
 
 export function GSplat() {
   return (
@@ -651,7 +652,14 @@ class SPlatMobileClass extends Group {
         window.addEventListener('click-floor', ({ detail }) => {
           // console.log(detail)
 
-          material.uniforms.origin.value.copy(detail.target)
+          let pos = camera.position.clone()
+
+          let mid = new THREE.Vector3()
+          mid.lerpVectors(detail.camera, detail.target, -1)
+          mid.normalize().multiplyScalar(5)
+          pos.add(mid)
+
+          material.uniforms.origin.value.copy(pos)
           // camera.getWorldPosition(material.uniforms.origin.value)
           material.uniforms.progress.value = 0
           material.uniforms.radius.value = 80
