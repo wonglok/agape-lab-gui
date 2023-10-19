@@ -1,5 +1,6 @@
-import { ObjectLoader, PerspectiveCamera, Raycaster, Vector3 } from 'three'
-import { MeshBVH } from 'three-mesh-bvh'
+import { BufferGeometryLoader, ObjectLoader, PerspectiveCamera, Raycaster, Vector3 } from 'three'
+import { MeshBVH, NOT_INTERSECTED, CONTAINED, INTERSECTED } from 'three-mesh-bvh'
+import { BufferGeometry } from 'three147'
 
 let bvh = false
 
@@ -9,13 +10,14 @@ let dest = new Vector3()
 const loader = new ObjectLoader()
 
 self.onmessage = (ev) => {
-  console.log(ev.data)
-
-  if (ev.data.bvhGeo) {
-    bvh = new MeshBVH(ev.data.bvhGeo, { lazyGeneration: false })
+  if (ev.data.pointCloudGeo) {
+    const geometriesLoader = new BufferGeometryLoader()
+    let geo = geometriesLoader.parse(ev.data.pointCloudGeo)
+    bvh = new MeshBVH(geo)
+    self.postMessage({ type: 'ready' })
   }
 
-  if (ev.data.mouse) {
+  if (ev.data.mouse && ev.data.camera && bvh) {
     //
     let closestDistance = Infinity
 
@@ -23,13 +25,13 @@ self.onmessage = (ev) => {
     let cameraJSON = ev.data.camera
 
     let camera = loader.parse(cameraJSON)
+
     raycaster.setFromCamera(mouse, camera)
+
     let ray = raycaster.ray
 
-    //
-
     dest.set(0, 0, 0)
-    const localThreshold = 2
+    const localThreshold = 1
 
     let currentDist = Infinity
     bvh.shapecast({
@@ -40,7 +42,7 @@ self.onmessage = (ev) => {
       intersectsBounds: (box, isLeaf, score) => {
         // if we've already found a point that's closer then the full bounds then
         // don't traverse further.
-        if (score > closestDistance) {
+        if (score > Infinity) {
           return NOT_INTERSECTED
         }
 
@@ -56,10 +58,12 @@ self.onmessage = (ev) => {
       },
     })
 
-    if (dest.length() === 0.0) {
+    console.log(dest)
+
+    if (dest.length() <= 0.1) {
       return
     }
 
-    self.postMessage({ type: 'raycast', p: dest.toArray() })
+    self.postMessage({ type: 'raycast', point: dest.toArray() })
   }
 }
