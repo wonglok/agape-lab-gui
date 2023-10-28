@@ -353,7 +353,7 @@ export function MindARCompilerHologram() {
           {/* <SelectiveBloom luminanceThreshold={0.3} mipmapBlur intensity={2} /> */}
         </EffectComposer>
 
-        <Environment files={`/hdr/grass.hdr`}></Environment>
+        <Environment path={''} files={`/hdr/grass.hdr`}></Environment>
         <Stats></Stats>
         {/* <EnergySpa></EnergySpa> */}
       </Canvas>

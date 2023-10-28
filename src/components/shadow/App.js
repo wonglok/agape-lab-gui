@@ -105,7 +105,7 @@ export default function App() {
 
       {/* <Room scale={0.5} position={[0, -1, 0]} /> */}
       <Sky inclination={0.52} scale={320} />
-      <Environment preset='sunset' background></Environment>
+      <Environment path={''} preset='sunset' background></Environment>
     </Canvas>
   )
 }

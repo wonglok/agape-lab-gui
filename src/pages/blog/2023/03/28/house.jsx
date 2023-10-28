@@ -264,7 +264,7 @@ export default function WebSocketPage() {
           // st.scene.background = new Color('#000000')
         }}
         className='w-full h-full'>
-        <Environment preset='night' background></Environment>
+        <Environment path={''} preset='night' background></Environment>
         <Content></Content>
         <OrbitControls object-position={[0, 0, 20]} target={[0, 0, 0]}></OrbitControls>
       </Canvas>

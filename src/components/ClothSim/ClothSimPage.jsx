@@ -48,7 +48,7 @@ function Content() {
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
-      <Environment files={`/lok/street.hdr`} background />
+      <Environment path={''} files={`/lok/street.hdr`} background />
       <group ref={spin} rotation={[0, 0, 0]}>
         {/* <group scale={0.5} rotation={[0, 0, ((Math.PI * 2.0) / 7) * 1]}>
           <group scale={[1, 1, 1]} position={[130, 0, 0]} rotation={[-0.65, 0, -0.5]}>

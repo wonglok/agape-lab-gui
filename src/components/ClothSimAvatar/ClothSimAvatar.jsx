@@ -22,7 +22,7 @@ function Content() {
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
-      <Environment files={`/lok/street.hdr`} background />
+      <Environment path={''} files={`/lok/street.hdr`} background />
       <ClothSim></ClothSim>
     </>
   )

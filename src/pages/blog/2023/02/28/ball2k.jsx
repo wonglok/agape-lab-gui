@@ -16,7 +16,7 @@ export default function Material() {
           {/* <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.4} intensity={1} mipmapBlur></Bloom>
           </EffectComposer> */}
-          {/* <Environment preset='city' background></Environment> */}
+          {/* <Environment path={''} preset='city' background></Environment> */}
           <OrbitControls target={[0, 1, 0]} object-position={[0, 1, 2]}></OrbitControls>
         </Suspense>
 

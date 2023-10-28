@@ -105,7 +105,7 @@ function R3f({ oid, object, refTracker }) {
           enableRotate={true}
           enablePan={false}></OrbitControls>
       )}
-      <Environment preset='sunset'></Environment>
+      <Environment path={''} preset='sunset'></Environment>
     </View>
   )
 }

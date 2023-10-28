@@ -21,7 +21,7 @@ export default function Material() {
       <Canvas>
         <Suspense fallback={null}>
           <Content></Content>
-          <Environment preset='apartment'></Environment>
+          <Environment path={''} preset='apartment'></Environment>
           <OrbitControls></OrbitControls>
         </Suspense>
 

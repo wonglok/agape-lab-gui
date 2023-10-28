@@ -272,7 +272,7 @@ export const HandXR = () => (
       </XR>
 
       {/*  */}
-      <Environment files={`/lok/shanghai.hdr`}></Environment>
+      <Environment path={''} files={`/lok/shanghai.hdr`}></Environment>
     </Canvas>
     <div className='absolute bottom-0 left-0 flex items-center justify-center w-full'>
       <div className='mb-5 text-2xl bg-lime-500'>

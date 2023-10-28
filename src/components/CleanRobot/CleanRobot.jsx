@@ -45,7 +45,7 @@ export function CleanRobot() {
           {/* <ParticleRelay /> */}
 
           <WaterSurfaceContent></WaterSurfaceContent>
-          <Environment background files={`/lok/street.hdr`}></Environment>
+          <Environment path={''} background files={`/lok/street.hdr`}></Environment>
         </group>
 
         {/* <EffectComposer>

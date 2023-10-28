@@ -116,7 +116,7 @@ function Content() {
           })}
       </>
 
-      <Environment files={`/lok/shanghai.hdr`} background></Environment>
+      <Environment path={''} files={`/lok/shanghai.hdr`} background></Environment>
       <OrbitControls></OrbitControls>
     </>
   )

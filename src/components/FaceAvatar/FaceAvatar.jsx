@@ -179,7 +179,7 @@ function Content() {
         {/* <Avatar rotation={[0, 0.3, 0]} position={[-0.15, 0, 0]}></Avatar> */}
         <Avatar rotation={[0, 0.0, 0]} position={[0.0, 0, 0]} url={`/FaceAvatar/avatar/face.glb`}></Avatar>
       </group>
-      {origin && <Environment path={`${origin}`} files={`/lok/shanghai.hdr`}></Environment>}
+      {origin && <Environment path={''} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }

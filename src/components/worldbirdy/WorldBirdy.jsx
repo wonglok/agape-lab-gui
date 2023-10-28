@@ -245,7 +245,7 @@ export function WorldBirdy({ cape = new Object3D(), point = new Vector3() }) {
           )
         }}></Collider>
 
-      {/* <Environment preset='apartment' background></Environment> */}
+      {/* <Environment path={''} preset='apartment' background></Environment> */}
     </group>
   )
 }
