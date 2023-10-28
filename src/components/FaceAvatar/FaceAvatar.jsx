@@ -170,15 +170,16 @@ function VideoYo() {
 }
 
 function Content() {
+  let origin = (typeof window !== 'undefined' && window.location.origin) || false
   return (
     <group>
       <PerspectiveCamera makeDefault position={[0, 1.67, 0.6]}></PerspectiveCamera>
       <OrbitControls makeDefault target={[0, 1.67, 0]}></OrbitControls>
-      <group rotation={[0, -0.3, 0]}>
-        <Avatar rotation={[0, 0.3, 0]} position={[-0.15, 0, 0]}></Avatar>
-        <Avatar rotation={[0, 0.3, 0]} position={[0.15, 0, 0]} url={`/FaceAvatar/avatar/face.glb`}></Avatar>
+      <group rotation={[0, 0, 0]}>
+        {/* <Avatar rotation={[0, 0.3, 0]} position={[-0.15, 0, 0]}></Avatar> */}
+        <Avatar rotation={[0, 0.0, 0]} position={[0.0, 0, 0]} url={`/FaceAvatar/avatar/face.glb`}></Avatar>
       </group>
-      <Environment files={`/lok/shanghai.hdr`}></Environment>
+      {origin && <Environment path={`${origin}`} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }
