@@ -21,7 +21,7 @@ export default function Material() {
       <Canvas>
         <Suspense fallback={null}>
           <Content></Content>
-          <Environment path={''} preset='apartment'></Environment>
+          <Environment path={'https://lab.agape.land'} preset='apartment'></Environment>
           <OrbitControls></OrbitControls>
         </Suspense>
 

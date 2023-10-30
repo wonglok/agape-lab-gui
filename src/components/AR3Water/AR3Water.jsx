@@ -103,7 +103,7 @@ function ARContent() {
   })
   return (
     <group>
-      <Environment path={''} files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
+      <Environment path={'https://lab.agape.land'} files={`/envMap/evening_road_01_puresky_1k.hdr`}></Environment>
       <group position={[0, 0, 0.0]}>
         <ParticleRelay></ParticleRelay>
       </group>

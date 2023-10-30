@@ -23,7 +23,7 @@ function Content() {
   return (
     <>
       <PerspectiveCamera makeDefault position={[0, 0, 350]}></PerspectiveCamera>
-      <Environment path={''} files={`/lok/street.hdr`} background />
+      <Environment path={'https://lab.agape.land'} files={`/lok/street.hdr`} background />
       <ClothSimCape></ClothSimCape>
     </>
   )

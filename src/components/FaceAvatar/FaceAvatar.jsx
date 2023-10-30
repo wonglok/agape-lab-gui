@@ -227,7 +227,7 @@ function VideoYo() {
 }
 
 function Content() {
-  let origin = (typeof window !== 'undefined' && window.location.pathname) || false
+  // let origin = (typeof window !== 'undefined' && window.location.pathname) || false
   let list = useFaceAvatar((s) => s.list) || []
   return (
     <group>
@@ -253,7 +253,7 @@ function Content() {
           )
         })}
       </group>
-      {<Environment path={'../../../../'} files={`/lok/shanghai.hdr`}></Environment>}
+      {<Environment path={'https://lab.agape.land'} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }

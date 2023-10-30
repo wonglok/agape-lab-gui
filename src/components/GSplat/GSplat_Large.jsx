@@ -20,7 +20,7 @@ export function GSplat() {
         <OrbitControls makeDefault object-position={[-4, 0.5, -1.5]} target={[0, 0, 0.0]}></OrbitControls>
         <Content></Content>
 
-        <Environment path={''} files={`/hdr/grass.hdr`}></Environment>
+        <Environment path={'https://lab.agape.land'} files={`/hdr/grass.hdr`}></Environment>
         <directionalLight intensity={3} position={[1, 1, 1]}></directionalLight>
 
         {/* <EffectComposer multisampling={0} disableNormalPass>

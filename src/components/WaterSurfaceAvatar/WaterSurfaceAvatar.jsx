@@ -19,7 +19,7 @@ export function WaterSurfaceAvatar({}) {
     <>
       <Canvas>
         <WaterSurfaceAvatarContent></WaterSurfaceAvatarContent>
-        <Environment path={''} background files={`/lok/street.hdr`}></Environment>
+        <Environment path={'https://lab.agape.land'} background files={`/lok/street.hdr`}></Environment>
       </Canvas>
       {/*  */}
 

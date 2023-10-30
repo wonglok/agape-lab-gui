@@ -202,7 +202,7 @@ function ARContent() {
         {process.env.NODE_ENV === 'development' && <primitive object={ring}></primitive>}
       </group>
 
-      <Environment path={''} preset='sunset'></Environment>
+      <Environment path={'https://lab.agape.land'} preset='sunset'></Environment>
       {/*  */}
 
       {ground && <primitive object={ground}></primitive>}

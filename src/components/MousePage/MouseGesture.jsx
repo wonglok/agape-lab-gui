@@ -52,7 +52,7 @@ export function MouseGesture() {
 
         <OrbitControls object-position={[0, 10, 10]} target={[0, -5, 0]} makeDefault></OrbitControls>
 
-        <Environment path={''} files={`/lok/shanghai.hdr`}></Environment>
+        <Environment path={'https://lab.agape.land'} files={`/lok/shanghai.hdr`}></Environment>
 
         <Hand></Hand>
       </group>

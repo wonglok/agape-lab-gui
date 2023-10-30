@@ -74,7 +74,10 @@ export function MouseGesture() {
         <Vars></Vars>
 
         <Suspense fallback={null}>
-          <Environment path={''} background files={`/envMap/poly_haven_studio_1k.hdr`}></Environment>
+          <Environment
+            path={'https://lab.agape.land'}
+            background
+            files={`/envMap/poly_haven_studio_1k.hdr`}></Environment>
           <group rotation={[0, 0.5, 0]} position={[15, -10, -30]} scale={10}>
             <BG url={`/room/room-fancy.003.glb`}></BG>
           </group>

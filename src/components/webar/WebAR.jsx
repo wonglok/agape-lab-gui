@@ -276,7 +276,7 @@ export function WebAR() {
                   <meshNormalMaterial></meshNormalMaterial>
                 </Sphere>
 
-                <Environment path={''} preset='apartment'></Environment>
+                <Environment path={'https://lab.agape.land'} preset='apartment'></Environment>
                 {joyState && <Content joy={joyState}></Content>}
               </group>
 

@@ -105,7 +105,7 @@ function R3f({ oid, object, refTracker }) {
           enableRotate={true}
           enablePan={false}></OrbitControls>
       )}
-      <Environment path={''} preset='sunset'></Environment>
+      <Environment path={'https://lab.agape.land'} preset='sunset'></Environment>
     </View>
   )
 }

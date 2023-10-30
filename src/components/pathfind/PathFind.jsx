@@ -116,7 +116,7 @@ function Content() {
           })}
       </>
 
-      <Environment path={''} files={`/lok/shanghai.hdr`} background></Environment>
+      <Environment path={'https://lab.agape.land'} files={`/lok/shanghai.hdr`} background></Environment>
       <OrbitControls></OrbitControls>
     </>
   )
