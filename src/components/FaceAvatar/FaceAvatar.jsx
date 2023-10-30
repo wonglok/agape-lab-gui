@@ -299,7 +299,7 @@ function AvatarCore({ url = `/FaceAvatar/avatar/stand.glb`, morphTargets, o3d, .
             let fromVal = r.morphTargetInfluences[r.morphTargetDictionary[kn]]
             let toVal = foundTarget.score
 
-            r.morphTargetInfluences[r.morphTargetDictionary[kn]] = MathUtils.lerp(fromVal, toVal, 0.9)
+            r.morphTargetInfluences[r.morphTargetDictionary[kn]] = MathUtils.lerp(fromVal, toVal, 0.5)
 
             // MathUtils.damp(
             //   fromVal,
