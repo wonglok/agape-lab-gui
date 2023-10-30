@@ -1,9 +1,10 @@
-import { Environment, OrbitControls, PerspectiveCamera, useGLTF } from '@react-three/drei'
+import { Environment, OrbitControls, PerspectiveCamera, Sphere, Text, useGLTF } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, use, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Clock, DoubleSide, MathUtils, Matrix4, Object3D, Quaternion } from 'three'
 import { AnimationMixer } from 'three147'
 import { create } from 'zustand'
+import { AvatarPicker } from './AvatarPicker'
 
 let running = async ({ onLoop, setList = () => {}, setData = () => {} }) => {
   const { FaceLandmarker, FilesetResolver } = await import('@mediapipe/tasks-vision').then((r) => {
@@ -154,6 +155,8 @@ export function FaceAvatarCore({ onList = () => {}, onData = () => {} }) {
 
 const useFaceAvatar = create(() => {
   return {
+    avatarURL: `/FaceAvatar/avatar/face.glb`,
+    avatarPicker: false,
     list: [],
     morphTargets: [],
     o3d: new Object3D(),
@@ -185,6 +188,14 @@ export function FaceAvatar() {
   }, [])
 
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
+  let avatarPicker = useFaceAvatar((s) => s.avatarPicker)
+
+  useEffect(() => {
+    let url = localStorage.getItem('avatarURL')
+    if (url && typeof url === 'string') {
+      useFaceAvatar.setState({ avatarURL: url })
+    }
+  }, [])
 
   return (
     <>
@@ -192,9 +203,50 @@ export function FaceAvatar() {
       <Canvas>
         <Content></Content>
       </Canvas>
+
       <div className=' absolute top-0 right-0'>
         <VideoYo></VideoYo>
+        <button
+          onClick={() => {
+            //
+            //
+            useFaceAvatar.setState({ avatarPicker: !avatarPicker })
+          }}>
+          Switch Avatar Clothes
+        </button>
       </div>
+      {avatarPicker && (
+        <div
+          className={`absolute top-0 right-0 z-10 w-full h-full p-20 backdrop-blur-lg ${avatarPicker ? `` : `hidden`}`}>
+          <>
+            {/*  */}
+            <AvatarPicker
+              onURL={(url) => {
+                //
+                url += `?t=${new Date().getTime()}`
+                localStorage.setItem('avatarURL', url)
+                useFaceAvatar.setState({ avatarPicker: !avatarPicker, avatarURL: url })
+
+                //
+              }}
+              rounded></AvatarPicker>
+            {/*  */}
+          </>
+        </div>
+      )}
+
+      {avatarPicker && (
+        <div className=' absolute top-0 right-0 z-30'>
+          <button
+            className='p-3 m-2 text-red-500 bg-white rounded-xl'
+            onClick={() => {
+              useFaceAvatar.setState({ avatarPicker: !avatarPicker })
+            }}>
+            Close
+          </button>
+        </div>
+      )}
+
       <div className='absolute top-0 left-0 h-full p-3 overflow-scroll'>
         {morphTargets.map((r, i) => {
           return (
@@ -229,6 +281,8 @@ function VideoYo() {
 function Content() {
   // let origin = (typeof window !== 'undefined' && window.location.pathname) || false
   let list = useFaceAvatar((s) => s.list) || []
+
+  let avatarURL = useFaceAvatar((s) => s.avatarURL)
   return (
     <group>
       <PerspectiveCamera makeDefault position={[0, 1.67, 0.6]}></PerspectiveCamera>
@@ -244,11 +298,18 @@ function Content() {
           let sep = 0.5
           return (
             <group position={[lidx * sep - (list.filter((r) => r).length - 1) * 0.5 * sep, 0, 0]} key={'face' + lidx}>
-              <AvatarCore
-                rotation={[0, Math.PI * -0.15, 0]}
-                morphTargets={li.morphTargets}
-                o3d={li.o3d}
-                url={`/FaceAvatar/avatar/face.glb?i=${lidx}`}></AvatarCore>
+              <Suspense
+                fallback={
+                  <Text scale={0.1} position={[0, 1.5, 0]}>
+                    Loading...
+                  </Text>
+                }>
+                <AvatarCore
+                  rotation={[0, Math.PI * 0, 0]}
+                  morphTargets={li.morphTargets}
+                  o3d={li.o3d}
+                  url={`${avatarURL}${avatarURL.includes('?') ? `&i=${lidx}` : `?i=${lidx}`}`}></AvatarCore>
+              </Suspense>
             </group>
           )
         })}
