@@ -238,6 +238,8 @@ function Content() {
           if (!li) {
             return null
           }
+          //
+
           let sep = 0.5
           return (
             <group rotation={[0, -Math.PI * 0.125, 0]} key={'face' + lidx}>
@@ -251,7 +253,7 @@ function Content() {
           )
         })}
       </group>
-      {origin && <Environment path={'../../../../'} files={`/lok/shanghai.hdr`}></Environment>}
+      {<Environment path={'../../../../'} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }
@@ -283,8 +285,7 @@ function AvatarCore({ url = `/FaceAvatar/avatar/stand.glb`, morphTargets, o3d, .
       }
       if (r.isBone && r.name === 'Head') {
         r.quaternion.slerp(o3d.quaternion, 0.2)
-        r.rotation.x = -0.25
-        r.rotation.z *= -0.5
+        r.rotation.x -= 0.05
         r.scale.copy(o3d.scale)
       }
       if (r.geometry && r.morphTargetDictionary && r.morphTargetInfluences) {
