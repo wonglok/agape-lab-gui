@@ -10,3 +10,5 @@ import { FaceAvatar } from '@/components/FaceAvatar/FaceAvatar'
 // const image = document.getElementById('image')
 // const landmarks = faceLandmarker.detect(image)
 export default FaceAvatar
+
+//

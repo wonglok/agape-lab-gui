@@ -5,7 +5,7 @@ import { Clock, DoubleSide, MathUtils, Matrix4, Object3D, Quaternion } from 'thr
 import { AnimationMixer } from 'three147'
 import { create } from 'zustand'
 
-let running = async ({ onLoop, setData = () => {} }) => {
+let running = async ({ onLoop, setList = () => {}, setData = () => {} }) => {
   const { FaceLandmarker, FilesetResolver } = await import('@mediapipe/tasks-vision').then((r) => {
     return {
       FaceLandmarker: r.FaceLandmarker,
@@ -25,7 +25,7 @@ let running = async ({ onLoop, setData = () => {} }) => {
     },
     outputFaceBlendshapes: true,
     runningMode: 'VIDEO',
-    numFaces: 1,
+    numFaces: 7,
     outputFacialTransformationMatrixes: true,
   })
 
@@ -60,42 +60,77 @@ let running = async ({ onLoop, setData = () => {} }) => {
       if (video.paused) {
         video.play()
       }
-      let m4 = new Matrix4()
-      let o3d = new Object3D()
 
       onLoop(async () => {
         let ts = performance.now()
         let results = faceLandmarker.detectForVideo(video, ts)
 
         let faceBlendshapes = results.faceBlendshapes
-
         let faceMatrix = results.facialTransformationMatrixes
 
-        let fristMatrix = faceMatrix[0]
-        let firstFace = faceBlendshapes[0]
-        if (firstFace && fristMatrix) {
-          m4.fromArray(fristMatrix.data)
-          m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
+        let count = faceMatrix.length
+        let list = []
 
-          setData({
-            video,
-            morphTargets: firstFace.categories,
-            o3d: o3d,
-          })
+        for (let i = 0; i < count; i++) {
+          let fristMatrix = faceMatrix[i]
+          let firstFace = faceBlendshapes[i]
+
+          if (firstFace && fristMatrix) {
+            let m4 = new Matrix4()
+            let o3d = new Object3D()
+            m4.fromArray(fristMatrix.data)
+            m4.decompose(o3d.position, o3d.quaternion, o3d.scale)
+
+            if (i === 0) {
+              setData({
+                video,
+                morphTargets: firstFace.categories,
+                o3d: o3d,
+              })
+            }
+
+            list.push({
+              i,
+              order: o3d.position.x,
+              morphTargets: firstFace.categories,
+              o3d: o3d,
+              ts: performance.now(),
+            })
+          }
         }
+
+        list = list.slice()
+        list = list.sort((a, b) => {
+          if (a.order > b.order) {
+            return 1
+          }
+          if (a.order < b.order) {
+            return -1
+          }
+          return 0
+        })
+
+        setList({
+          //
+          list,
+
+          //
+        })
       })
     }
   })
 }
 
-export function FaceAvatarCore({ onData = () => {} }) {
+export function FaceAvatarCore({ onList = () => {}, onData = () => {} }) {
   useEffect(() => {
     let works = []
     let onLoop = (v) => {
       works.push(v)
     }
+
     running({
       onLoop,
+      setList: onList,
       setData: onData,
     })
 
@@ -112,27 +147,46 @@ export function FaceAvatarCore({ onData = () => {} }) {
       works = []
       cancelAnimationFrame(tt)
     }
-  }, [onData])
+  }, [onData, onList])
 
   return <>{/*  */}</>
 }
 
 const useFaceAvatar = create(() => {
   return {
+    list: [],
     morphTargets: [],
     o3d: new Object3D(),
     video: null,
   }
 })
+
 export function FaceAvatar() {
   let onData = useCallback(({ morphTargets, o3d, video }) => {
     useFaceAvatar.setState({ morphTargets, o3d, video })
   }, [])
+
+  let onList = useCallback(({ list }) => {
+    //
+
+    list.forEach((r, i, a) => {
+      let old = useFaceAvatar.getState().list[i]
+
+      if (old && r && Math.abs(r.ts - old.ts) >= 10 * 1000) {
+        useFaceAvatar.getState().list[i] = false
+      } else {
+        useFaceAvatar.getState().list[i] = r
+      }
+    })
+
+    useFaceAvatar.setState({ list })
+  }, [])
+
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
 
   return (
     <>
-      <FaceAvatarCore onData={onData} />
+      <FaceAvatarCore onList={onList} onData={onData} />
       <Canvas>
         <Content></Content>
       </Canvas>
@@ -171,30 +225,49 @@ function VideoYo() {
 
 function Content() {
   let origin = (typeof window !== 'undefined' && window.location.origin) || false
+  let list = useFaceAvatar((s) => s.list) || []
   return (
     <group>
       <PerspectiveCamera makeDefault position={[0, 1.67, 0.6]}></PerspectiveCamera>
       <OrbitControls makeDefault target={[0, 1.67, 0]}></OrbitControls>
       <group rotation={[0, 0, 0]}>
         {/* <Avatar rotation={[0, 0.3, 0]} position={[-0.15, 0, 0]}></Avatar> */}
-        <Avatar rotation={[0, 0.0, 0]} position={[0.0, 0, 0]} url={`/FaceAvatar/avatar/face.glb`}></Avatar>
+        {list.map((li, lidx) => {
+          if (!li) {
+            return null
+          }
+          let sep = 0.4
+          return (
+            <group rotation={[0, -0.5, 0]} key={'face' + lidx}>
+              <AvatarCore
+                rotation={[0, 0.0, 0]}
+                morphTargets={li.morphTargets}
+                o3d={li.o3d}
+                position={[lidx * sep - (list.filter((r) => r).length - 1) * 0.5 * sep, 0, 0]}
+                url={`/FaceAvatar/avatar/face.glb?i=${lidx}`}></AvatarCore>
+            </group>
+          )
+        })}
       </group>
-      {origin && <Environment path={''} files={`/lok/shanghai.hdr`}></Environment>}
+      {origin && <Environment path={origin} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }
 
-function Avatar({ url = `/FaceAvatar/avatar/stand.glb`, ...props }) {
+function AvatarCore({ url = `/FaceAvatar/avatar/stand.glb`, morphTargets, o3d, ...props }) {
   // let glb = useGLTF(`/FaceAvatar/avatar/face.glb`)
   let glb = useGLTF(url)
-  let morphTargets = useFaceAvatar((s) => s.morphTargets)
-  let o3d = useFaceAvatar((s) => s.o3d)
+  // let morphTargets = useFaceAvatar((s) => s.morphTargets)
+  // let o3d = useFaceAvatar((s) => s.o3d)
+  //
   let mixer = useMemo(() => {
     return new AnimationMixer(glb.scene)
   }, [glb.scene])
+
   useFrame((st, dt) => {
     mixer.update(dt)
   })
+
   useEffect(() => {
     glb.animations.forEach((r) => {
       mixer.clipAction(r).play()
@@ -247,12 +320,12 @@ function Avatar({ url = `/FaceAvatar/avatar/stand.glb`, ...props }) {
   return (
     <group {...props}>
       <primitive object={glb.scene}></primitive>
-
+      {/* 
       <directionalLight
         position={[0, 1, 1]}
         target-position={[0, 1.5, 0]}
         color={'#bababa'}
-        intensity={0.5}></directionalLight>
+        intensity={0.5}></directionalLight> */}
     </group>
   )
 }
