@@ -174,13 +174,14 @@ export function FaceAvatar() {
     })
 
     useFaceAvatar.getState().list.forEach((old, i, a) => {
-      if (old && Math.abs(performance.now() - old.ts) >= 10 * 1000) {
+      if (old && Math.abs(performance.now() - old.ts) >= 2 * 1000) {
         useFaceAvatar.getState().list[i] = false
-      } else {
       }
     })
 
-    useFaceAvatar.setState({ list: [...useFaceAvatar.getState().list].filter((r) => r) })
+    if (useFaceAvatar.getState().list.some((r) => !r)) {
+      useFaceAvatar.setState({ list: [...useFaceAvatar.getState().list].filter((r) => r) })
+    }
   }, [])
 
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
