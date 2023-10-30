@@ -170,16 +170,17 @@ export function FaceAvatar() {
     //
 
     list.forEach((r, i, a) => {
-      let old = useFaceAvatar.getState().list[i]
+      useFaceAvatar.getState().list[i] = r
+    })
 
-      if (old && r && Math.abs(r.ts - old.ts) >= 10 * 1000) {
+    useFaceAvatar.getState().list.forEach((old, i, a) => {
+      if (old && Math.abs(performance.now() - old.ts) >= 10 * 1000) {
         useFaceAvatar.getState().list[i] = false
       } else {
-        useFaceAvatar.getState().list[i] = r
       }
     })
 
-    useFaceAvatar.setState({ list })
+    useFaceAvatar.setState({ list: [...useFaceAvatar.getState().list].filter((r) => r) })
   }, [])
 
   let morphTargets = useFaceAvatar((s) => s.morphTargets)
@@ -236,11 +237,11 @@ function Content() {
           if (!li) {
             return null
           }
-          let sep = 0.4
+          let sep = 0.5
           return (
             <group rotation={[0, -0.5, 0]} key={'face' + lidx}>
               <AvatarCore
-                rotation={[0, 0.0, 0]}
+                rotation={[0, -Math.PI * 0.25, 0]}
                 morphTargets={li.morphTargets}
                 o3d={li.o3d}
                 position={[lidx * sep - (list.filter((r) => r).length - 1) * 0.5 * sep, 0, 0]}
