@@ -216,6 +216,7 @@ function VideoYo() {
     if (!video) {
       return
     }
+
     ref.current.append(video)
 
     return () => {
@@ -242,12 +243,11 @@ function Content() {
 
           let sep = 0.5
           return (
-            <group rotation={[0, -Math.PI * 0.125, 0]} key={'face' + lidx}>
+            <group position={[lidx * sep - (list.filter((r) => r).length - 1) * 0.5 * sep, 0, 0]} key={'face' + lidx}>
               <AvatarCore
-                rotation={[0, 0, 0]}
+                rotation={[0, Math.PI * -0.15, 0]}
                 morphTargets={li.morphTargets}
                 o3d={li.o3d}
-                position={[lidx * sep - (list.filter((r) => r).length - 1) * 0.5 * sep, 0, 0]}
                 url={`/FaceAvatar/avatar/face.glb?i=${lidx}`}></AvatarCore>
             </group>
           )
