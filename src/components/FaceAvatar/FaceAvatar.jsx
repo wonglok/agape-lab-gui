@@ -226,7 +226,7 @@ function VideoYo() {
 }
 
 function Content() {
-  let origin = (typeof window !== 'undefined' && window.location.origin) || false
+  let origin = (typeof window !== 'undefined' && window.location.pathname) || false
   let list = useFaceAvatar((s) => s.list) || []
   return (
     <group>
@@ -251,7 +251,7 @@ function Content() {
           )
         })}
       </group>
-      {origin && <Environment path={origin} files={`/lok/shanghai.hdr`}></Environment>}
+      {origin && <Environment path={'../../../../'} files={`/lok/shanghai.hdr`}></Environment>}
     </group>
   )
 }
